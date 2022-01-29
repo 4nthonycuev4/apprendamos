@@ -3,6 +3,7 @@
 import Body from "./Body";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0";
+import { AiOutlineEdit } from "react-icons/ai";
 
 export default function Tweet({ tweet }) {
 	const { user } = useUser();
@@ -19,10 +20,16 @@ export default function Tweet({ tweet }) {
 			{user && user.sub == tweet.data.userId && (
 				<>
 					<Link href={`/edit/${tweet.id}`}>
-						<a className='text-gray-800 mr-2'>Edit</a>
+						<a className='text-gray-800 mr-2 mt-2 flex items-center'>
+							Editar
+							<AiOutlineEdit style={{ marginLeft: "5px" }} />
+						</a>
 					</Link>
 				</>
 			)}
+			<p className='text-xs text-gray-800 text-right'>
+				Actualizado el {new Date(tweet.ts / 1000).toLocaleString()}
+			</p>
 		</div>
 	);
 }

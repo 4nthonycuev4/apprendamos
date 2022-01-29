@@ -8,12 +8,12 @@ export default function Home() {
 	return (
 		<div>
 			<Head>
-				<title>Create a Tweet</title>
+				<title>Crear un Tweet</title>
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
 			<main className='max-w-lg mx-auto'>
-				<h1 className='text-red-100 text-2xl mb-4'>New Tweet</h1>
+				<h1 className='text-red-100 text-2xl mb-4'>Nuevo Tweet</h1>
 				<TweetForm />
 			</main>
 		</div>

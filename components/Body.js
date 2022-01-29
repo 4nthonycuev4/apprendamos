@@ -13,8 +13,12 @@ export default function Body({ body }) {
 				{showBody ? "Ocultar" : "Mostrar 👇"}
 			</button>
 			{showBody && (
-				<div className='relative'>
-					<p className='text-gray-800 bg-gray-300 rounded-md p-2'>{body}</p>
+				<div className='relative min-h-[100px] bg-gray-300 rounded-md p-2'>
+					<p
+						className='selection:bg-fuchsia-300 selection:text-fuchsia-900 first-letter:uppercase first-letter:text-7xl first-letter:font-bold first-letter:text-slate-900
+  first-letter:mr-3 first-letter:float-left text-gray-800 break-all whitespace-pre-wrap'>
+						{body}
+					</p>
 				</div>
 			)}
 		</div>

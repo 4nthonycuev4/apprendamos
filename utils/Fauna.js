@@ -12,8 +12,8 @@ const q = query;
 const getTweets = async () => {
 	const { data } = await faunaClient.query(
 		q.Map(
-			q.Paginate(q.Documents(q.Collection("tweets"))),
-			q.Lambda("ref", q.Get(q.Var("ref")))
+			q.Paginate(q.Match(q.Index("all_tweets_sorted_by_ts_desc"))),
+			q.Lambda(["ts", "ref"], q.Get(q.Var("ref")))
 		)
 	);
 	const tweets = data.map((tweet) => {
@@ -39,8 +39,10 @@ const getTweetById = async (id) => {
 const getTweetsByUserId = async (userId) => {
 	const { data } = await faunaClient.query(
 		q.Map(
-			q.Paginate(q.Match(q.Index("tweets_by_userId"), userId)),
-			q.Lambda("ref", q.Get(q.Var("ref")))
+			q.Paginate(
+				q.Match(q.Index("tweets_by_userId_sorted_by_ts_desc"), userId)
+			),
+			q.Lambda(["ts", "ref"], q.Get(q.Var("ref")))
 		)
 	);
 	const tweets = data.map((tweet) => {

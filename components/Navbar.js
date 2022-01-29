@@ -9,7 +9,7 @@ export default function Navbar() {
 	return (
 		<nav>
 			<Link href='/'>
-				<a className='text-2xl mb-2 block text-center text-red-200'>
+				<a className='text-2xl mb-2 block text-center text-red-200 font-bold'>
 					TWITTER ROJO
 				</a>
 			</Link>
@@ -25,7 +25,9 @@ export default function Navbar() {
 				{!isLoading && user && (
 					<>
 						<Link href='/myTweets'>
-							<a className='text-red-200 hover:underline'>Hola {user.name}</a>
+							<a className='text-red-200 hover:underline'>
+								Hola {user.name.split(" ")[0]}
+							</a>
 						</Link>
 
 						<Link href='/api/auth/logout'>

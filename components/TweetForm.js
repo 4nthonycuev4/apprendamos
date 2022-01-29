@@ -121,7 +121,7 @@ export default function TweetForm({ tweet }) {
 				<textarea
 					{...register("body", { required: true })}
 					id='code'
-					rows='10'
+					rows='12'
 					className='resize-none w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none'
 					placeholder='p. ej. A q edad se supera Yellow de Coldplay ?'
 				/>

@@ -20,16 +20,10 @@ export default withApiAuthRequired(async function handler(req, res) {
 		return res.status(403).json({ msg: "Unauthorized" });
 	}
 
-	const { name, language, description, code } = req.body;
+	const { title, topic, body } = req.body;
 
 	try {
-		const updatedTweet = await updateTweet(
-			id,
-			name,
-			language,
-			description,
-			code
-		);
+		const updatedTweet = await updateTweet(id, title, topic, body);
 		res.status(200).json(updatedTweet);
 	} catch (err) {
 		console.error(err);
