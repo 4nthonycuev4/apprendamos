@@ -96,18 +96,28 @@ export default function TweetForm({ tweet }) {
 			</div>
 			<div className='mb-4'>
 				<label
-					className='block text-red-100 text-sm font-bold mb-1'
+					className='block text-red-100 text-sm font-bold mb-1 mr-5'
 					htmlFor='topic'>
 					Tema
 				</label>
-				<select
+				<input
+					list='list'
+					name='topic'
 					id='topic'
+					className='border bg-white rounded px-3 py-2 outline-none text-gray-700 uppercase'
 					{...register("topic", { required: true })}
-					className='w-full border bg-white rounded px-3 py-2 outline-none text-gray-700'>
-					<option className='py-1'>AMOR</option>
-					<option className='py-1'>DESAMOR</option>
-					<option className='py-1'>PERRITOS</option>
-				</select>
+				/>
+				<datalist id='list'>
+					<option className='py-1' value='AMOR'>
+						AMOR
+					</option>
+					<option className='py-1' value='DESAMOR'>
+						DESAMOR
+					</option>
+					<option className='py-1' value='PERRITOS'>
+						PERRITOS
+					</option>
+				</datalist>
 				{errors.topic && (
 					<p className='font-bold text-red-900'>El tema es obligatorio</p>
 				)}
@@ -116,7 +126,7 @@ export default function TweetForm({ tweet }) {
 				<label
 					className='block text-red-100 text-sm font-bold mb-1'
 					htmlFor='body'>
-					Cuerpo 😏
+					Cuerpo
 				</label>
 				<textarea
 					{...register("body", { required: true })}

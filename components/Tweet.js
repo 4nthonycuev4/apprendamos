@@ -10,11 +10,17 @@ export default function Tweet({ tweet }) {
 
 	return (
 		<div className='bg-gray-100 p-4 rounded-md my-2 shadow-lg'>
-			<div className='flex items-center justify-between mb-2'>
-				<h2 className='text-l text-gray-800 font-bold'>{tweet.data.title}</h2>
-				<span className='font-bold text-xs text-red-800 px-2 py-1 rounded-lg '>
-					{tweet.data.topic}
-				</span>
+			<div className='flex items-top w-full'>
+				<div className='w-3/4 pr-3'>
+					<h2 className='text-l text-gray-800 font-bold break-all'>
+						{tweet.data.title}
+					</h2>
+				</div>
+				<div className='w-1/4 flex justify-end'>
+					<span className='font-bold text-xs text-red-800 px-2 py-1 rounded-lg '>
+						{tweet.data.topic}
+					</span>
+				</div>
 			</div>
 			<Body body={tweet.data.body} />
 			{user && user.sub == tweet.data.userId && (

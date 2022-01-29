@@ -8,7 +8,9 @@ export default withApiAuthRequired(async function handler(req, res) {
 	const session = getSession(req, res);
 	const userId = session.user.sub;
 
-	const { title, topic, body } = req.body;
+	const { title, topic: invalidTopic, body } = req.body;
+	const topic = invalidTopic.toUpperCase().split(" ")[0].substring(0, 15);
+
 	if (req.method !== "POST") {
 		return res.status(405).json({ msg: "Method not allowed" });
 	}

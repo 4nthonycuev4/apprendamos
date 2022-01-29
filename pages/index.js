@@ -20,7 +20,7 @@ export default function Home() {
 			<main className=''>
 				<Header
 					title='Últimos tweets'
-					subtitle='Sácale provecho al twitter rojo. Puedes publicar lo que quieras. Nobody is watching you...'
+					subtitle="Bienvenido al twitter rojo. Puedes publicar lo que quieras, todo es anónimo. Nobody will know it's you..."
 				/>
 				{tweets &&
 					tweets.map((tweet) => <Tweet key={tweet.id} tweet={tweet} />)}
