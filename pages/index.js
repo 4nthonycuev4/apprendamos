@@ -1,30 +1,83 @@
 /** @format */
 
 import Head from "next/head";
-import Tweet from "../components/Tweet";
+
+import { getSession } from "@auth0/nextjs-auth0";
+
+import { query as q, Client } from "faunadb";
+
 import useSWR from "swr";
 
-import Header from "../components/Header";
+import { formatFaunaDocs } from "../utils/Fauna";
 
-export default function Home() {
-	const fetcher = (url) => fetch(url).then((r) => r.json());
+import HeadTitle from "../components/HeadTitle";
+import QuizList from "../components/lists/QuizList";
 
-	const { data: tweets } = useSWR("/api/tweets", fetcher);
+const fetcher = (url) => fetch(url).then((r) => r.json());
+
+export default function Home({ quizzes }) {
+	if (quizzes.length === 0) {
+		const { data } = useSWR("/api/quizzes", fetcher);
+		quizzes = data;
+	}
+
 	return (
-		<div>
+		<>
 			<Head>
 				<title>Home</title>
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
-			<main className=''>
-				<Header
-					title='Últimos tweets'
-					subtitle="Bienvenido al twitter rojo. Puedes publicar lo que quieras, todo es anónimo. Nobody will know it's you..."
-				/>
-				{tweets &&
-					tweets.map((tweet) => <Tweet key={tweet.id} tweet={tweet} />)}
-			</main>
-		</div>
+			<HeadTitle>Bienvenid@ :D</HeadTitle>
+
+			<QuizList quizzes={quizzes} />
+		</>
 	);
+}
+
+export async function getServerSideProps(ctx) {
+	try {
+		const session = getSession(ctx.req, ctx.res);
+
+		if (session) {
+			return { props: { quizzes: [] } };
+		}
+
+		const client = new Client({
+			secret: process.env.FAUNA_SECRET,
+			domain: process.env.FAUNA_DOMAIN,
+		});
+
+		let errorCode, errorMessage;
+
+		const quizzes = await client
+			.query(
+				q.Map(
+					q.Paginate(
+						q.Join(
+							q.Match(q.Index("all_quizzes")),
+							q.Index("quizzes_sort_by_ts_desc")
+						)
+					),
+					q.Lambda(["ts", "ref"], q.Get(q.Var("ref")))
+				)
+			)
+			.then((res) => formatFaunaDocs(res.data))
+			.catch((error) => {
+				errorCode = error.requestResult.statusCode;
+				errorMessage = error.description;
+			});
+
+		if (errorCode) {
+			return { props: { errorCode, errorMessage } };
+		}
+
+		return { props: { quizzes } };
+	} catch (error) {
+		return {
+			props: {
+				errorCode: 500,
+			},
+		};
+	}
 }

@@ -2,43 +2,34 @@
 
 import { useUser } from "@auth0/nextjs-auth0";
 import Link from "next/link";
-import { AiOutlineLogin, AiOutlineLogout } from "react-icons/ai";
+
+import ProfileMenu from "./ProfileMenu";
+import Search from "./Search";
 
 export default function Navbar() {
 	const { user, isLoading } = useUser();
+
 	return (
-		<nav>
+		<nav className='bg-white border-b sticky top-0 flex items-center justify-between px-10 h-16 z-40'>
 			<Link href='/'>
-				<a className='text-2xl mb-2 block text-center text-red-200 font-bold'>
-					TWITTER ROJO
+				<a className='text-2xl mb-2 block text-center text-gray-800 font-bold'>
+					<span>cuy</span>
+					<span className='font-light'>zee</span>
 				</a>
 			</Link>
-			<div className='flex space-x-3 justify-center mb-6 m-x-auto'>
-				{!isLoading && !user && (
-					<Link href='/api/auth/login'>
-						<a className='text-red-100 hover:underline flex items-center'>
-							Hola
-							<AiOutlineLogin color='white' style={{ "margin-left": "5px" }} />
-						</a>
-					</Link>
-				)}
-				{!isLoading && user && (
-					<>
-						<Link href='/myTweets'>
-							<a className='text-red-200 hover:underline'>
-								Hola {user.name.split(" ")[0]}
-							</a>
-						</Link>
 
-						<Link href='/api/auth/logout'>
-							<a className='text-red-200 hover:underline flex items-center'>
-								Chao
-								<AiOutlineLogout color='white' style={{ marginLeft: "5px" }} />
-							</a>
-						</Link>
-					</>
-				)}
-			</div>
+			<Search />
+
+			{!isLoading && !user && (
+				<Link href='/api/auth/login'>
+					<a>
+						<button className='bg-red-500 text-white font-bold rounded-md h-10 px-7 border'>
+							Ingresar
+						</button>
+					</a>
+				</Link>
+			)}
+			{!isLoading && user && <ProfileMenu profile={user.profile} />}
 		</nav>
 	);
 }
