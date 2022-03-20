@@ -31,7 +31,6 @@ export default withApiAuthRequired(async function shows(req, res) {
 						title,
 						tags: tags.split(",").map((tag) => tag.trim()),
 						about,
-						owner: session.user.sub,
 					},
 				})
 			)

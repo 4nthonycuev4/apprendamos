@@ -17,7 +17,7 @@ export default function QuizForm({ quiz }) {
 	} = useForm({
 		defaultValues: {
 			title: quiz?.title,
-			tags: quiz?.tags,
+			tags: quiz?.tags.join(),
 			about: quiz?.about,
 		},
 	});
@@ -43,6 +43,8 @@ export default function QuizForm({ quiz }) {
 
 	const updateQuiz = async (data) => {
 		const { title, tags, about } = data;
+
+		console.log("data", data);
 
 		try {
 			const q = await fetch(`/api/quizzes/${quiz.id}/edit`, {
@@ -112,6 +114,7 @@ export default function QuizForm({ quiz }) {
 				</label>
 				<textarea
 					{...register("about", { required: true })}
+					type='text'
 					id='about'
 					rows='12'
 					className='resize-none w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none'
