@@ -2,14 +2,14 @@
 
 import UserCard from "../items/User";
 
-export default function UserList({ users, setOpen }) {
-	return (
-		<div className=''>
+export default function UserList({ users }) {
+	return users?.length > 0 ? (
+		<div className='grid grid-cols-1 gap-1'>
 			{users.map((user) => (
-				<div key={user.id} className='mb-3 border-b-2'>
-					<UserCard user={user} setOpen={setOpen} />
-				</div>
+				<UserCard user={user} key={user.id} />
 			))}
 		</div>
+	) : (
+		<h1>Sin seguidores :(</h1>
 	);
 }

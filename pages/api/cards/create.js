@@ -7,7 +7,7 @@ import {
 } from "@auth0/nextjs-auth0";
 import { query as q, Client } from "faunadb";
 
-import { formatFaunaDoc } from "../../../../../utils/Fauna";
+import { formatFaunaDoc } from "../../../utils/Fauna";
 
 export default withApiAuthRequired(async function shows(req, res) {
 	try {
@@ -20,9 +20,7 @@ export default withApiAuthRequired(async function shows(req, res) {
 			domain: process.env.FAUNA_DOMAIN,
 		});
 
-		const { quizID } = req.query;
-
-		const { front, back } = req.body;
+		const { front, back, quizID } = req.body;
 
 		const quizExists = await client.query(
 			q.Exists(q.Ref(q.Collection("quizzes"), quizID))

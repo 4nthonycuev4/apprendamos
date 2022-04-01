@@ -9,8 +9,8 @@ import { useUser } from "@auth0/nextjs-auth0";
 
 import { formatFaunaDoc, formatFaunaDocs } from "../../../utils/Fauna";
 
-import HeadTitle from "../../../components/HeadTitle";
-import BodyTitle from "../../../components/BodyTitle";
+import PrimaryTitle from "../../../components/PrimaryTitle";
+import SecondaryTitle from "../../../components/SecondaryTitle";
 import BigQuiz from "../../../components/items/BigQuiz";
 import CardList from "../../../components/lists/CardList";
 import AddCardButton from "../../../components/buttons/AddCard";
@@ -36,16 +36,21 @@ export default function Quiz({
 				</title>
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
-			<HeadTitle>{quiz.title}</HeadTitle>
+			<PrimaryTitle>{quiz.title}</PrimaryTitle>
 			<BigQuiz
 				quiz={quiz}
 				profile={profile}
 				user={user}
 				isLoading={isLoading}
 			/>
-			<BodyTitle>Cartas</BodyTitle>
-			{!isLoading && user?.sub === quiz.owner && <AddCardButton />}
-			<CardList cards={cards} />
+			<SecondaryTitle>Cartas</SecondaryTitle>
+			{!isLoading && user?.sub === quiz.owner && (
+				<AddCardButton quizID={quiz.id} />
+			)}
+			<CardList
+				cards={cards}
+				canEdit={!isLoading && user?.sub === quiz.owner}
+			/>
 		</>
 	);
 }

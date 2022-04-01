@@ -4,7 +4,7 @@ import Head from "next/head";
 
 import { withPageAuthRequired, getSession } from "@auth0/nextjs-auth0";
 
-import ProfileForm from "../../../components/ProfileForm";
+import ProfileForm from "../../../components/forms/ProfileForm";
 
 export default function Account({ user }) {
 	return (

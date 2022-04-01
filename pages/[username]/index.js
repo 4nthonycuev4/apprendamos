@@ -7,19 +7,13 @@ import { query as q, Client } from "faunadb";
 
 import { formatFaunaDoc, formatFaunaDocs } from "../../utils/Fauna";
 
-import HeadTitle from "../../components/HeadTitle";
-import BodyTitle from "../../components/BodyTitle";
+import PrimaryTitle from "../../components/PrimaryTitle";
+import SecondaryTitle from "../../components/SecondaryTitle";
 
 import QuizList from "../../components/lists/QuizList";
 import BigProfile from "../../components/items/BigProfile";
 
-export default function Profile({
-	profile,
-	quizzes,
-	quizCount,
-	errorCode,
-	errorMessage,
-}) {
+export default function Profile({ profile, errorCode, errorMessage }) {
 	if (errorCode) {
 		return <Error statusCode={errorCode} title={errorMessage} />;
 	}
@@ -32,11 +26,10 @@ export default function Profile({
 				</title>
 			</Head>
 
-			<HeadTitle>{profile.name}</HeadTitle>
-
-			<BigProfile profile={profile} quizCount={quizCount} />
-			<BodyTitle>{quizCount} quizzes</BodyTitle>
-			<QuizList quizzes={quizzes} />
+			<PrimaryTitle>{profile.name}</PrimaryTitle>
+			<BigProfile profile={profile} />
+			<SecondaryTitle>{profile?.quizCount} quizzes</SecondaryTitle>
+			<QuizList quizzes={profile?.quizzes} />
 		</>
 	);
 }
@@ -56,9 +49,18 @@ export async function getServerSideProps(context) {
 		const profile = await client
 			.query(q.Call(q.Function("getProfileByUsername"), username))
 			.then((doc) => formatFaunaDoc(doc))
-			.catch((error) => {
-				errorCode = error.requestResult.statusCode;
-				errorMessage = error.description;
+			.catch((err) => {
+				console.log(err);
+				errorMessage =
+					err.requestResult.responseContent.errors[0].cause[0].code;
+				if (errorMessage === "instance not found") {
+					errorMessage = `No se encontró al usuario ${username}`;
+					errorCode = 404;
+				} else {
+					errorMessage = "internal server error";
+					errorCode = 400;
+				}
+				return null;
 			});
 
 		if (errorCode) {
@@ -87,6 +89,48 @@ export async function getServerSideProps(context) {
 			return { props: { errorCode, errorMessage } };
 		}
 
+		const followerCount = await client
+			.query(
+				q.Count(
+					q.Match(
+						q.Index("followers_by_followee"),
+						q.Select(
+							["data", "owner"],
+							q.Call(q.Function("getProfileByUsername"), username)
+						)
+					)
+				)
+			)
+			.catch((error) => {
+				errorCode = error.requestResult.statusCode;
+				errorMessage = error.description;
+			});
+
+		if (errorCode) {
+			return { props: { errorCode, errorMessage } };
+		}
+
+		const followingCount = await client
+			.query(
+				q.Count(
+					q.Match(
+						q.Index("followees_by_follower"),
+						q.Select(
+							["data", "owner"],
+							q.Call(q.Function("getProfileByUsername"), username)
+						)
+					)
+				)
+			)
+			.catch((error) => {
+				errorCode = error.requestResult.statusCode;
+				errorMessage = error.description;
+			});
+
+		if (errorCode) {
+			return { props: { errorCode, errorMessage } };
+		}
+
 		const quizCount = await client
 			.query(q.Count(q.Match(q.Index("quizzes_by_owner"), profile.owner)))
 			.catch((error) => {
@@ -100,9 +144,13 @@ export async function getServerSideProps(context) {
 
 		return {
 			props: {
-				profile,
-				quizzes,
-				quizCount,
+				profile: {
+					...profile,
+					followerCount,
+					followingCount,
+					quizCount,
+					quizzes,
+				},
 			},
 		};
 	} catch (error) {

@@ -4,7 +4,7 @@ import Quiz from "../items/Quiz";
 
 export default function TestList({ quizzes }) {
 	return quizzes?.length > 0 ? (
-		<div className='mb-3 grid grid-cols-1 gap-1'>
+		<div className='grid grid-cols-1 gap-1'>
 			{quizzes.map((quiz) => (
 				<Quiz key={quiz.id} quiz={quiz} />
 			))}

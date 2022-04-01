@@ -10,25 +10,20 @@ import useSWR from "swr";
 
 import { formatFaunaDocs } from "../utils/Fauna";
 
-import HeadTitle from "../components/HeadTitle";
+import PrimaryTitle from "../components/PrimaryTitle";
 import QuizList from "../components/lists/QuizList";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export default function Home({ quizzes }) {
-	if (quizzes.length === 0) {
-		const { data } = useSWR("/api/quizzes", fetcher);
-		quizzes = data;
-	}
-
 	return (
 		<>
 			<Head>
-				<title>Home</title>
+				<title>Bienvenido a cuyzee</title>
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
-			<HeadTitle>Bienvenid@ :D</HeadTitle>
+			<PrimaryTitle>Bienvenid@ :D</PrimaryTitle>
 
 			<QuizList quizzes={quizzes} />
 		</>
@@ -37,12 +32,6 @@ export default function Home({ quizzes }) {
 
 export async function getServerSideProps(ctx) {
 	try {
-		const session = getSession(ctx.req, ctx.res);
-
-		if (session) {
-			return { props: { quizzes: [] } };
-		}
-
 		const client = new Client({
 			secret: process.env.FAUNA_SECRET,
 			domain: process.env.FAUNA_DOMAIN,

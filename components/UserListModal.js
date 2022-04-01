@@ -3,7 +3,6 @@
 import { Fragment, useRef } from "react";
 
 import { Dialog, Transition } from "@headlessui/react";
-import { PlusIcon } from "@heroicons/react/outline";
 
 import UserList from "./lists/UserList";
 

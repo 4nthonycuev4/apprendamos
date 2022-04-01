@@ -13,7 +13,7 @@ export default function Quiz({ quiz }) {
 
 	const relativeTime = moment(quiz.ts).fromNow();
 	return (
-		<article className='border-y p-4 hover:bg-gray-100'>
+		<article id={quiz.id} className='border-y px-4 py-2 hover:bg-gray-100'>
 			<Link href={`/quizzes/${quiz.id}`}>
 				<a>
 					<h1 className='text-lg font-bold hover:underline'>

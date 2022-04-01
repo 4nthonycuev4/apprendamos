@@ -34,15 +34,17 @@ export default function MyApp({ Component, pageProps }) {
 	return (
 		<React.StrictMode>
 			<UserProvider>
-				<Navbar />
 				<div className='w-full z-0'>
 					<div className='max-w-2xl mx-auto border-x'>
-						<main className='mx-1 border-x min-h-[91vh] pt-1 pb-4'>
-							<Component {...pageProps} />
-						</main>
+						<div className='mx-1 border-x'>
+							<Navbar />
+							<main className='min-h-[91vh] pt-1 pb-4'>
+								<Component {...pageProps} />
+							</main>
+							<Footer />
+						</div>
 					</div>
 				</div>
-				<Footer />
 			</UserProvider>
 		</React.StrictMode>
 	);

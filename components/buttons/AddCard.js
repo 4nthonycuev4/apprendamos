@@ -1,17 +1,12 @@
 /** @format */
 
-import { useState } from "react";
-
 import { PlusIcon } from "@heroicons/react/outline";
+import Link from "next/link";
 
-import NewCardModal from "../NewCardModal";
-
-export default function AddCardButton() {
-	const [open, setOpen] = useState(false);
-
+export default function AddCardButton({ quizID }) {
 	return (
-		<>
-			<button className='mb-2 mx-4' onClick={() => setOpen(true)}>
+		<Link href={`/quizzes/${quizID}/cards/create`}>
+			<button className='mb-2 mx-4'>
 				<div className='bg-green-100 p-2 pr-4 flex rounded-full items-center'>
 					<div className='flex items-center justify-center bg-green-200 rounded-full w-6 h-6 mr-2'>
 						<PlusIcon width={16} />
@@ -19,7 +14,6 @@ export default function AddCardButton() {
 					<span>Añadir carta</span>
 				</div>
 			</button>
-			<NewCardModal open={open} setOpen={setOpen} />
-		</>
+		</Link>
 	);
 }

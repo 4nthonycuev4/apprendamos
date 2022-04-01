@@ -6,7 +6,7 @@ import Head from "next/head";
 
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 
-import ProfileForm from "../../../components/ProfileForm";
+import ProfileForm from "../../../components/forms/ProfileForm";
 
 export default function Account({ user }) {
 	const [u, setU] = useState(user);
@@ -30,7 +30,7 @@ export default function Account({ user }) {
 			</Head>
 
 			<main className='max-w-lg mx-auto'>
-				<h1 className='text-red-100 text-2xl mb-4'>Crear tu Perfil</h1>
+				<h1 className='text-2xl mb-4'>Crear tu Perfil</h1>
 				<ProfileForm />
 			</main>
 		</div>
