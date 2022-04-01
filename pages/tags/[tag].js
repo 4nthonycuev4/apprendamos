@@ -6,8 +6,8 @@ import { query as q, Client } from "faunadb";
 
 import { formatFaunaDocs } from "../../utils/Fauna";
 
-import HeadTitle from "../../components/HeadTitle";
-import BodyTitle from "../../components/BodyTitle";
+import PrimaryTitle from "../../components/PrimaryTitle";
+import SecondaryTitle from "../../components/SecondaryTitle";
 
 import QuizList from "../../components/lists/QuizList";
 
@@ -17,8 +17,8 @@ export default function TagPage({ quizzes, quizCount, tag }) {
 			<Head>
 				<title>#{tag} quizzes</title>
 			</Head>
-			<HeadTitle>#{tag}</HeadTitle>
-			<BodyTitle>{quizCount} quizzes</BodyTitle>
+			<PrimaryTitle>#{tag}</PrimaryTitle>
+			<SecondaryTitle>{quizCount} quizzes</SecondaryTitle>
 			<QuizList quizzes={quizzes} />
 		</>
 	);
