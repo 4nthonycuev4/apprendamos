@@ -14,7 +14,7 @@ export default function Quiz({ quiz }) {
 	const relativeTime = moment(quiz.ts).fromNow();
 	return (
 		<article id={quiz.id} className='border-y px-4 py-2 hover:bg-gray-100'>
-			<Link href={`/quizzes/${quiz.id}`}>
+			<Link href={`/q/${quiz.id}`}>
 				<a>
 					<h1 className='text-lg font-bold hover:underline'>
 						{quiz.title}
@@ -28,7 +28,7 @@ export default function Quiz({ quiz }) {
 			<h1 className='text-md font-normal mb-2'>
 				{aboutParsed}
 				{aboutParsed.length == 250 && (
-					<Link href={`/quizzes/${quiz.id}`}>
+					<Link href={`/q/${quiz.id}`}>
 						<a className='font-normal text-justify hover:underline'>
 							<span className='font-medium'>[...leer más]</span>
 						</a>

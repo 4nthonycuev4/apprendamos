@@ -33,7 +33,7 @@ export default function Search() {
 				}}
 			/>
 			<div className='h-full'>
-				<Link href={`/tags/${search.toLowerCase()}`}>
+				<Link href={`/t/${search.toLowerCase()}`}>
 					<a>
 						<div className='flex items-center justify-center h-full px-5 bg-gray-200 cursor-pointer'>
 							<SearchIcon className='h-5 w-5 text-gray-500' />

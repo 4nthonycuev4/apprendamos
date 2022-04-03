@@ -38,7 +38,7 @@ export default function BigQuiz({ quiz, profile, user, isLoading }) {
 					</div>
 					<div className='content'>
 						<div className='flex'>
-							<Link href={`/${profile.username}`}>
+							<Link href={`/p/${profile.username}`}>
 								<a>
 									<div className='flex'>
 										<h1 className='text-md font-bold mr-1 hover:underline'>
@@ -65,7 +65,7 @@ export default function BigQuiz({ quiz, profile, user, isLoading }) {
 			<TagList tags={quiz.tags} />
 
 			{!isLoading && user?.sub === quiz.owner && (
-				<Link href={`/quizzes/${quiz.id}/edit`}>
+				<Link href={`/q/${quiz.id}/edit`}>
 					<button className='w-20 rounded-full bg-red-100'>Editar</button>
 				</Link>
 			)}

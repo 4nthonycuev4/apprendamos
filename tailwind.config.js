@@ -7,6 +7,10 @@ module.exports = {
 	},
 	content: ["./pages/**/*.{js, jsx}", "./components/**/*.{js,jsx}"],
 	theme: {
+		fontFamily: {
+			sans: ["Inter", "sans-serif"],
+			serif: ["Merriweather", "serif"],
+		},
 		extend: {},
 	},
 	variants: {},

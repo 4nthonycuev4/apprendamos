@@ -20,7 +20,7 @@ export default function BigProfile({ profile }) {
 					className='rounded-full '
 				/>
 				<div className='text-center'>
-					<Link href={`/${profile.username}`}>
+					<Link href={`/p/${profile.username}`}>
 						<a>
 							<h1 className='font-normal text-xl mb-2'>@{profile.username}</h1>
 						</a>
@@ -37,7 +37,7 @@ export default function BigProfile({ profile }) {
 					</h1>
 				</div>
 				<div className='flex justify-center'>
-					<Link href={`/${profile.username}/followers`}>
+					<Link href={`/p/${profile.username}/followers`}>
 						<a>
 							<h1 className='text-gray-600 font-bold hover:underline'>
 								{profile.followerCount}
@@ -46,7 +46,7 @@ export default function BigProfile({ profile }) {
 						</a>
 					</Link>
 
-					<Link href={`/${profile.username}/following`}>
+					<Link href={`/p/${profile.username}/following`}>
 						<a className='ml-3'>
 							<h1 className='text-gray-600 font-bold hover:underline'>
 								{profile.followingCount}

@@ -3,11 +3,11 @@ import Error from "next/error";
 import Link from "next/link";
 
 import { query as q, Client } from "faunadb";
-import { formatFaunaDoc, formatFaunaDocs } from "../../utils/Fauna";
+import { formatFaunaDoc, formatFaunaDocs } from "../../../utils/Fauna";
 
-import UserList from "../../components/lists/UserList";
-import PrimaryTitle from "../../components/PrimaryTitle";
-import SecondaryTitle from "../../components/SecondaryTitle";
+import UserList from "../../../components/lists/UserList";
+import PrimaryTitle from "../../../components/PrimaryTitle";
+import SecondaryTitle from "../../../components/SecondaryTitle";
 
 export default function Following({ profile, errorCode, errorMessage }) {
 	if (errorCode) {
@@ -16,7 +16,7 @@ export default function Following({ profile, errorCode, errorMessage }) {
 	return (
 		<>
 			<PrimaryTitle>
-				<Link href={`/${profile.username}`}>
+				<Link href={`/p/${profile.username}`}>
 					<a>{profile.name}</a>
 				</Link>
 			</PrimaryTitle>

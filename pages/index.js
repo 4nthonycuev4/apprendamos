@@ -19,7 +19,7 @@ export default function Home({ quizzes }) {
 	return (
 		<>
 			<Head>
-				<title>Bienvenido a cuyzee</title>
+				<title>Bienvenid@ a cardsmemo</title>
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 

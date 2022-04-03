@@ -5,13 +5,13 @@ import Error from "next/error";
 
 import { query as q, Client } from "faunadb";
 
-import { formatFaunaDoc, formatFaunaDocs } from "../../utils/Fauna";
+import { formatFaunaDoc, formatFaunaDocs } from "../../../utils/Fauna";
 
-import PrimaryTitle from "../../components/PrimaryTitle";
-import SecondaryTitle from "../../components/SecondaryTitle";
+import PrimaryTitle from "../../../components/PrimaryTitle";
+import SecondaryTitle from "../../../components/SecondaryTitle";
 
-import QuizList from "../../components/lists/QuizList";
-import BigProfile from "../../components/items/BigProfile";
+import QuizList from "../../../components/lists/QuizList";
+import BigProfile from "../../../components/items/BigProfile";
 
 export default function Profile({ profile, errorCode, errorMessage }) {
 	if (errorCode) {

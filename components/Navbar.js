@@ -3,21 +3,27 @@
 import { useUser } from "@auth0/nextjs-auth0";
 import Link from "next/link";
 import Image from "next/image";
-import { LoginIcon, LogoutIcon, PlusIcon } from "@heroicons/react/outline";
+import { LoginIcon, CollectionIcon } from "@heroicons/react/outline";
 
 export default function Navbar() {
 	const { user, isLoading } = useUser();
 
 	return (
-		<nav className='bg-white border-b sticky top-0 flex items-center justify-between max-w-2xl h-12 z-40 px-4'>
+		<nav
+			className='
+				px-4 py-1 top-0 sticky 
+				flex justify-between items-center
+				bg-white/30 backdrop-blur-md
+				border-b'>
 			<Link href='/'>
-				<a className='text-2xl mb-2 block text-center text-gray-800 font-bold'>
-					<span>cuy</span>
-					<span className='font-light'>zee</span>
+				<a className='flex text-center text-gray-800'>
+					<CollectionIcon className='w-6 h-6' />
+					<span className='pl-1 font-light'>cards</span>
+					<span className='font-bold'>memo</span>
 				</a>
 			</Link>
 
-			{!isLoading && !user && (
+			{!user ? (
 				<Link href='/api/auth/login'>
 					<a>
 						<button className='rounded-full border-2 hover:bg-gray-200 p-2'>
@@ -25,35 +31,18 @@ export default function Navbar() {
 						</button>
 					</a>
 				</Link>
-			)}
-			{!isLoading && user?.profile && (
-				<div className='flex items-center w-32 justify-between'>
-					<Link href={"/" + user.profile.username}>
-						<a className='flex items-center'>
-							<Image
-								src={user.profile.picture}
-								layout='fixed'
-								width={40}
-								height={40}
-								className='rounded-full'
-							/>
-						</a>
-					</Link>
-					<Link href='/quizzes/create'>
-						<a>
-							<button className='rounded-full border-2  hover:bg-gray-200 p-2'>
-								<PlusIcon className='h-5 w-5 text-gray-600' />
-							</button>
-						</a>
-					</Link>
-					<Link href='/api/auth/logout'>
-						<a>
-							<button className='rounded-full border-2 hover:bg-gray-200 p-2'>
-								<LogoutIcon className='h-5 w-5 text-gray-600' />
-							</button>
-						</a>
-					</Link>
-				</div>
+			) : (
+				<Link href={"/p/" + user.profile.username}>
+					<a className='flex items-center'>
+						<Image
+							src={user.profile.picture}
+							layout='fixed'
+							width={32}
+							height={32}
+							className='rounded-full'
+						/>
+					</a>
+				</Link>
 			)}
 		</nav>
 	);

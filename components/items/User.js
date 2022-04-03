@@ -15,7 +15,7 @@ export default function User({ user }) {
 				alt={user.username}
 				className='rounded-full'
 			/>
-			<Link href={`/${user.username}`}>
+			<Link href={`/p/${user.username}`}>
 				<a>
 					<h1 className='text-md font-bold -mt-1 hover:underline ml-2'>
 						{user.name}

@@ -18,7 +18,7 @@ export default function Card({ card, selected, canEdit }) {
 			</div>
 			{canEdit && (
 				<div className='flex p-1 justify-end'>
-					<Link href={"/quizzes/" + card.quiz + "/cards/" + card.id + "/edit"}>
+					<Link href={"/q/" + card.quiz + "/c/" + card.id + "/edit"}>
 						<a>
 							<button
 								onClick={(e) => {

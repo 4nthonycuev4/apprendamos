@@ -126,7 +126,7 @@ export default function QuizForm({ quiz }) {
 					</p>
 				)}
 			</div>
-			<Link href={quiz ? `/quizzes/${quiz.id}` : "/"}>
+			<Link href={quiz ? `/q/${quiz.id}` : "/"}>
 				<a className='mt-3 inline-block bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2'>
 					Cancelar
 				</a>
