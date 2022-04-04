@@ -47,7 +47,7 @@ export default function Footer() {
 					</button>
 				</a>
 			</Link>
-			<Link href='/'>
+			<Link href='/more'>
 				<a className='flex justify-center items-center'>
 					<button className='rounded-full hover:bg-gray-200 p-2'>
 						<MenuIcon className='h-6 w-6' />

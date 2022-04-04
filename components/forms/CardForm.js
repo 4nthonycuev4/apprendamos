@@ -31,7 +31,7 @@ export default function EditCard({ card, quizID }) {
 		})
 			.then((res) => res.json())
 			.then(() => {
-				router.push(`/quizzes/${quizID}`);
+				router.push(`/q/${quizID}`);
 			})
 			.catch(console.error);
 		await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -47,7 +47,7 @@ export default function EditCard({ card, quizID }) {
 		})
 			.then((res) => res.json())
 			.then(() => {
-				router.push(`/quizzes/${card.quiz}`);
+				router.push(`/q/${card.quiz}`);
 			})
 			.catch(console.error);
 		await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -62,7 +62,7 @@ export default function EditCard({ card, quizID }) {
 		})
 			.then((res) => res.json())
 			.then(() => {
-				router.push(`/quizzes/${card.quiz}`);
+				router.push(`/q/${card.quiz}`);
 			})
 			.catch(console.error);
 		await new Promise((resolve) => setTimeout(resolve, 2000));
