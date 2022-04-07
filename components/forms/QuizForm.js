@@ -54,7 +54,7 @@ export default function QuizForm({ quiz }) {
 					"Content-Type": "application/json",
 				},
 			}).then((res) => res.json());
-			router.push(`/quizzes/${quiz.id}`);
+			router.push(`/q/${quiz.id}`);
 		} catch (err) {
 			console.error(err);
 		}

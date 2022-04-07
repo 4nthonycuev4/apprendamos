@@ -57,7 +57,7 @@ export default function BigQuiz({ quiz, profile, user, isLoading }) {
 								</time>
 							</button>
 						</div>
-						<h1 className='text-md mb-2'>{quiz.about}</h1>
+						<h1 className='text-md mb-2 whitespace-pre-line'>{quiz.about}</h1>
 					</div>
 				</div>
 			</div>

@@ -71,14 +71,14 @@ export default function EditCard({ card, quizID }) {
 	return (
 		<form onSubmit={handleSubmit(card ? editCard : createCard)}>
 			<div className='px-4 '>
-				<h1>{card?.front}</h1>
+				<h1>Editar Carta</h1>
 				<div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
 					<div>
 						<textarea
 							{...register("front", { required: true, maxLength: 240 })}
 							rows={10}
 							onChange={(e) => setFrontLength(e.target.value.length)}
-							className='caret-red-500 bg-red-200 outline-red-500 rounded-md resize-none p-4 w-full text-center font-bold'
+							className='caret-red-500 bg-red-200 outline-red-500 rounded-md resize-none p-4 w-full text-center '
 						/>
 						<h1
 							className={
@@ -100,7 +100,7 @@ export default function EditCard({ card, quizID }) {
 							{...register("back", { required: true, maxLength: 240 })}
 							rows={10}
 							onChange={(e) => setBackLength(e.target.value.length)}
-							className='caret-blue-500 bg-blue-200 outline-blue-500 rounded-md w-full resize-none p-4 text-center'
+							className='caret-blue-500 bg-blue-200 outline-blue-500 rounded-md w-full resize-none p-4 text-center font-bold'
 						/>
 						<h1
 							className={

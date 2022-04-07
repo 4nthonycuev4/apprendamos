@@ -14,6 +14,7 @@ import SecondaryTitle from "../../../components/SecondaryTitle";
 import BigQuiz from "../../../components/items/BigQuiz";
 import CardList from "../../../components/lists/CardList";
 import AddCardButton from "../../../components/buttons/AddCard";
+import CardView from "../../../components/items/CardView";
 
 export default function Quiz({
 	quiz,
@@ -47,7 +48,7 @@ export default function Quiz({
 			{!isLoading && user?.sub === quiz.owner && (
 				<AddCardButton quizID={quiz.id} />
 			)}
-			<CardList
+			<CardView
 				cards={cards}
 				canEdit={!isLoading && user?.sub === quiz.owner}
 			/>

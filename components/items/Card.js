@@ -1,18 +1,18 @@
 /** @format */
-import Link from "next/link";
-import {
-	ThumbUpIcon,
-	ThumbDownIcon,
-	PencilIcon,
-} from "@heroicons/react/outline";
+import { useState } from "react";
 
-export default function Card({ card, selected, canEdit }) {
+import Link from "next/link";
+
+import { PencilIcon } from "@heroicons/react/outline";
+
+export default function Card({ card, canEdit, selected }) {
 	const bgColor = selected ? "bg-red-100" : "bg-blue-100";
-	const fontBold = selected ? "" : "font-bold";
+	const fontBold = selected ? "font-bold" : "";
+
 	return (
 		<div className={bgColor}>
-			<div className='flex h-48 sm:h-72 p-2 justify-center items-center rounded-md drop-shadow-sm '>
-				<h1 className={"text-center " + fontBold}>
+			<div className='flex h-48 sm:h-72 p-2 justify-center items-center rounded-md drop-shadow-sm'>
+				<h1 className={"text-center whitespace-pre-line " + fontBold}>
 					{selected ? card.back : card.front}
 				</h1>
 			</div>
