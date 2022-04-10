@@ -1,12 +1,22 @@
 /** @format */
 
 import Head from "next/head";
+import { useRouter } from "next/router";
 
-import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { useUser } from "@auth0/nextjs-auth0";
 
 import QuizForm from "../../components/forms/QuizForm";
 
 export default function Home() {
+	const { user, error, isLoading } = useUser();
+	if (isLoading) return <div>Cargando...</div>;
+	if (error) return <div>{error.message}</div>;
+	if (!user) {
+		const router = useRouter();
+		router.push("/api/auth/login");
+
+		return <div>Cargando...</div>;
+	}
 	return (
 		<div>
 			<Head>
@@ -21,5 +31,3 @@ export default function Home() {
 		</div>
 	);
 }
-
-export const getServerSideProps = withPageAuthRequired();

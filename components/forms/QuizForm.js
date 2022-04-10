@@ -35,7 +35,7 @@ export default function QuizForm({ quiz }) {
 				},
 			}).then((res) => res.json());
 
-			!quiz.error && router.push(`/q/${quiz.id}`);
+			!quiz.error && router.push(`/q/${quiz.id}/c/create`);
 		} catch (err) {
 			console.error(err);
 		}

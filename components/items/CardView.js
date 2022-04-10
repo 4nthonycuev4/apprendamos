@@ -1,7 +1,6 @@
 /** @format */
 
 import { useState } from "react";
-
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/outline";
 
 import Card from "./Card";
@@ -9,7 +8,9 @@ export default function CardView({ cards, canEdit }) {
 	const [viewing, setViewing] = useState(0);
 
 	const [selected, setSelected] = useState(false);
-
+	if (!cards || !cards.length) {
+		return <div>Sin cartas :(</div>;
+	}
 	return (
 		<div className='px-4'>
 			<button
