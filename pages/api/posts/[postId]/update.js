@@ -16,7 +16,7 @@ export default withApiAuthRequired(async function shows(req, res) {
 
 		const { accessToken } = await getAccessToken(req, res);
 
-		const client = new FaunaClient(accessToken, null, session.user);
+		const client = new FaunaClient(accessToken, session.user, null);
 
 		const { body, tags } = req.body;
 

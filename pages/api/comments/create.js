@@ -13,7 +13,7 @@ export default withApiAuthRequired(async function createComment(req, res) {
 		const { accessToken } = await getAccessToken(req, res);
 		const session = getSession(req, res);
 
-		const client = new FaunaClient(accessToken, null, session.user);
+		const client = new FaunaClient(accessToken, session.user);
 
 		const { ref, message, coins } = req.body;
 		const comment = await client.createComment(ref, message, coins);

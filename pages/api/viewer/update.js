@@ -13,11 +13,7 @@ export default withApiAuthRequired(async function shows(req, res) {
 		const session = getSession(req, res);
 		const { accessToken } = await getAccessToken(req, res);
 
-		const client = new FaunaClient(
-			accessToken,
-			session.user.accountConnection,
-			session.user.ref.id
-		);
+		const client = new FaunaClient(accessToken, session.user);
 
 		const { name, about, username, picture } = req.body;
 

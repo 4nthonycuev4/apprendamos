@@ -13,7 +13,9 @@ function getRandomInt(min, max) {
 }
 
 export default function UserForm({ user }) {
-	const [picture, setPicture] = useState(`/ru${getRandomInt(1, 8)}.jpg`);
+	const [picture, setPicture] = useState(
+		user?.picture || `/ru${getRandomInt(1, 8)}.jpg`
+	);
 
 	const {
 		register,

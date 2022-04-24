@@ -13,7 +13,7 @@ export default withApiAuthRequired(async function createPost(req, res) {
 		const { accessToken } = await getAccessToken(req, res);
 		const session = getSession(req, res);
 
-		const client = new FaunaClient(accessToken, null, session.user);
+		const client = new FaunaClient(accessToken, session.user);
 
 		const { body, tags } = req.body;
 		const post = await client.createPost(body, tags);
