@@ -13,18 +13,16 @@ export default function BigProfile({ profile }) {
 		<>
 			<div className='text-center py-1 border-y px-4'>
 				<Image
-					src={profile.picture}
-					alt='Picture of the user'
 					width={100}
 					height={100}
-					className='rounded-full '
+					src={profile.picture}
+					alt='Picture of the user'
+					className='rounded-full'
 				/>
 				<div className='text-center'>
-					<Link href={`/p/${profile.username}`}>
-						<a>
-							<h1 className='font-normal text-xl mb-2'>@{profile.username}</h1>
-						</a>
-					</Link>
+					<h1 className='font-bold text-xl'>{profile.name}</h1>
+					<h1 className='font-normal text-md mb-2'>@{profile.username}</h1>
+
 					<ToggleFollowButton username={profile.username} />
 				</div>
 				<p>{profile.bio}</p>
@@ -36,24 +34,16 @@ export default function BigProfile({ profile }) {
 						Se unió el {moment(profile.joined).format("LL")}
 					</h1>
 				</div>
-				<div className='flex justify-center'>
-					<Link href={`/p/${profile.username}/followers`}>
-						<a>
-							<h1 className='text-gray-600 font-bold hover:underline'>
-								{profile.followerCount}
-								<span className='font-normal'> Seguidores</span>
-							</h1>
-						</a>
-					</Link>
+				<div className='flex justify-center space-x-4'>
+					<h1 className='text-gray-600 font-bold'>
+						{profile.stats.followers}
+						<span className='font-normal'> Seguidores</span>
+					</h1>
 
-					<Link href={`/p/${profile.username}/following`}>
-						<a className='ml-3'>
-							<h1 className='text-gray-600 font-bold hover:underline'>
-								{profile.followingCount}
-								<span className='font-normal'> Siguiendo</span>
-							</h1>
-						</a>
-					</Link>
+					<h1 className='text-gray-600 font-bold'>
+						{profile.stats.following}
+						<span className='font-normal'> Siguiendo</span>
+					</h1>
 				</div>
 			</div>
 		</>

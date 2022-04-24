@@ -1,6 +1,7 @@
 /** @format */
 
 import React from "react";
+import useSWR, { SWRConfig } from "swr";
 
 import { UserProvider } from "@auth0/nextjs-auth0";
 
@@ -11,38 +12,28 @@ import moment from "moment";
 import "moment/locale/es";
 import Footer from "../components/Footer";
 
-moment.updateLocale("es", {
-	relativeTime: {
-		future: "in %s",
-		past: "hace %s",
-		s: "segundos",
-		ss: "%s seg",
-		m: "1 min",
-		mm: "%d min",
-		h: "1 hora",
-		hh: "%d horas",
-		d: "1 día",
-		dd: "%d días",
-		M: "1 mes",
-		MM: "%d mes",
-		y: "1 año",
-		yy: "%d años",
-	},
-});
+moment.updateLocale("es");
 
 export default function MyApp({ Component, pageProps }) {
 	return (
 		<React.StrictMode>
 			<UserProvider>
-				<div className='w-full z-0'>
-					<div className='max-w-xl mx-auto border-x-2'>
-						<Navbar />
-						<main className='pt-1 pb-4 min-h-[90vh]'>
-							<Component {...pageProps} />
-						</main>
-						<Footer />
+				<SWRConfig
+					value={{
+						refreshInterval: 5000,
+						fetcher: (resource, init) =>
+							fetch(resource, init).then((res) => res.json()),
+					}}>
+					<div className='w-full z-0'>
+						<div className='max-w-2xl mx-auto border-x-2'>
+							<Navbar />
+							<main className='pt-1 pb-4 space-y-4 px-4 min-h-[90vh]'>
+								<Component {...pageProps} />
+							</main>
+							<Footer />
+						</div>
 					</div>
-				</div>
+				</SWRConfig>
 			</UserProvider>
 		</React.StrictMode>
 	);

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 
-export default function EditCard({ card, quizID }) {
+export default function EditCard({ card, quizId }) {
 	const [frontLength, setFrontLength] = useState(card?.front.length || 0);
 	const [backLength, setBackLength] = useState(card?.back.length || 0);
 
@@ -27,11 +27,11 @@ export default function EditCard({ card, quizID }) {
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ front, back, quizID }),
+			body: JSON.stringify({ front, back, quizId }),
 		})
 			.then((res) => res.json())
 			.then(() => {
-				router.push(`/q/${quizID}`);
+				router.push(`/q/${quizId}`);
 			})
 			.catch(console.error);
 		await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -118,7 +118,7 @@ export default function EditCard({ card, quizID }) {
 						)}
 					</div>
 				</div>
-				<Link href={card ? `/q/${card.quiz}` : `/q/${quizID}`}>
+				<Link href={card ? `/q/${card.quiz}` : `/q/${quizId}`}>
 					<a className='mt-3 inline-block bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2'>
 						Cancelar
 					</a>

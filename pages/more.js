@@ -10,7 +10,7 @@ export default function MorePage() {
 					<button>Cerrar sesión</button>
 				</a>
 			</Link>
-			<Link href='/settings/profile'>
+			<Link href='/settings/user'>
 				<a>
 					<button>Configuración</button>
 				</a>

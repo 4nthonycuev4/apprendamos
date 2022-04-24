@@ -1,39 +1,24 @@
 /** @format */
 
-import { handleAuth, handleCallback, handleProfile } from "@auth0/nextjs-auth0";
+import { handleAuth, handleCallback } from "@auth0/nextjs-auth0";
 
-import { query as q, Client } from "faunadb";
-
-import { formatFaunaDoc } from "../../../utils/Fauna";
+import FaunaClient from "../../../fauna";
 
 const afterCallback = async (req, res, session, state) => {
-	const client = new Client({
-		secret: session.accessToken,
-		domain: process.env.FAUNA_DOMAIN,
-	});
+	console.log("session.user", session.user);
+	const client = new FaunaClient(session.accessToken, null, session.user.sub);
+	const accountConnection = session.user.sub;
+	const viewer = await client.getViewer();
 
-	session.user.registered = true;
+	if (!viewer) {
+		state.returnTo = "/settings/user/create";
+		return session;
+	} else {
+		session.user = viewer;
+		session.user.accountConnection = accountConnection;
 
-	const profile = await client
-		.query(q.Call(q.Function("getProfile"), session.user.sub))
-		.then((doc) => formatFaunaDoc(doc))
-		.catch(() => {
-			session.user.registered = false;
-			state.returnTo = "/settings/profile/create";
-		});
-
-	const account = await client
-		.query(q.Call(q.Function("getAccount"), session.user.sub))
-		.then((doc) => formatFaunaDoc(doc))
-		.catch(() => {
-			session.user.registered = false;
-			state.returnTo = "/settings/profile/create";
-		});
-
-	session.user.profile = profile;
-	session.user.account = account;
-
-	return session;
+		return session;
+	}
 };
 
 export default handleAuth({
