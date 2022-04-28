@@ -7,8 +7,7 @@ export default async function getComments(req, res) {
 		const client = new FaunaClient();
 
 		const { ref } = req.body;
-		console.log("ref", ref);
-		const comments = await client.getComments(ref);
+		const comments = await client.getContentComments(ref);
 
 		res.status(200).json(comments);
 	} catch (error) {

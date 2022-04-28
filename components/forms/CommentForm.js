@@ -3,12 +3,15 @@ import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { useUser } from "@auth0/nextjs-auth0";
 import { PaperAirplaneIcon } from "@heroicons/react/solid";
-import { useSWRConfig } from "swr";
 
-export default function CommentForm({ contentRef }) {
-	const { mutate } = useSWRConfig();
-
+export default function CommentForm({
+	contentRef,
+	setViewerStats,
+	setStats,
+	setComments,
+}) {
 	const { user, error, isLoading } = useUser();
+
 	const {
 		register,
 		reset,
@@ -42,7 +45,7 @@ export default function CommentForm({ contentRef }) {
 				message = comment;
 			}
 
-			await fetch("/api/comments/create", {
+			const res = await fetch("/api/comments/create", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -53,40 +56,45 @@ export default function CommentForm({ contentRef }) {
 					coins,
 				}),
 			}).then((res) => res.json());
+			setViewerStats(res.viewerStats);
+			setStats(res.stats);
+			setComments(res.comments);
+
 			reset();
-			mutate(`/api/comments`);
 		} catch (err) {
 			console.error(err);
 		}
 	};
 
 	return (
-		<form onSubmit={handleSubmit(createComment)}>
-			<div className='flex w-full justify-between'>
+		<form className='w-full' onSubmit={handleSubmit(createComment)}>
+			<div className='flex space-x-2'>
+				{!isLoading && !error && user && (
+					<Image
+						src={user.picture}
+						alt='Picture of the user'
+						width={50}
+						height={50}
+						className='rounded-full'
+					/>
+				)}
 				<input
 					{...register("comment", { required: true })}
 					type='text'
 					name='comment'
-					className='rounded-md w-10/12'
+					className='rounded-md w-3/4'
 					placeholder={
 						!isLoading && !error && user
 							? "Escribe un comentario"
 							: "Inicia sesión para comentar"
 					}
 				/>
-				{!isLoading && !error && user && (
-					<Image
-						src={user.picture}
-						alt='Picture of the user'
-						width={40}
-						height={40}
-						className='rounded-full'
-					/>
-				)}
+
 				<button
 					type='submit'
-					disabled={isSubmitting || !Boolean(!isLoading && !error && user)}>
-					<PaperAirplaneIcon className='text-gray-500 w-5 disabled:text-blue-400' />
+					disabled={isSubmitting || !user}
+					className=' text-blue-500 disabled:text-gray-400'>
+					<PaperAirplaneIcon className='w-5' />
 				</button>
 			</div>
 			{errors.comment && <p className='text-red-500'>Escribe un comentario</p>}
