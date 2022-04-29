@@ -30,62 +30,44 @@ const {
 import { GetMinimalUser, GetViewerRef } from "../user/read";
 import { GetContentComments } from "../comment/read";
 
-export function GetPostWithMinimalAuthorAndComments(postRef) {
+export function GetPost(
+	postRef,
+	withAuthor = true,
+	comments = 3,
+	withViewerStats = false
+) {
 	return Let(
 		{
 			post: Get(postRef),
 
 			authorRef: Select(["data", "authorRef"], Var("post")),
-			author: GetMinimalUser(Var("authorRef")),
-			comments: GetContentComments(postRef, "post"),
-		},
-		{
-			author: Var("author"),
-			post: Var("post"),
-			comments: Var("comments"),
-		}
-	);
-}
+			author: withAuthor ? GetMinimalUser(Var("authorRef")) : {},
+			comments: GetContentComments(postRef, "post", comments),
 
-export function GetPostWithMinimalAuthorAndViewerStats(postRef) {
-	return Let(
-		{
-			post: Get(postRef),
+			viewerRef: withViewerStats ? GetViewerRef() : null,
 
-			authorRef: Select(["data", "authorRef"], Var("post")),
-			author: this.GetMinimalUser(Var("authorRef")),
+			viewerPostStatsMatch: withViewerStats
+				? Match(
+						Index("stats_by_postRef_and_userRef"),
+						Var("viewerRef"),
+						postRef
+				  )
+				: null,
+			viewerPostStats: withViewerStats
+				? If(
+						Exists(Var("viewerPostStatsMatch")),
+						Get(Var("viewerPostStatsMatch")),
+						{}
+				  )
+				: null,
 
-			viewerRef: GetViewerRef(),
-
-			viewerPostStatsMatch: Match(
-				Index("stats_by_postRef_and_userRef"),
-				Var("viewerRef"),
-				postRef
-			),
-			viewerPostStats: If(
-				Exists(Var("viewerPostStatsMatch")),
-				Get(Var("viewerPostStatsMatch")),
-				{}
-			),
-		},
-		{
-			author: Var("author"),
-			post: Var("post"),
 			viewerPostStats: Var("viewerPostStats"),
-		}
-	);
-}
-
-export function GetPostsWithMinimalAuthorAndViewerStats(postRefs) {
-	return Let(
-		{
-			posts: Map(
-				(postRef) => GetPostWithMinimalAuthorAndViewerStats(postRef),
-				postRefs
-			),
 		},
 		{
-			posts: Var("posts"),
+			post: Var("post"),
+			author: Var("author"),
+			comments: Var("comments"),
+			viewerPostStats: Var("viewerPostStats"),
 		}
 	);
 }

@@ -7,27 +7,26 @@ import AuthorCard from "./AuthorCard";
 import TagList from "../lists/Tags";
 import Interactions from "../Interactions";
 
-export default function Post({ post, preview = false }) {
+export default function Post({ post, author, comments, minimal = false }) {
 	return (
 		<div className='p-4 rounded-lg border  space-y-2'>
 			<article
-				className={"prose" + (preview ? " line-clamp-5" : "")}
+				className={"prose" + (minimal ? " line-clamp-5" : "")}
 				dangerouslySetInnerHTML={{ __html: post.body }}
 			/>
-			{preview && (
-				<Link href={`/@/${post.author.username}/posts/${post.ref.id}`}>
+			{minimal && (
+				<Link href={`/@/${author.username}/posts/${post.ref.id}`}>
 					<a className='hover:underline font-bold'>seguir leyendo...</a>
 				</Link>
 			)}
 			<TagList tags={post.tags}></TagList>
 			<div className='flex justify-between items-center'>
-				<AuthorCard author={post.author} />
+				<AuthorCard author={author} />
 
 				<div className='flex space-x-1'>
 					<p className='text-right'>{moment(post.created).fromNow()}</p>
 					<button>
-						<Link
-							href={`/@/${post.author.username}/posts/${post.ref.id}/options`}>
+						<Link href={`/@/${author.username}/posts/${post.ref.id}/options`}>
 							<a>
 								<DotsHorizontalIcon className='text-gray-700 w-5' />
 							</a>
@@ -37,8 +36,10 @@ export default function Post({ post, preview = false }) {
 			</div>
 			<Interactions
 				contentRef={post.ref}
+				authorUsername={author.username}
 				startStats={post.stats}
-				startComments={post.comments}
+				startComments={comments}
+				minimal={minimal}
 			/>
 		</div>
 	);

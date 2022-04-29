@@ -35,6 +35,8 @@ export function FaunaToJSON(obj) {
 					Object.keys(d).forEach((dataKey) => {
 						obj[dataKey] = FaunaToJSON(d[dataKey]);
 					});
+				} else if (obj[k] === null || obj[k] === undefined) {
+					delete obj[k];
 				} else {
 					obj[k] = FaunaToJSON(obj[k]);
 				}

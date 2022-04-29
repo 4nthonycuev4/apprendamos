@@ -8,17 +8,16 @@ import FaunaClient from "../../../../../fauna";
 import Flashquiz from "../../../../../components/items/Flashquiz";
 import Comments from "../../../../../components/lists/Comments";
 
-export default function Quiz({ flashquiz }) {
+export default function Quiz({ flashquiz, author, comments }) {
 	return (
 		<>
 			<Head>
 				<title>
-					{flashquiz.author.name}: {flashquiz.title}
+					{author.name}: "{flashquiz.name}" flashquiz
 				</title>
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
-			<Flashquiz flashquiz={flashquiz} />
-			<Comments contentRef={flashquiz.ref} />
+			<Flashquiz flashquiz={flashquiz} author={author} comments={comments} />
 		</>
 	);
 }
@@ -27,11 +26,14 @@ export async function getServerSideProps(context) {
 	try {
 		const { flashquizId } = context.params;
 
-		const client = new FaunaClient();
+		const faunaClient = new FaunaClient();
 
-		const flashquiz = await client.getFlashquiz(flashquizId);
+		const { content, author, comments } = await faunaClient.getSingleContent({
+			collection: "Flashquizzes",
+			id: flashquizId,
+		});
 
-		return { props: { flashquiz } };
+		return { props: { flashquiz: content, author, comments } };
 	} catch (error) {
 		return { props: { errorCode: 500 } };
 	}

@@ -5,7 +5,7 @@ import Head from "next/head";
 import FaunaClient from "../../../../../fauna";
 import Post from "../../../../../components/items/Post";
 
-export default function PostPage({ post }) {
+export default function PostPage({ post, author, comments }) {
 	return (
 		<>
 			<Head>
@@ -20,8 +20,10 @@ export default function PostPage({ post }) {
 					src='https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js'
 					integrity='sha384-0fdwu/T/EQMsQlrHCCHoH10pkPLlKA1jL5dFyUOvB3lfeT2540/2g6YgSi2BL14p'
 					crossorigin='anonymous'></script>
+				<title>{author.name}'s post</title>
 			</Head>
-			<Post post={{ ...post }} />
+
+			<Post post={post} author={author} comments={comments} />
 		</>
 	);
 }
@@ -29,13 +31,16 @@ export default function PostPage({ post }) {
 export async function getServerSideProps(context) {
 	const { postId } = context.query;
 	const faunaClient = new FaunaClient();
-	const post = await faunaClient.getSinglePostWithMinimalAuthorAndComments(
-		postId
-	);
+	const { content, author, comments } = await faunaClient.getSingleContent({
+		collection: "Posts",
+		id: postId,
+	});
 
 	return {
 		props: {
-			post,
+			post: content,
+			author,
+			comments,
 		},
 	};
 }

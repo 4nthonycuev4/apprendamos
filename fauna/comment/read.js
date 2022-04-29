@@ -28,7 +28,6 @@ const {
 	Now,
 } = query;
 
-import { GetDocType } from "../utils/index";
 import { GetMinimalUser } from "../user/read";
 
 export function GetCommentWithMinimalAuthor(commentRef) {
@@ -53,7 +52,7 @@ export function GetCommentsWithMinimalAuthor(commentRefs) {
 	);
 }
 
-export function GetContentComments(contentRef, docType, size = 30) {
+export function GetContentComments(contentRef, docType, size) {
 	return GetCommentsWithMinimalAuthor(
 		Paginate(
 			Join(

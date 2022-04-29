@@ -1,6 +1,7 @@
 /** @format */
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/solid";
 import { HeartIcon as HeartIconOutline } from "@heroicons/react/outline";
@@ -15,20 +16,21 @@ import CommentForm from "./forms/CommentForm";
 import Comments from "./lists/Comments";
 
 export default function Interactions({
+	authorUsername,
 	contentRef,
-	minimal = false,
 	startViewerStats = { like: false, comments: 0, saved: false },
 	startStats,
 	startComments = [],
+	minimal = false,
 }) {
 	const [viewerStats, setViewerStats] = useState(startViewerStats);
 	const [stats, setStats] = useState(startStats);
 	const [comments, setComments] = useState(startComments);
 
-	useEffect(() => {
+	useEffect(async () => {
 		try {
 			const getViewerStats = async () => {
-				const res = await fetch("/api/interactions", {
+				return await fetch("/api/interactions", {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
@@ -36,12 +38,13 @@ export default function Interactions({
 					body: JSON.stringify({
 						ref: contentRef,
 					}),
-				}).then((res) => res.json());
-
-				setViewerStats(res);
+				})
+					.then((resx) => resx.json())
+					.catch((err) => console.log(err));
 			};
 			if (!viewerStats.ref) {
-				getViewerStats();
+				const x = await getViewerStats();
+				setViewerStats(x);
 			}
 		} catch (err) {
 			console.error(err);
@@ -50,7 +53,7 @@ export default function Interactions({
 
 	const likeContent = async () => {
 		try {
-			const res = await fetch("/api/interactions/likeContent", {
+			const resx = await fetch("/api/interactions/likeContent", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -60,8 +63,8 @@ export default function Interactions({
 				}),
 			}).then((res) => res.json());
 
-			setStats(res.stats);
-			setViewerStats(res.viewerStats);
+			setStats(resx.stats);
+			setViewerStats(resx.viewerStats);
 		} catch (err) {
 			console.error(err);
 		}
@@ -70,17 +73,28 @@ export default function Interactions({
 	return (
 		<div className='space-y-4'>
 			<div className='flex items-center justify-between'>
-				<CommentForm
-					contentRef={contentRef}
-					setViewerStats={setViewerStats}
-					setStats={setStats}
-					setComments={setComments}
-				/>
+				{minimal ? (
+					<Link
+						href={`/@/${authorUsername}/${contentRef.collection.toLowerCase()}/${
+							contentRef.id
+						}`}>
+						<a>
+							<h1>Ver comentarios</h1>
+						</a>
+					</Link>
+				) : (
+					<CommentForm
+						contentRef={contentRef}
+						setViewerStats={setViewerStats}
+						setStats={setStats}
+						setComments={setComments}
+					/>
+				)}
 				<div className='flex space-x-4'>
 					<div className='flex text-red-400'>
 						<span>{stats.likes}</span>
 						<button onClick={() => likeContent()}>
-							{viewerStats.like ? (
+							{viewerStats && viewerStats.like ? (
 								<HeartIconSolid className='w-5' />
 							) : (
 								<HeartIconOutline strokeWidth={1.5} className='w-5' />
@@ -90,7 +104,7 @@ export default function Interactions({
 					<div className='flex text-blue-400'>
 						<span>{stats.comments}</span>
 						<button>
-							{viewerStats.comments > 0 ? (
+							{viewerStats && viewerStats.comments > 0 ? (
 								<AnnotationIconSolid className='w-5' />
 							) : (
 								<AnnotationIconOutline strokeWidth={1.5} className='w-5' />
@@ -101,7 +115,7 @@ export default function Interactions({
 					<div className='flex text-gray-700'>
 						<span>{stats.saved}</span>
 						<button>
-							{viewerStats.saved > 0 ? (
+							{viewerStats && viewerStats.saved > 0 ? (
 								<BookmarkIconSolid className='w-5' />
 							) : (
 								<BookmarkIconOutline strokeWidth={1.5} className='w-5' />
@@ -110,7 +124,7 @@ export default function Interactions({
 					</div>
 				</div>
 			</div>
-			<Comments comments={comments} />
+			{!minimal && <Comments comments={comments} />}
 		</div>
 	);
 }

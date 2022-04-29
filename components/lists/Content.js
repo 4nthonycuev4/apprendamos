@@ -3,7 +3,7 @@
 import Flashquiz from "../items/Flashquiz";
 import Post from "../items/Post";
 
-export default function Content({ content, author }) {
+export default function Content({ content, author, minimal = false }) {
 	if (content.length < 1) {
 		return <h1>Sin contenido</h1>;
 	}
@@ -13,15 +13,16 @@ export default function Content({ content, author }) {
 				{content.map((x) => {
 					if (x.ref.collection === "Flashquizzes")
 						return (
-							<Flashquiz key={x.ref.id} flashquiz={{ ...x, author: author }} />
+							<Flashquiz
+								key={x.ref.id}
+								flashquiz={x}
+								author={author}
+								minimal={minimal}
+							/>
 						);
 					if (x.ref.collection === "Posts")
 						return (
-							<Post
-								key={x.ref.id}
-								post={{ ...x, author: author }}
-								preview={true}
-							/>
+							<Post key={x.ref.id} post={x} minimal={minimal} author={author} />
 						);
 				})}
 			</div>
@@ -31,9 +32,11 @@ export default function Content({ content, author }) {
 		<div className='space-y-4'>
 			{content.map((x) => {
 				if (x.ref.collection === "Flashquizzes")
-					return <Flashquiz key={x.ref.id} flashquiz={x} />;
+					return <Flashquiz key={x.ref.id} flashquiz={x} minimal={minimal} />;
 				if (x.ref.collection === "Posts")
-					return <Post post={x} key={x.ref.id} preview={true} />;
+					return (
+						<Post post={x} key={x.ref.id} preview={true} minimal={minimal} />
+					);
 			})}
 		</div>
 	);

@@ -8,7 +8,7 @@ import FaunaClient from "../../../fauna";
 import BigProfile from "../../../components/items/BigProfile";
 import Content from "../../../components/lists/Content";
 
-export default function Profile({ profile, errorCode, errorMessage }) {
+export default function Profile({ user, content, errorCode, errorMessage }) {
 	if (errorCode) {
 		return <Error statusCode={errorCode} title={errorMessage} />;
 	}
@@ -17,14 +17,11 @@ export default function Profile({ profile, errorCode, errorMessage }) {
 		<>
 			<Head>
 				<title>
-					{profile.name} (@{profile.username})
+					{user.name} (@{user.username})
 				</title>
 			</Head>
-			<BigProfile profile={profile} />
-			<Content
-				content={profile.content}
-				author={{ ...profile, content: null }}
-			/>
+			<BigProfile profile={user} />
+			<Content content={content} author={user} minimal={true} />
 		</>
 	);
 }
@@ -35,11 +32,14 @@ export async function getServerSideProps(context) {
 
 		const client = new FaunaClient();
 
-		const profile = await client.getUserWithContent(username);
+		const { user, content } = await client.getUserWithContent(username);
+
+		console.log("user", user);
 
 		return {
 			props: {
-				profile,
+				user,
+				content,
 			},
 		};
 	} catch (error) {

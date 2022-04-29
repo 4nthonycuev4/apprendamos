@@ -57,3 +57,28 @@ export function GetMinimalUser(userRef) {
 		}
 	);
 }
+
+export function GetUserWithContent(username) {
+	return Let(
+		{
+			userRef: Select(
+				[0],
+				Paginate(Match(Index("userRef_by_username"), username))
+			),
+			user: Get(Var("userRef")),
+			content: query.Map(
+				Paginate(
+					Join(
+						Match(Index("content_by_authorRef"), Var("userRef")),
+						Index("content_sorted_ts")
+					)
+				),
+				Lambda(["ts", "ref"], Get(Var("ref")))
+			),
+		},
+		{
+			user: Var("user"),
+			content: Var("content"),
+		}
+	);
+}

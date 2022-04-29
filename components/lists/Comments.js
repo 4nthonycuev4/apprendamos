@@ -5,8 +5,8 @@ import Comment from "../items/Comment";
 export default function CommentList({ comments = [] }) {
 	return (
 		<div className='space-y-2'>
-			{comments && Object.values(comments).length > 1 ? (
-				Object.values(comments).map(
+			{comments ? (
+				comments.map(
 					(e) =>
 						e.comment && (
 							<Comment

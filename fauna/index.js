@@ -5,8 +5,8 @@ import { GetContentComments } from "./comment/read";
 import { GetPostWithMinimalAuthorAndComments } from "./post/read";
 import { GetViewerContentStats } from "./interactions/read";
 import { LikeContent } from "./interactions/create";
-import { GetViewer } from "./user/read";
-
+import { GetViewer, GetUserWithContent } from "./user/read";
+import { GetContentWithAuthor } from "./content/read";
 import { Client, query } from "faunadb";
 import { CreateComment } from "./comment/create";
 
@@ -87,6 +87,33 @@ export default class FaunaClient {
 					docType,
 					message,
 					coins
+				)
+			)
+			.then((res) => FaunaToJSON(res))
+			.catch((error) => {
+				console.log("error", error);
+				return null;
+			});
+	}
+
+	async getUserWithContent(username) {
+		return await this.client
+			.query(GetUserWithContent(username))
+			.then((res) => FaunaToJSON(res))
+			.catch((error) => {
+				console.log("error", error);
+				return null;
+			});
+	}
+
+	async getSingleContent(ref) {
+		const docType = ParseDocType(ref);
+		return await this.client
+			.query(
+				GetContentWithAuthor(
+					Ref(Collection(ref.collection), ref.id),
+					docType,
+					30
 				)
 			)
 			.then((res) => FaunaToJSON(res))
