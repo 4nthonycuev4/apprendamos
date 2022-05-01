@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
+import { useUser } from "@auth0/nextjs-auth0";
+
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/solid";
 import { HeartIcon as HeartIconOutline } from "@heroicons/react/outline";
 
@@ -39,6 +41,8 @@ export default function Interactions({
 	const [stats, setStats] = useState(startStats);
 	const [comments, setComments] = useState(x);
 	const [cursor, setCursor] = useState(y);
+
+	const { user } = useUser();
 
 	useEffect(async () => {
 		try {
@@ -107,7 +111,7 @@ export default function Interactions({
 				<div className='flex space-x-4'>
 					<div className='flex text-red-400'>
 						<span>{stats.likes}</span>
-						<button onClick={() => likeContent()}>
+						<button disabled={!user?.ref} onClick={() => likeContent()}>
 							{viewerStats && viewerStats.like ? (
 								<HeartIconSolid className='w-5' />
 							) : (
@@ -117,7 +121,7 @@ export default function Interactions({
 					</div>
 					<div className='flex text-blue-400'>
 						<span>{stats.comments}</span>
-						<button>
+						<button disabled>
 							{viewerStats && viewerStats.comments > 0 ? (
 								<AnnotationIconSolid className='w-5' />
 							) : (
@@ -128,7 +132,7 @@ export default function Interactions({
 
 					<div className='flex text-gray-700'>
 						<span>{stats.saved}</span>
-						<button>
+						<button disabled>
 							{viewerStats && viewerStats.saved > 0 ? (
 								<BookmarkIconSolid className='w-5' />
 							) : (
