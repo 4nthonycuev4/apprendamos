@@ -11,7 +11,6 @@ export default function Account({ user }) {
 		<>
 			<Head>
 				<title>Edita tu Perfil</title>
-				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
 			<h1 className=' text-2xl mb-4'>Edita tu Perfil</h1>

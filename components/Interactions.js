@@ -17,16 +17,6 @@ import { BookmarkIcon as BookmarkIconOutline } from "@heroicons/react/outline";
 import CommentForm from "./forms/CommentForm";
 import Comments from "./lists/Comments";
 
-function ParseComments(x) {
-	if (typeof x === "object") {
-		let comments = Object.keys(x).map((key) => x[key]);
-		let cursor = comments.pop();
-		return { comments, cursor };
-	} else if (x.length) {
-		return { comments: x, cursor: null };
-	}
-}
-
 export default function Interactions({
 	authorUsername,
 	contentRef,
@@ -35,12 +25,9 @@ export default function Interactions({
 	startComments = [],
 	commentInput,
 }) {
-	const { comments: x, cursor: y } = ParseComments(startComments);
-
 	const [viewerStats, setViewerStats] = useState(startViewerStats);
 	const [stats, setStats] = useState(startStats);
-	const [comments, setComments] = useState(x);
-	const [cursor, setCursor] = useState(y);
+	const [comments, setComments] = useState(startComments);
 
 	const { user } = useUser();
 

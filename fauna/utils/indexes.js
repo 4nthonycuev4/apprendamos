@@ -14,7 +14,7 @@ CreateIndex({
 						{
 							likesfactor: 40,
 							commentsFactor: 50,
-							ageFactor: 0.005,
+							ageFactor: 0.01,
 
 							likes: Select(["data", "stats", "likes"], Var("content")),
 							comments: Select(["data", "stats", "comments"], Var("content")),

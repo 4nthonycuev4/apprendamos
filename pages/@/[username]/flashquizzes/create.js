@@ -21,7 +21,6 @@ export default function Home() {
 		<div>
 			<Head>
 				<title>Crear un Flashquiz</title>
-				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
 			<main className='max-w-lg mx-auto'>

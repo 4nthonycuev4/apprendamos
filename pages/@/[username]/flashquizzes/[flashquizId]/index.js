@@ -15,7 +15,6 @@ export default function Quiz({ flashquiz, author, comments }) {
 				<title>
 					{author.name}: "{flashquiz.name}" flashquiz
 				</title>
-				<link rel='icon' href='/favicon.ico' />
 			</Head>
 			<Flashquiz flashquiz={flashquiz} author={author} comments={comments} />
 		</>

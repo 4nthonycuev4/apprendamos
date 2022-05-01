@@ -21,17 +21,16 @@ export default function EditFlashquizPage({ flashquiz }) {
 		return <div>Cargando...</div>;
 	}
 	return (
-		<div>
+		<>
 			<Head>
 				<title>Editar Flashquiz</title>
-				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
 			<main className='max-w-lg mx-auto'>
 				<h1 className='text-gray-800  text-2xl mb-4'>Editar un flashquiz</h1>
 				<FlashquizForm flashquiz={flashquiz} />
 			</main>
-		</div>
+		</>
 	);
 }
 
