@@ -64,7 +64,7 @@ export default function FlashcardList({
 		<div>
 			<div className='flex space-x-2'>
 				<button
-					disabled={flashcards.length > 5}
+					disabled={flashcards.length > 30}
 					type='button'
 					onClick={() => {
 						handleAddItem();

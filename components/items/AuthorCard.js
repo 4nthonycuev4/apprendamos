@@ -9,8 +9,8 @@ export default function AuthorCard({ author }) {
 			<Image
 				src={author.picture}
 				alt='Picture of the user'
-				width={75}
-				height={75}
+				width={70}
+				height={70}
 				className='rounded-full'
 			/>
 			<div className='text-left'>
@@ -20,9 +20,6 @@ export default function AuthorCard({ author }) {
 						<h1 className='font-normal'>@{author.username}</h1>
 					</a>
 				</Link>
-				<button className='bg-red-600 text-white rounded-lg h-min px-4'>
-					Seguir
-				</button>
 			</div>
 		</div>
 	);

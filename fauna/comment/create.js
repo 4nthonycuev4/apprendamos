@@ -32,6 +32,7 @@ export function CreateComment(contentRef, docType, message, coins) {
 			comments[x] = 0;
 		}
 	});
+
 	return Let(
 		{
 			viewerRef: GetViewerRef(),
@@ -95,7 +96,7 @@ export function CreateComment(contentRef, docType, message, coins) {
 						following: false,
 						likes: {
 							flashquiz: 0,
-							flashquiz: 0,
+							post: 0,
 							question: 0,
 							answer: 0,
 						},
@@ -184,12 +185,12 @@ export function CreateComment(contentRef, docType, message, coins) {
 							}
 						)
 					),
-					comments: GetContentComments(contentRef, docType),
 				},
 				{
 					stats: Var("statsUpdated"),
 					viewerStats: Var("viewerStats"),
-					comments: Var("comments"),
+					comment: Var("comment"),
+					author: Var("viewer"),
 				}
 			)
 		)

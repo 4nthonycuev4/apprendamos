@@ -1,12 +1,8 @@
 /** @format */
 import { query } from "faunadb";
 const {
-	Call,
-	Create,
-	Collection,
 	CurrentIdentity,
 	Paginate,
-	Documents,
 	Lambda,
 	Get,
 	Var,
@@ -15,17 +11,11 @@ const {
 	Match,
 	Index,
 	Join,
-	If,
-	Exists,
-	Update,
-	Do,
-	Add,
-	Subtract,
-	Not,
-	Contains,
-	Abort,
-	Now,
 } = query;
+
+export function GetUserRefByUsername(username) {
+	return Select([0], Paginate(Match(Index("userRef_by_username"), username)));
+}
 
 export function GetUserRefByAccountConnection(accountConnection) {
 	return Select(

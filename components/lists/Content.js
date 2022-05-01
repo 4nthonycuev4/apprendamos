@@ -3,7 +3,13 @@
 import Flashquiz from "../items/Flashquiz";
 import Post from "../items/Post";
 
-export default function Content({ content, author, minimal = false }) {
+export default function Content({
+	content,
+	author,
+	minimal = false,
+	showComments = false,
+	commentInput = false,
+}) {
 	if (content.length < 1) {
 		return <h1>Sin contenido</h1>;
 	}
@@ -18,11 +24,18 @@ export default function Content({ content, author, minimal = false }) {
 								flashquiz={x}
 								author={author}
 								minimal={minimal}
+								commentInput={commentInput}
 							/>
 						);
 					if (x.ref.collection === "Posts")
 						return (
-							<Post key={x.ref.id} post={x} minimal={minimal} author={author} />
+							<Post
+								key={x.ref.id}
+								post={x}
+								minimal={minimal}
+								author={author}
+								commentInput={commentInput}
+							/>
 						);
 				})}
 			</div>
@@ -31,11 +44,29 @@ export default function Content({ content, author, minimal = false }) {
 	return (
 		<div className='space-y-4'>
 			{content.map((x) => {
-				if (x.ref.collection === "Flashquizzes")
-					return <Flashquiz key={x.ref.id} flashquiz={x} minimal={minimal} />;
-				if (x.ref.collection === "Posts")
+				if (x.content.ref.collection === "Flashquizzes")
 					return (
-						<Post post={x} key={x.ref.id} preview={true} minimal={minimal} />
+						<Flashquiz
+							key={x.content.ref.id}
+							flashquiz={x.content}
+							minimal={minimal}
+							author={x.author}
+							startViewerStats={x.viewerStats}
+							comments={x.comments}
+							showComments={showComments}
+						/>
+					);
+				if (x.content.ref.collection === "Posts")
+					return (
+						<Post
+							key={x.content.ref.id}
+							post={x.content}
+							minimal={minimal}
+							author={x.author}
+							startViewerStats={x.viewerStats}
+							comments={x.comments}
+							showComments={showComments}
+						/>
 					);
 			})}
 		</div>

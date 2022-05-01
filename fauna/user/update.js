@@ -2,13 +2,12 @@
 
 import { GetViewerRef } from "./read";
 
-export function UpdateUser(name, username, about, picture) {
+import { query } from "faunadb";
+
+const { Update } = query;
+
+export function UpdateViewer(data) {
 	return Update(GetViewerRef(), {
-		data: {
-			name,
-			username,
-			about,
-			picture,
-		},
+		data: data,
 	});
 }

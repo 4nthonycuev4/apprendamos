@@ -6,7 +6,7 @@ export default async function Content(req, res) {
 	try {
 		const client = new FaunaClient();
 
-		const content = await client.getContent();
+		const content = await client.getContent(req.query?.username || null);
 
 		res.status(200).json(content);
 	} catch (error) {

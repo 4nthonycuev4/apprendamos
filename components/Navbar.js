@@ -3,7 +3,12 @@
 import { useUser } from "@auth0/nextjs-auth0";
 import Link from "next/link";
 import Image from "next/image";
-import { LoginIcon, CollectionIcon, PlusIcon } from "@heroicons/react/outline";
+import {
+	LoginIcon,
+	CollectionIcon,
+	PlusIcon,
+	LogoutIcon,
+} from "@heroicons/react/solid";
 
 export default function Navbar() {
 	const { user, error, isLoading } = useUser();
@@ -14,7 +19,8 @@ export default function Navbar() {
 				px-4 py-1 top-0 sticky 
 				flex justify-between items-center
 				bg-white/30 backdrop-blur-md
-				border-b'>
+				border-b
+				z-50'>
 			<Link href='/'>
 				<a className='flex text-center text-gray-800'>
 					<CollectionIcon className='w-6 h-6' />
@@ -24,6 +30,13 @@ export default function Navbar() {
 			</Link>
 			{!error && !isLoading && user?.ref ? (
 				<div className='flex space-x-2 items-center'>
+					<button className='rounded-full hover:bg-gray-200 p-2'>
+						<Link href='/api/auth/logout'>
+							<a>
+								<LogoutIcon className='h-4 w-4 text-gray-600' />
+							</a>
+						</Link>
+					</button>
 					<button className='rounded-full hover:bg-gray-200 p-2'>
 						<Link href={`/@/${user.username}/create`}>
 							<a>

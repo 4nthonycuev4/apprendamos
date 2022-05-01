@@ -15,15 +15,12 @@ const {
 	Add,
 } = query;
 
-export function CreateUser(name, username, about, picture) {
+export function CreateUser(data) {
 	return Let(
 		{
 			user: Create(Collection("Users"), {
 				data: {
-					name,
-					username,
-					about,
-					picture,
+					...data,
 					joined: Now(),
 					stats: {
 						received: { likes: 0, saved: 0, comments: 0 },

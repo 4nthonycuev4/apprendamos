@@ -5,13 +5,12 @@ import { handleAuth, handleCallback } from "@auth0/nextjs-auth0";
 import FaunaClient from "../../../fauna";
 
 const afterCallback = async (req, res, session, state) => {
-	console.log("session.user", session.user);
 	const client = new FaunaClient(session.accessToken, null, session.user.sub);
 	const accountConnection = session.user.sub;
 	const viewer = await client.getViewer();
 
 	if (!viewer) {
-		state.returnTo = "/settings/user/create";
+		state.returnTo = "/register";
 		return session;
 	} else {
 		session.user = viewer;

@@ -6,7 +6,7 @@ import Head from "next/head";
 
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 
-import UserForm from "../../../components/forms/UserForm";
+import UserForm from "../components/forms/UserForm";
 
 export default function Account({ user }) {
 	const router = useRouter();

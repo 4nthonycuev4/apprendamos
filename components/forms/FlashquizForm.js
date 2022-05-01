@@ -8,8 +8,16 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 
 import FlashcardList from "../lists/FlashcardList";
+import TagsInput from "../TagsInput";
+
+const defaultTags = [
+	{ parsed: "hello_w0rld", raw: "Hello w0rld" },
+	{ parsed: "bye", raw: "Bye " },
+];
 
 export default function FlashquizForm({ flashquiz }) {
+	const [tags, setTags] = useState(flashquiz?.tags || defaultTags);
+
 	const [sending, setSending] = useState(false);
 
 	const [flashcards, setFlashcards] = useState(
@@ -45,18 +53,23 @@ export default function FlashquizForm({ flashquiz }) {
 
 	const createQuiz = async (data) => {
 		try {
-			const { name, tags } = data;
+			const { name } = data;
 			deleteEmptyFlashcards();
-			const flashquiz = await fetch("/api/flashquizzes/create", {
+			const res = await fetch("/api/content/create", {
 				method: "POST",
-				body: JSON.stringify({ name, tags, flashcards }),
+				body: JSON.stringify({
+					data: { name, tags, flashcards },
+					type: "flashquiz",
+				}),
 				headers: {
 					"Content-Type": "application/json",
 				},
-			}).then((res) => res.json());
+			})
+				.then((res) => res.json())
+				.catch((err) => console.error(err));
 
 			router.push(
-				`/@/${flashquiz.author.username}/flashquizzes/${flashquiz.ref.id}/`
+				`/@/${res.author.username}/flashquizzes/${res.content.ref.id}/`
 			);
 		} catch (err) {
 			console.error(err);
@@ -88,7 +101,7 @@ export default function FlashquizForm({ flashquiz }) {
 
 	const deleteQuiz = async () => {
 		setSending(true);
-		const q = await fetch(`/api/quizzes/${flashquiz.id}/delete`, {
+		const q = await fetch("/api/content/create", {
 			method: "DELETE",
 			headers: {
 				"Content-Type": "application/json",
@@ -118,32 +131,7 @@ export default function FlashquizForm({ flashquiz }) {
 					<p className='font-bold text-red-900'>El nombre es obligatorio</p>
 				)}
 			</div>
-			<div className='mb-4'>
-				<label
-					className='block text-gray-800  text-sm font-bold mb-1 mr-5'
-					htmlFor='tags'>
-					Tags separados por comas
-				</label>
-				<input
-					type='text'
-					id='tags'
-					{...register("tags", { pattern: /^[a-zA-Z0-9,_-]*$/ })}
-					className='w-full border bg-white rounded px-3 py-2 outline-none text-gray-700'
-					placeholder='Biologia,Historia,filosofia,2da_creacion'
-				/>
-				{errors.tags && (
-					<p className='font-bold text-red-900'>
-						Solo están permitidos
-						<ul className='pl-10 list-disc'>
-							<li>Letras (a-z, A-Z)</li>
-							<li>Números (0-9)</li>
-							<li>Guiones bajos (_)</li>
-							<li>Guiones (-)</li>
-						</ul>
-						Recuerda que las comas (,) son separadoras de tags
-					</p>
-				)}
-			</div>
+			<TagsInput tags={tags} handleOnTagsChange={setTags} />
 
 			<div className='mb-4'>
 				<label

@@ -6,6 +6,7 @@ import { PaperAirplaneIcon } from "@heroicons/react/solid";
 
 export default function CommentForm({
 	contentRef,
+	comments,
 	setViewerStats,
 	setStats,
 	setComments,
@@ -58,7 +59,9 @@ export default function CommentForm({
 			}).then((res) => res.json());
 			setViewerStats(res.viewerStats);
 			setStats(res.stats);
-			setComments(res.comments);
+			setComments(
+				[{ comment: res.comment, author: res.author }].concat(comments)
+			);
 
 			reset();
 		} catch (err) {

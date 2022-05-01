@@ -20,7 +20,7 @@ const {
 	Now,
 } = query;
 
-import { GetViewerRef } from "../user/read";
+import { GetViewerRef, GetUserRefByUsername } from "../user/read";
 
 export function LikeContent(contentRef, docType) {
 	const likes = {};
@@ -90,7 +90,7 @@ export function LikeContent(contentRef, docType) {
 						},
 						comments: {
 							flashquiz: 0,
-							flashquiz: 0,
+							post: 0,
 							question: 0,
 							answer: 0,
 						},
@@ -167,5 +167,86 @@ export function LikeContent(contentRef, docType) {
 				}
 			)
 		)
+	);
+}
+
+export function FollowUser(username) {
+	return Let(
+		{
+			viewerRef: GetViewerRef(),
+			authorRef: GetUserRefByUsername(username),
+			viewerAuthorStatsRefMatch: Match(
+				Index("stats_by_authorRef_and_userRef"),
+				Var("authorRef"),
+				Var("viewerRef")
+			),
+			viewerAuthorStats: If(
+				Exists(Var("viewerAuthorStatsRefMatch")),
+				Get(Var("viewerAuthorStatsRefMatch")),
+				null
+			),
+
+			viewerAuthorStatsUpdated: If(
+				Not(Exists(Var("viewerAuthorStatsRefMatch"))),
+				Create(Collection("UserAuthorStats"), {
+					data: {
+						userRef: Var("viewerRef"),
+						authorRef: Var("authorRef"),
+						following: true,
+						likes: { flashquiz: 0, post: 0, question: 0, answer: 0 },
+						saved: {
+							flashquiz: 0,
+							post: 0,
+							question: 0,
+							answer: 0,
+						},
+						comments: {
+							flashquiz: 0,
+							post: 0,
+							question: 0,
+							answer: 0,
+						},
+						created: Now(),
+					},
+				}),
+				Update(Select(["ref"], Var("viewerAuthorStats")), {
+					data: {
+						following: Not(
+							Select(["data", "following"], Var("viewerAuthorStats"))
+						),
+					},
+				})
+			),
+
+			newFollowingStatus: Select(
+				["data", "following"],
+				Var("viewerAuthorStatsUpdated")
+			),
+
+			author: Update(Var("authorRef"), {
+				data: {
+					stats: {
+						followers: Add(
+							Select(["data", "stats", "followers"], Get(Var("authorRef"))),
+							If(Var("newFollowingStatus"), 1, -1)
+						),
+					},
+				},
+			}),
+			viewer: Update(Var("viewerRef"), {
+				data: {
+					stats: {
+						following: Add(
+							Select(["data", "stats", "following"], Get(Var("authorRef"))),
+							If(Var("newFollowingStatus"), 1, -1)
+						),
+					},
+				},
+			}),
+		},
+		{
+			stats: Select(["data", "stats"], Var("author")),
+			viewerStats: Var("viewerAuthorStatsUpdated"),
+		}
 	);
 }

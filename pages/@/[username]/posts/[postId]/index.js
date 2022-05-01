@@ -31,16 +31,16 @@ export default function PostPage({ post, author, comments }) {
 export async function getServerSideProps(context) {
 	const { postId } = context.query;
 	const faunaClient = new FaunaClient();
-	const { content, author, comments } = await faunaClient.getSingleContent({
+	const res = await faunaClient.getSingleContent({
 		collection: "Posts",
 		id: postId,
 	});
 
 	return {
 		props: {
-			post: content,
-			author,
-			comments,
+			post: res.content,
+			author: res.author,
+			comments: res.comments,
 		},
 	};
 }

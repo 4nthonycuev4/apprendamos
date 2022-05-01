@@ -2,9 +2,9 @@
 
 import { getAccessToken, withApiAuthRequired } from "@auth0/nextjs-auth0";
 
-import FaunaClient from "../../../fauna";
+import FaunaClient from "../../../../fauna";
 
-export default withApiAuthRequired(async function likeContent(req, res) {
+export default withApiAuthRequired(async function like(req, res) {
 	try {
 		const { ref } = req.body;
 

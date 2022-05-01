@@ -15,22 +15,35 @@ import { BookmarkIcon as BookmarkIconOutline } from "@heroicons/react/outline";
 import CommentForm from "./forms/CommentForm";
 import Comments from "./lists/Comments";
 
+function ParseComments(x) {
+	if (typeof x === "object") {
+		let comments = Object.keys(x).map((key) => x[key]);
+		let cursor = comments.pop();
+		return { comments, cursor };
+	} else if (x.length) {
+		return { comments: x, cursor: null };
+	}
+}
+
 export default function Interactions({
 	authorUsername,
 	contentRef,
 	startViewerStats = { like: false, comments: 0, saved: false },
 	startStats,
 	startComments = [],
-	minimal = false,
+	commentInput,
 }) {
+	const { comments: x, cursor: y } = ParseComments(startComments);
+
 	const [viewerStats, setViewerStats] = useState(startViewerStats);
 	const [stats, setStats] = useState(startStats);
-	const [comments, setComments] = useState(startComments);
+	const [comments, setComments] = useState(x);
+	const [cursor, setCursor] = useState(y);
 
 	useEffect(async () => {
 		try {
 			const getViewerStats = async () => {
-				return await fetch("/api/interactions", {
+				return await fetch("/api/interactions/content", {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
@@ -53,7 +66,7 @@ export default function Interactions({
 
 	const likeContent = async () => {
 		try {
-			const resx = await fetch("/api/interactions/likeContent", {
+			const resx = await fetch("/api/interactions/content/like", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -73,7 +86,15 @@ export default function Interactions({
 	return (
 		<div className='space-y-4'>
 			<div className='flex items-center justify-between'>
-				{minimal ? (
+				{commentInput ? (
+					<CommentForm
+						contentRef={contentRef}
+						comments={comments}
+						setViewerStats={setViewerStats}
+						setStats={setStats}
+						setComments={setComments}
+					/>
+				) : (
 					<Link
 						href={`/@/${authorUsername}/${contentRef.collection.toLowerCase()}/${
 							contentRef.id
@@ -82,13 +103,6 @@ export default function Interactions({
 							<h1>Ver comentarios</h1>
 						</a>
 					</Link>
-				) : (
-					<CommentForm
-						contentRef={contentRef}
-						setViewerStats={setViewerStats}
-						setStats={setStats}
-						setComments={setComments}
-					/>
 				)}
 				<div className='flex space-x-4'>
 					<div className='flex text-red-400'>
@@ -124,7 +138,7 @@ export default function Interactions({
 					</div>
 				</div>
 			</div>
-			{!minimal && <Comments comments={comments} />}
+			{comments.length > 0 && <Comments comments={comments} />}
 		</div>
 	);
 }

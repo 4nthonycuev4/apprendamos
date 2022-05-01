@@ -1,16 +1,35 @@
 /** @format */
-
-import { FaunaToJSON, MDtoHTML, ParseDocType } from "./utils";
-import { GetContentComments } from "./comment/read";
-import { GetPostWithMinimalAuthorAndComments } from "./post/read";
-import { GetViewerContentStats } from "./interactions/read";
-import { LikeContent } from "./interactions/create";
-import { GetViewer, GetUserWithContent } from "./user/read";
-import { GetContentWithAuthor } from "./content/read";
 import { Client, query } from "faunadb";
-import { CreateComment } from "./comment/create";
 
-const { Ref, Collection } = query;
+import { GetViewer, GetUserWithContent } from "./user/read";
+import {
+	GetViewerContentStats,
+	GetViewerAuthorStats,
+} from "./interactions/read";
+
+import { UpdateViewer } from "./user/update";
+import { CreateUser } from "./user/create";
+
+import { LikeContent, FollowUser } from "./interactions/create";
+import { GetContentWithAuthor } from "./content/read";
+import { CreateComment } from "./comment/create";
+import { CreateContent } from "./content/create";
+
+import { FaunaToJSON, ParseDocType } from "./utils";
+
+const {
+	Ref,
+	Collection,
+	Paginate,
+	Join,
+	Match,
+	Var,
+	Lambda,
+	Index,
+	If,
+	Equals,
+	Select,
+} = query;
 
 export default class FaunaClient {
 	constructor(secret) {
@@ -49,6 +68,26 @@ export default class FaunaClient {
 				const doc = FaunaToJSON(res);
 				return { ...doc.post, author: doc.author, comments: doc.comments };
 			})
+			.catch((error) => {
+				console.log("error", error);
+				return null;
+			});
+	}
+
+	async getViewerAuthorStats(username) {
+		return await this.client
+			.query(GetViewerAuthorStats(username))
+			.then((res) => FaunaToJSON(res))
+			.catch((error) => {
+				console.log("error", error);
+				return {};
+			});
+	}
+
+	async followUser(username) {
+		return await this.client
+			.query(FollowUser(username))
+			.then((res) => FaunaToJSON(res))
 			.catch((error) => {
 				console.log("error", error);
 				return null;
@@ -116,6 +155,88 @@ export default class FaunaClient {
 					30
 				)
 			)
+			.then((res) => FaunaToJSON(res))
+			.catch((error) => {
+				console.log("error", error);
+				return null;
+			});
+	}
+
+	async getContent(username) {
+		return await this.client
+			.query(
+				query.Map(
+					Paginate(
+						Join(Match("all_content"), Index("content_sorted_popularity"))
+					),
+					Lambda(
+						["score", "ref"],
+						If(
+							Equals(Select(["collection", "id"], Var("ref")), "Posts"),
+							GetContentWithAuthor(Var("ref"), "post", 3, username),
+							GetContentWithAuthor(Var("ref"), "flashquiz", 3, username)
+						)
+					)
+				)
+			)
+			.then((res) => FaunaToJSON(res))
+			.catch((error) => {
+				console.log("error", error);
+				return null;
+			});
+	}
+
+	async createContent(data, type) {
+		if (type === "post") {
+			if (data.bodyHTML === undefined || data.bodyHTML === "") {
+				return null;
+			}
+		}
+
+		return await this.client
+			.query(CreateContent(data, type))
+			.then((res) => FaunaToJSON(res))
+			.catch((error) => {
+				console.log("error", error);
+				return null;
+			});
+	}
+
+	async getContentByTag(tag_parsed) {
+		return await this.client
+			.query(
+				query.Map(
+					Paginate(Match(Index("content_by_tag"), tag_parsed)),
+					Lambda(
+						["score", "ref"],
+						If(
+							Equals(Select(["collection", "id"], Var("ref")), "Posts"),
+							GetContentWithAuthor(Var("ref"), "post", 3),
+							GetContentWithAuthor(Var("ref"), "flashquiz", 3)
+						)
+					)
+				)
+			)
+			.then((res) => FaunaToJSON(res))
+			.catch((error) => {
+				console.log("error", error);
+				return null;
+			});
+	}
+
+	async updateViewer(data) {
+		return await this.client
+			.query(UpdateViewer(data))
+			.then((res) => FaunaToJSON(res))
+			.catch((error) => {
+				console.log("error", error);
+				return null;
+			});
+	}
+
+	async register(data) {
+		return await this.client
+			.query(CreateUser(data))
 			.then((res) => FaunaToJSON(res))
 			.catch((error) => {
 				console.log("error", error);

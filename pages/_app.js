@@ -20,17 +20,16 @@ export default function MyApp({ Component, pageProps }) {
 			<UserProvider>
 				<SWRConfig
 					value={{
-						refreshInterval: 5000,
+						refreshInterval: 30000,
 						fetcher: (resource, init) =>
 							fetch(resource, init).then((res) => res.json()),
 					}}>
 					<div className='w-full z-0'>
 						<div className='max-w-2xl mx-auto border-x-2'>
 							<Navbar />
-							<main className='pt-1 pb-4 space-y-4 px-4 min-h-[90vh]'>
+							<main className='pt-1 pb-4 space-y-4 px-4'>
 								<Component {...pageProps} />
 							</main>
-							<Footer />
 						</div>
 					</div>
 				</SWRConfig>

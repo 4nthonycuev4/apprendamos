@@ -4,7 +4,7 @@ import Link from "next/link";
 import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import moment from "moment";
 
-import TagList from "../lists/Tags";
+import Tags from "../Tags";
 import CardView from "./CardView";
 import AuthorCard from "./AuthorCard";
 import Interactions from "../Interactions";
@@ -13,7 +13,8 @@ export default function Flashquiz({
 	flashquiz,
 	author,
 	comments,
-	minimal = false,
+	startViewerStats,
+	commentInput = true,
 }) {
 	return (
 		<div className='p-4 rounded-lg border space-y-2'>
@@ -21,7 +22,7 @@ export default function Flashquiz({
 				<a className='hover:underline font-bold text-xl'>{flashquiz.name}</a>
 			</Link>
 			<CardView cards={flashquiz.flashcards} canEdit={false} />
-			<TagList tags={flashquiz.tags}></TagList>
+			<Tags tags={flashquiz.tags}></Tags>
 			<div className='flex justify-between items-center'>
 				<AuthorCard author={author} />
 
@@ -39,10 +40,11 @@ export default function Flashquiz({
 			</div>
 			<Interactions
 				authorUsername={author.username}
+				startViewerStats={startViewerStats}
 				contentRef={flashquiz.ref}
 				startStats={flashquiz.stats}
 				startComments={comments}
-				minimal={minimal}
+				commentInput={commentInput}
 			/>
 		</div>
 	);

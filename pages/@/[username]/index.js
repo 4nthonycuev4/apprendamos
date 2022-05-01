@@ -34,8 +34,6 @@ export async function getServerSideProps(context) {
 
 		const { user, content } = await client.getUserWithContent(username);
 
-		console.log("user", user);
-
 		return {
 			props: {
 				user,

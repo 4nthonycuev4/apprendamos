@@ -2,16 +2,16 @@
 
 import { query } from "faunadb";
 
-const { Let, Select, Index, Get, If, Var, Exists } = query;
+const { Let, Select, Index, Get, If, Var, Exists, Match } = query;
 
-import { GetViewerRef, GetMinimalUser } from "../user/read";
+import { GetUserRefByUsername, GetMinimalUser } from "../user/read";
 import { GetContentComments } from "../comment/read";
 
 export function GetContentWithAuthor(
 	contentRef,
 	docType,
-	comments = 3,
-	withViewerStats = false
+	comments,
+	viewerUsername = null
 ) {
 	return Let(
 		{
@@ -22,21 +22,21 @@ export function GetContentWithAuthor(
 
 			comments: GetContentComments(contentRef, docType, comments),
 
-			viewerRef: withViewerStats ? GetViewerRef() : null,
+			viewerRef: viewerUsername ? GetUserRefByUsername(viewerUsername) : null,
 
-			viewerContentStatsMatch: withViewerStats
+			viewerContentStatsMatch: viewerUsername
 				? Match(
 						Index(`stats_by_${docType}Ref_and_userRef`),
-						Var("viewerRef"),
-						contentRef
+						contentRef,
+						Var("viewerRef")
 				  )
 				: null,
 
-			viewerStats: withViewerStats
+			viewerStats: viewerUsername
 				? If(
 						Exists(Var("viewerContentStatsMatch")),
 						Get(Var("viewerContentStatsMatch")),
-						{}
+						{ ref: "not_found" }
 				  )
 				: null,
 		},
@@ -44,6 +44,7 @@ export function GetContentWithAuthor(
 			content: Var("content"),
 			author: Var("author"),
 			comments: Var("comments"),
+			viewerRef: Var("viewerRef"),
 			viewerStats: Var("viewerStats"),
 		}
 	);

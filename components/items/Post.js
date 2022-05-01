@@ -4,22 +4,29 @@ import moment from "moment";
 import { DotsHorizontalIcon } from "@heroicons/react/outline";
 
 import AuthorCard from "./AuthorCard";
-import TagList from "../lists/Tags";
+import Tags from "../Tags";
 import Interactions from "../Interactions";
 
-export default function Post({ post, author, comments, minimal = false }) {
+export default function Post({
+	post,
+	author,
+	comments,
+	startViewerStats,
+	minimal,
+	commentInput = true,
+}) {
 	return (
 		<div className='p-4 rounded-lg border  space-y-2'>
 			<article
 				className={"prose" + (minimal ? " line-clamp-5" : "")}
-				dangerouslySetInnerHTML={{ __html: post.body }}
+				dangerouslySetInnerHTML={{ __html: post.bodyHTML }}
 			/>
 			{minimal && (
 				<Link href={`/@/${author.username}/posts/${post.ref.id}`}>
 					<a className='hover:underline font-bold'>seguir leyendo...</a>
 				</Link>
 			)}
-			<TagList tags={post.tags}></TagList>
+			<Tags tags={post.tags}></Tags>
 			<div className='flex justify-between items-center'>
 				<AuthorCard author={author} />
 
@@ -37,9 +44,10 @@ export default function Post({ post, author, comments, minimal = false }) {
 			<Interactions
 				contentRef={post.ref}
 				authorUsername={author.username}
+				startViewerStats={startViewerStats}
 				startStats={post.stats}
 				startComments={comments}
-				minimal={minimal}
+				commentInput={commentInput}
 			/>
 		</div>
 	);
