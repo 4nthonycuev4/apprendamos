@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import moment from "moment";
 
 export default function Comment({ comment, author }) {
 	return (
@@ -21,6 +22,8 @@ export default function Comment({ comment, author }) {
 						<span className='font-bold'>{author.name}</span>
 						<span> · </span>
 						<span>@{author.username}</span>
+						<span> · </span>
+						<span>{moment(comment.created).fromNow()}</span>
 					</a>
 				</Link>
 				<p>{comment.message}</p>

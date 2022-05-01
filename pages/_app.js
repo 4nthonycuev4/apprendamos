@@ -1,7 +1,7 @@
 /** @format */
 
 import React from "react";
-import useSWR, { SWRConfig } from "swr";
+import { SWRConfig } from "swr";
 
 import { UserProvider } from "@auth0/nextjs-auth0";
 
@@ -10,9 +10,25 @@ import Navbar from "../components/Navbar";
 
 import moment from "moment";
 import "moment/locale/es";
-import Footer from "../components/Footer";
 
-moment.updateLocale("es");
+moment.updateLocale("es", {
+	relativeTime: {
+		future: "in %s",
+		past: "%s",
+		s: "justo ahora",
+		ss: "%ss",
+		m: "1 min",
+		mm: "%dm",
+		h: "1 hora",
+		hh: "%dh",
+		d: "1 día",
+		dd: "%dd",
+		M: "1 mes",
+		MM: "%dM",
+		y: "1 año",
+		yy: "%da",
+	},
+});
 
 export default function MyApp({ Component, pageProps }) {
 	return (

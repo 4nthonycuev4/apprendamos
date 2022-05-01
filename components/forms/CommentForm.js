@@ -85,6 +85,7 @@ export default function CommentForm({
 					{...register("comment", { required: true })}
 					type='text'
 					name='comment'
+					disabled={!user}
 					className='rounded-md w-3/4'
 					placeholder={
 						!isLoading && !error && user

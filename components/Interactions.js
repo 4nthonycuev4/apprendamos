@@ -129,7 +129,7 @@ export default function Interactions({
 					</div>
 				</div>
 			</div>
-			{comments.length > 0 && <Comments comments={comments} />}
+			<Comments comments={comments} />
 		</div>
 	);
 }

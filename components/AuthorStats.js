@@ -66,6 +66,7 @@ export default function AuthorStats({ startStats, username }) {
 			) : viewerStats.following ? (
 				<button
 					type='button'
+					disabled={!user}
 					onClick={follow}
 					className='text-white text-sm font-normal px-4 rounded w-32 h-6 bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600'>
 					Siguiendo
@@ -73,6 +74,7 @@ export default function AuthorStats({ startStats, username }) {
 			) : (
 				<button
 					type='button'
+					disabled={!user}
 					onClick={follow}
 					className='text-white text-sm font-normal px-4 rounded w-32 h-6 bg-black hover:bg-slate-800'>
 					Seguir
