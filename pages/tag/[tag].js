@@ -13,6 +13,17 @@ export default function TagPage({ content }) {
 		<>
 			<Head>
 				<title>#{tag} posts & flashquizzes</title>
+				<link
+					rel='stylesheet'
+					href='https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css'
+					integrity='sha384-KiWOvVjnN8qwAZbuQyWDIbfCLFhLXNETzBQjA/92pIowpC0d2O3nppDGQVgwd2nB'
+					crossorigin='anonymous'
+				/>
+				<script
+					defer
+					src='https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js'
+					integrity='sha384-0fdwu/T/EQMsQlrHCCHoH10pkPLlKA1jL5dFyUOvB3lfeT2540/2g6YgSi2BL14p'
+					crossorigin='anonymous'></script>
 			</Head>
 			<h1 className='text-2xl font-extrabold text-center mb-2'>
 				Contenido con #{tag}
