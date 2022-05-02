@@ -5,8 +5,6 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-import { useForm } from "react-hook-form";
-
 import FlashcardList from "../lists/FlashcardList";
 import TagsInput from "../TagsInput";
 
@@ -17,9 +15,7 @@ const defaultTags = [
 
 export default function FlashquizForm({ flashquiz }) {
 	const [tags, setTags] = useState(flashquiz?.tags || defaultTags);
-
-	const [sending, setSending] = useState(false);
-
+	const [name, setName] = useState(flashquiz?.name || "");
 	const [flashcards, setFlashcards] = useState(
 		flashquiz?.flashcards || [
 			{
@@ -30,16 +26,8 @@ export default function FlashquizForm({ flashquiz }) {
 		]
 	);
 
-	const {
-		register,
-		handleSubmit,
-		formState: { errors, isSubmitting },
-	} = useForm({
-		defaultValues: {
-			name: flashquiz?.name,
-			tags: flashquiz?.tags.join(),
-		},
-	});
+	const [error, setError] = useState(null);
+	const [sending, setSending] = useState(false);
 
 	const router = useRouter();
 
@@ -51,9 +39,9 @@ export default function FlashquizForm({ flashquiz }) {
 		setFlashcards(items1);
 	}
 
-	const createQuiz = async (data) => {
+	const createQuiz = async () => {
 		try {
-			const { name } = data;
+			setSending(true);
 			deleteEmptyFlashcards();
 			const res = await fetch("/api/content/create", {
 				method: "POST",
@@ -71,25 +59,25 @@ export default function FlashquizForm({ flashquiz }) {
 			router.push(
 				`/@/${res.author.username}/flashquizzes/${res.content.ref.id}/`
 			);
+			setTimeout(() => setSending(false), 2000);
 		} catch (err) {
 			console.error(err);
 		}
 	};
-	let flashquizId;
-	if (flashquiz) {
-		flashquizId = flashquiz.ref.id;
-	}
-	const updateQuiz = async (data) => {
+
+	const updateQuiz = async () => {
 		try {
-			const { name, tags } = data;
 			deleteEmptyFlashcards();
-			const flashquiz = await fetch(`/api/flashquizzes/${flashquizId}/update`, {
-				method: "PUT",
-				body: JSON.stringify({ name, tags, flashcards }),
-				headers: {
-					"Content-Type": "application/json",
-				},
-			}).then((res) => res.json());
+			const updatedFlashquiz = await fetch(
+				`/api/flashquizzes/${flashquiz.ref.id}/update`,
+				{
+					method: "PUT",
+					body: JSON.stringify({ name, tags, flashcards }),
+					headers: {
+						"Content-Type": "application/json",
+					},
+				}
+			).then((res) => res.json());
 
 			router.push(
 				`/@/${flashquiz.author.username}/flashquizzes/${flashquiz.ref.id}/`
@@ -112,8 +100,16 @@ export default function FlashquizForm({ flashquiz }) {
 		router.push("/");
 	};
 
+	const handleSubmit = () => {
+		if (flashquiz) {
+			updateQuiz();
+		} else {
+			createQuiz();
+		}
+	};
+
 	return (
-		<form onSubmit={handleSubmit(flashquiz ? updateQuiz : createQuiz)}>
+		<div className='rounded-lg border p-4'>
 			<div className='mb-4'>
 				<label
 					className='block text-gray-800 text-sm font-bold mb-1'
@@ -123,21 +119,21 @@ export default function FlashquizForm({ flashquiz }) {
 				<input
 					type='text'
 					id='name'
-					{...register("name", { required: true })}
+					onChange={(e) => setName(e.target.value)}
+					defaultValue={name}
 					className='w-full border bg-white rounded px-3 py-2 outline-none text-gray-700'
 					placeholder='Las teorías del origen de la vida'
 				/>
-				{errors.name && (
+				{error && (
 					<p className='font-bold text-red-900'>El nombre es obligatorio</p>
 				)}
 			</div>
-			<TagsInput tags={tags} handleOnTagsChange={setTags} />
 
 			<div className='mb-4'>
 				<label
-					className='block text-gray-800 text-sm font-bold mb-1 mr-5'
+					className='block text-gray-800 text-sm font-bold mb-1 mt-3'
 					htmlFor='flashcards'>
-					Flashcards
+					Flashcards ({flashcards.length}/30)
 				</label>
 				<FlashcardList
 					flashcards={flashcards}
@@ -145,36 +141,26 @@ export default function FlashquizForm({ flashquiz }) {
 				/>
 			</div>
 
-			<Link href={flashquiz ? `/q/${flashquiz.id}` : "/"}>
-				<a className='mt-3 inline-block bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2'>
-					Cancelar
-				</a>
-			</Link>
+			<TagsInput tags={tags} handleOnTagsChange={setTags} />
 
-			{flashquiz ? (
+			<div className='flex space-x-2 mt-2 text-white '>
 				<button
-					disabled={isSubmitting}
-					className='bg-blue-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2 disabled:bg-gray-200'
-					type='submit'>
-					Editar
-				</button>
-			) : (
-				<button
-					disabled={isSubmitting}
-					className='bg-blue-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2 disabled:bg-gray-200'
-					type='submit'>
-					Crear
-				</button>
-			)}
-			{flashquiz && (
-				<button
+					onClick={handleSubmit}
+					className='py-2 px-4 w-40 rounded font-bold bg-gradient-to-r from-sky-500 to-purple-500 hover:from-sky-600 hover:to-purple-600 disabled:from-slate-400 disabled:to-slate-700 hover:disabled:from-slate-500 hover:disabled:to-gray-800'
 					disabled={sending}
-					onClick={deleteQuiz}
-					className='bg-red-500 hover:bg-red-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2 disabled:bg-gray-200'
-					type='submit'>
-					Eliminar
+					type='button'>
+					{sending ? "Enviando..." : flashquiz ? "Actualizar" : "Crear"}
 				</button>
-			)}
-		</form>
+
+				{flashquiz && (
+					<button
+						onClick={deleteQuiz}
+						className='bg-red-500 hover:bg-red-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2 disabled:bg-gray-200'
+						type='submit'>
+						Eliminar
+					</button>
+				)}
+			</div>
+		</div>
 	);
 }

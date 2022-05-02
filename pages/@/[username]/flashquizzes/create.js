@@ -18,15 +18,14 @@ export default function Home() {
 		return <div>Cargando...</div>;
 	}
 	return (
-		<div>
+		<>
 			<Head>
 				<title>Crear un Flashquiz</title>
 			</Head>
-
-			<main className='max-w-lg mx-auto'>
-				<h1 className='text-gray-800  text-2xl mb-4'>Crear un flashquiz</h1>
-				<FlashquizForm />
-			</main>
-		</div>
+			<h1 className='text-2xl font-extrabold text-center'>
+				Crear un flashquiz
+			</h1>
+			<FlashquizForm />
+		</>
 	);
 }

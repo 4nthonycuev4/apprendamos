@@ -19,6 +19,8 @@ export default function CreatePostPage() {
 					integrity='sha384-0fdwu/T/EQMsQlrHCCHoH10pkPLlKA1jL5dFyUOvB3lfeT2540/2g6YgSi2BL14p'
 					crossorigin='anonymous'></script>
 			</Head>
+			<h1 className='text-2xl font-extrabold text-center'>Crear un post</h1>
+
 			<PostForm />
 		</>
 	);

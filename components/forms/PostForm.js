@@ -34,12 +34,12 @@ async function MDtoHTML(md) {
 
 export default function PostForm({ post }) {
 	const [bodyHTML, setBodyHTML] = useState(post?.bodyHTML || null);
-
 	const [bodyMD, setBodyMD] = useState(
 		post?.bodyMD || `# Un buen título\nAlgo de texto ...`
 	);
-
 	const [tags, setTags] = useState(post?.tags || defaultTags);
+
+	const [sending, setSending] = useState(false);
 
 	const [previewing, setPreviewing] = useState(false);
 
@@ -73,6 +73,7 @@ export default function PostForm({ post }) {
 
 	const createPost = async () => {
 		try {
+			setSending(true);
 			const res = await fetch("/api/content/create", {
 				method: "POST",
 				body: JSON.stringify({
@@ -87,6 +88,7 @@ export default function PostForm({ post }) {
 				.catch((err) => console.error(err));
 
 			router.push(`/@/${res.author.username}/posts/${res.content.ref.id}/`);
+			setTimeout(() => setSending(false), 2000);
 		} catch (err) {
 			console.error(err);
 		}
@@ -102,7 +104,7 @@ export default function PostForm({ post }) {
 
 	if (previewing && bodyHTML) {
 		return (
-			<div>
+			<div className='rounded-lg border p-4'>
 				<article
 					className='prose'
 					dangerouslySetInnerHTML={{ __html: bodyHTML }}
@@ -111,16 +113,16 @@ export default function PostForm({ post }) {
 				<Tags tags={tags} />
 				<div className='flex space-x-2 mt-2 text-white '>
 					<button
-						type='submit'
+						type='button'
 						onClick={handleSubmit}
-						className='py-2 px-4 rounded font-bold w-24 bg-gradient-to-r from-sky-500 to-purple-500 hover:from-sky-600 hover:to-purple-600'>
-						{post ? "Actualizar" : "Crear"}
+						disabled={sending}
+						className='py-2 px-4 w-40 rounded font-bold  bg-gradient-to-r from-sky-500 to-purple-500 hover:from-sky-600 hover:to-purple-600 disabled:from-slate-400 disabled:to-slate-700 hover:disabled:from-slate-500 hover:disabled:to-gray-800'>
+						{sending ? "Enviando..." : post ? "Actualizar" : "Crear"}
 					</button>
 					<button
-						disabled={!bodyMD || !bodyMD.startsWith("# ")}
 						type='button'
 						onClick={() => handlePreview()}
-						className='py-2 px-4 rounded font-bold w-40 bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600'>
+						className='py-2 px-4 w-40 rounded font-bold  bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600'>
 						Seguir editando
 					</button>
 				</div>
@@ -129,7 +131,14 @@ export default function PostForm({ post }) {
 	}
 
 	return (
-		<div>
+		<div className='rounded-lg border p-4'>
+			<label className='block text-gray-800 text-sm font-bold mb-1'>
+				Cuerpo (
+				{bodyMD.length < 50
+					? "escribe al menos 50 caracteres"
+					: `${bodyMD.length}/2000`}
+				)
+			</label>
 			<textarea
 				type='text'
 				id='body'
@@ -144,14 +153,15 @@ export default function PostForm({ post }) {
 
 			<div className='flex space-x-2 mt-2 text-white '>
 				<button
-					disabled={!bodyMD || !bodyMD.startsWith("# ")}
+					disabled={
+						!bodyMD ||
+						!bodyMD.startsWith("# ") ||
+						bodyMD.length < 50 ||
+						bodyMD.length > 2000
+					}
 					type='button'
 					onClick={() => handlePreview()}
-					className={`py-2 px-4 rounded font-bold w-24 ${
-						!bodyMD || !bodyMD.startsWith("# ")
-							? "bg-slate-500"
-							: "bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600"
-					}`}>
+					className='py-2 px-4 w-40 rounded font-bold  bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 disabled:from-slate-400 disabled:to-slate-700 hover:disabled:from-slate-500 hover:disabled:to-gray-800'>
 					Preview
 				</button>
 			</div>

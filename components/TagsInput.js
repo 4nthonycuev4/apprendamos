@@ -33,7 +33,9 @@ export default function TagsInput({ tags, handleOnTagsChange }) {
 
 	return (
 		<div className='space-y-2'>
-			<span className='font-bold underline'>Tags ({taglist.length}/8)</span>
+			<label className='block text-gray-800 text-sm font-bold mb-1'>
+				Tags ({taglist.length}/8)
+			</label>
 			<div className='flex flex-wrap gap-2'>
 				{tags &&
 					tags.length > 0 &&
