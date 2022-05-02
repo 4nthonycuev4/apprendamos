@@ -1,8 +1,7 @@
 /** @format */
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { useForm } from "react-hook-form";
-
+import { useUser } from "@auth0/nextjs-auth0";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkMath from "remark-math";
@@ -13,6 +12,7 @@ import rehypeStringify from "rehype-stringify";
 
 import TagsInput from "../TagsInput";
 import Tags from "../Tags";
+import { useEffect } from "react";
 
 const defaultTags = [
 	{ parsed: "hello_w0rld", raw: "Hello w0rld" },
@@ -32,7 +32,9 @@ async function MDtoHTML(md) {
 	return String(html);
 }
 
-export default function PostForm({ post }) {
+export default function PostForm({ post, author }) {
+	const router = useRouter();
+
 	const [bodyHTML, setBodyHTML] = useState(post?.bodyHTML || null);
 	const [bodyMD, setBodyMD] = useState(
 		post?.bodyMD || `# Un buen título\nAlgo de texto ...`
@@ -40,7 +42,6 @@ export default function PostForm({ post }) {
 	const [tags, setTags] = useState(post?.tags || defaultTags);
 
 	const [sending, setSending] = useState(false);
-
 	const [previewing, setPreviewing] = useState(false);
 
 	const handlePreview = async () => {
@@ -53,19 +54,28 @@ export default function PostForm({ post }) {
 		}
 	};
 
-	const router = useRouter();
-
 	const updatePost = async () => {
 		try {
-			const res = await fetch(`/api/posts/${post.ref.id}/update`, {
-				method: "PUT",
-				body: JSON.stringify({ body, tags }),
+			setSending(true);
+			const res = await fetch("/api/content/update", {
+				method: "PU",
+				body: JSON.stringify({
+					data: { bodyMD, bodyHTML, tags },
+					ref: post.ref,
+				}),
 				headers: {
 					"Content-Type": "application/json",
 				},
-			}).then((res) => res.json());
+			})
+				.then((res) => res.json())
+				.catch((err) => console.error(err));
 
-			router.push(`/@/${res.author.username}/posts/${res.content.ref.id}/`);
+			if (res.updated) {
+				router.push(`/@/${author.username}/posts/${post.ref.id}/`);
+			} else {
+				console.error("Error updating post");
+			}
+			setTimeout(() => setSending(false), 2000);
 		} catch (err) {
 			console.error(err);
 		}

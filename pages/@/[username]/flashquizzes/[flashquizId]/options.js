@@ -19,7 +19,7 @@ export default function FlashquizOptionsPage() {
 					</button>
 				</Link>
 				{!error && !isLoading && user?.username === username && (
-					<Link href={`/@/${username}/flashquizzes/${flashquizId}/edit`}>
+					<Link href={`/@/${username}/flashquizzes/${flashquizId}/update`}>
 						<button className='rounded-lg border mx-32 py-2 hover:bg-slate-100'>
 							<a>Editar o eliminar</a>{" "}
 						</button>

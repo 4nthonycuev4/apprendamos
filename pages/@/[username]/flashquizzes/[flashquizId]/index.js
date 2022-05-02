@@ -27,10 +27,11 @@ export async function getServerSideProps(context) {
 
 		const faunaClient = new FaunaClient();
 
-		const { content, author, comments } = await faunaClient.getSingleContent({
-			collection: "Flashquizzes",
-			id: flashquizId,
-		});
+		const { content, author, comments } =
+			await faunaClient.getSingleContentWithAuthor({
+				collection: "Flashquizzes",
+				id: flashquizId,
+			});
 
 		return { props: { flashquiz: content, author, comments } };
 	} catch (error) {

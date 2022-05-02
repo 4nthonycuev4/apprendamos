@@ -31,7 +31,7 @@ export default function PostPage({ post, author, comments }) {
 export async function getServerSideProps(context) {
 	const { postId } = context.query;
 	const faunaClient = new FaunaClient();
-	const res = await faunaClient.getSingleContent({
+	const res = await faunaClient.getSingleContentWithAuthor({
 		collection: "Posts",
 		id: postId,
 	});

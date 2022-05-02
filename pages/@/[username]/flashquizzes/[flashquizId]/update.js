@@ -10,26 +10,25 @@ import { useUser } from "@auth0/nextjs-auth0";
 import FaunaClient from "../../../../../fauna";
 import FlashquizForm from "../../../../../components/forms/FlashquizForm";
 
-export default function EditFlashquizPage({ flashquiz }) {
-	const { user, error, isLoading } = useUser();
+export default function EditFlashquizPage({ flashquiz, author }) {
+	const { user, isLoading } = useUser();
 	if (isLoading) return <div>Cargando...</div>;
-	if (error) return <div>{error.message}</div>;
-	if (!user) {
+
+	if ((!isLoading && !user) || user?.username !== author.username) {
 		const router = useRouter();
-		router.push("/api/auth/login");
+		router.back();
 
 		return <div>Cargando...</div>;
 	}
+
 	return (
 		<>
 			<Head>
 				<title>Editar Flashquiz</title>
 			</Head>
 
-			<main className='max-w-lg mx-auto'>
-				<h1 className='text-gray-800  text-2xl mb-4'>Editar un flashquiz</h1>
-				<FlashquizForm flashquiz={flashquiz} />
-			</main>
+			<h1 className='text-gray-800  text-2xl mb-4'>Editar un flashquiz</h1>
+			<FlashquizForm flashquiz={flashquiz} author={author} />
 		</>
 	);
 }
@@ -37,11 +36,19 @@ export default function EditFlashquizPage({ flashquiz }) {
 export async function getServerSideProps(context) {
 	const { flashquizId } = context.query;
 	const faunaClient = new FaunaClient();
-	const flashquiz = await faunaClient.getFlashquiz(flashquizId);
+
+	const res = await faunaClient.getSingleContentWithAuthor(
+		{
+			collection: "Flashquizzes",
+			id: flashquizId,
+		},
+		0
+	);
 
 	return {
 		props: {
-			flashquiz,
+			flashquiz: res.content,
+			author: res.author,
 		},
 	};
 }

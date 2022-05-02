@@ -17,7 +17,7 @@ export default function Home() {
 	const { data: content } = useSWR(!isLoading ? getUrl() : null);
 
 	if (isLoading || !content) {
-		return <p>Loading...</p>;
+		return <p>Cargando...</p>;
 	}
 
 	return (

@@ -53,6 +53,9 @@ export function GetCommentsWithMinimalAuthor(commentRefs) {
 }
 
 export function GetContentComments(contentRef, docType, size) {
+	if (size === 0) {
+		return [];
+	}
 	return GetCommentsWithMinimalAuthor(
 		Paginate(
 			Join(

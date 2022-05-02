@@ -29,6 +29,9 @@ const {
 	If,
 	Equals,
 	Select,
+	Get,
+	Let,
+	Update,
 } = query;
 
 export default class FaunaClient {
@@ -145,16 +148,26 @@ export default class FaunaClient {
 			});
 	}
 
-	async getSingleContent(ref) {
+	async getSingleContentWithAuthor(ref, comments = 30) {
 		const docType = ParseDocType(ref);
 		return await this.client
 			.query(
 				GetContentWithAuthor(
 					Ref(Collection(ref.collection), ref.id),
 					docType,
-					30
+					comments
 				)
 			)
+			.then((res) => FaunaToJSON(res))
+			.catch((error) => {
+				console.log("error", error);
+				return null;
+			});
+	}
+
+	async getSingleContent(ref) {
+		return await this.client
+			.query(Get(Ref(Collection(ref.collection), ref.id)))
 			.then((res) => FaunaToJSON(res))
 			.catch((error) => {
 				console.log("error", error);
@@ -195,6 +208,23 @@ export default class FaunaClient {
 
 		return await this.client
 			.query(CreateContent(data, type))
+			.then((res) => FaunaToJSON(res))
+			.catch((error) => {
+				console.log("error", error);
+				return null;
+			});
+	}
+
+	async updateContent(ref, data) {
+		return await this.client
+			.query(
+				Let(
+					{
+						content: Update(Ref(Collection(ref.collection), ref.id), { data }),
+					},
+					{ updated: true }
+				)
+			)
 			.then((res) => FaunaToJSON(res))
 			.catch((error) => {
 				console.log("error", error);

@@ -19,7 +19,7 @@ export default function PostOptionsPage() {
 					</button>
 				</Link>
 				{!error && !isLoading && user?.username === username && (
-					<Link href={`/@/${username}/posts/${postId}/edit`}>
+					<Link href={`/@/${username}/posts/${postId}/update`}>
 						<button className='rounded-lg border mx-32 py-2 hover:bg-slate-100'>
 							<a className='w-full'>Editar o eliminar</a>
 						</button>

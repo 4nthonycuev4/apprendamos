@@ -30,7 +30,7 @@ export default function Flashquiz({
 					<p className='text-right'>{moment(flashquiz.created).fromNow()}</p>
 					<button>
 						<Link
-							href={`/@/${author.username}/posts/${flashquiz.ref.id}/options`}>
+							href={`/@/${author.username}/flashquizzes/${flashquiz.ref.id}/options`}>
 							<a>
 								<DotsHorizontalIcon className='text-gray-700 w-5' />
 							</a>

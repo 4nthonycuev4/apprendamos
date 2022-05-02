@@ -13,7 +13,7 @@ const defaultTags = [
 	{ parsed: "bye", raw: "Bye " },
 ];
 
-export default function FlashquizForm({ flashquiz }) {
+export default function FlashquizForm({ flashquiz, author }) {
 	const [tags, setTags] = useState(flashquiz?.tags || defaultTags);
 	const [name, setName] = useState(flashquiz?.name || "");
 	const [flashcards, setFlashcards] = useState(
@@ -39,7 +39,7 @@ export default function FlashquizForm({ flashquiz }) {
 		setFlashcards(items1);
 	}
 
-	const createQuiz = async () => {
+	const createFlashquiz = async () => {
 		try {
 			setSending(true);
 			deleteEmptyFlashcards();
@@ -65,23 +65,28 @@ export default function FlashquizForm({ flashquiz }) {
 		}
 	};
 
-	const updateQuiz = async () => {
+	const updateFlashquiz = async () => {
 		try {
-			deleteEmptyFlashcards();
-			const updatedFlashquiz = await fetch(
-				`/api/flashquizzes/${flashquiz.ref.id}/update`,
-				{
-					method: "PUT",
-					body: JSON.stringify({ name, tags, flashcards }),
-					headers: {
-						"Content-Type": "application/json",
-					},
-				}
-			).then((res) => res.json());
+			setSending(true);
+			const res = await fetch("/api/content/update", {
+				method: "PUT",
+				body: JSON.stringify({
+					data: { name, tags, flashcards },
+					ref: flashquiz.ref,
+				}),
+				headers: {
+					"Content-Type": "application/json",
+				},
+			})
+				.then((res) => res.json())
+				.catch((err) => console.error(err));
 
-			router.push(
-				`/@/${flashquiz.author.username}/flashquizzes/${flashquiz.ref.id}/`
-			);
+			if (res.updated) {
+				router.push(`/@/${author.username}/flashquizzes/${flashquiz.ref.id}/`);
+			} else {
+				console.error("Error updating flashquiz");
+			}
+			setTimeout(() => setSending(false), 2000);
 		} catch (err) {
 			console.error(err);
 		}
@@ -102,9 +107,9 @@ export default function FlashquizForm({ flashquiz }) {
 
 	const handleSubmit = () => {
 		if (flashquiz) {
-			updateQuiz();
+			updateFlashquiz();
 		} else {
-			createQuiz();
+			createFlashquiz();
 		}
 	};
 

@@ -10,16 +10,17 @@ import { useUser } from "@auth0/nextjs-auth0";
 import FaunaClient from "../../../../../fauna";
 import PostForm from "../../../../../components/forms/PostForm";
 
-export default function EditPostPage({ post }) {
-	const { user, error, isLoading } = useUser();
+export default function EditPostPage({ post, author }) {
+	const { user, isLoading } = useUser();
 	if (isLoading) return <div>Cargando...</div>;
-	if (error) return <div>{error.message}</div>;
-	if (!user) {
+
+	if ((!isLoading && !user) || user?.username !== author.username) {
 		const router = useRouter();
-		router.push("/api/auth/login");
+		router.back();
 
 		return <div>Cargando...</div>;
 	}
+
 	return (
 		<div>
 			<Head>
@@ -37,10 +38,8 @@ export default function EditPostPage({ post }) {
 					crossorigin='anonymous'></script>
 			</Head>
 
-			<main className='max-w-lg mx-auto'>
-				<h1 className='text-gray-800  text-2xl mb-4'>Editar un post</h1>
-				<PostForm post={post} />
-			</main>
+			<h1 className='text-gray-800  text-2xl mb-4'>Editar un post</h1>
+			<PostForm post={post} author={author} />
 		</div>
 	);
 }
@@ -48,11 +47,18 @@ export default function EditPostPage({ post }) {
 export async function getServerSideProps(context) {
 	const { postId } = context.query;
 	const faunaClient = new FaunaClient();
-	const post = await faunaClient.getPost(postId);
+	const res = await faunaClient.getSingleContentWithAuthor(
+		{
+			collection: "Posts",
+			id: postId,
+		},
+		0
+	);
 
 	return {
 		props: {
-			post,
+			post: res.content,
+			author: res.author,
 		},
 	};
 }
