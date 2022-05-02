@@ -10,7 +10,7 @@ import AuthorStats from "./../AuthorStats";
 export default function BigProfile({ profile }) {
 	return (
 		<>
-			<div className='text-center py-1 border-y px-4'>
+			<div className='text-center py-1 px-4'>
 				<Image
 					width={100}
 					height={100}
@@ -23,15 +23,15 @@ export default function BigProfile({ profile }) {
 					<h1 className='font-normal text-md mb-2'>@{profile.username}</h1>
 				</div>
 				<AuthorStats username={profile.username} startStats={profile.stats} />
-				<p>{profile.about}</p>
-				<div className='flex h-6 itmes-center justify-center text-gray-500'>
+				<div className='flex h-6 itmes-center justify-center text-gray-600'>
 					<div className='pt-[2px] pr-1'>
 						<CalendarIcon className='w-5 h-5' />
 					</div>
 					<h1 className='font-normal text-md'>
-						Se unió el {moment(profile.joined).format("LL")}
+						{moment(profile.joined).format("MMMM YYYY")}
 					</h1>
 				</div>
+				<p>{profile.about}</p>
 			</div>
 		</>
 	);

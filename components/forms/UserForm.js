@@ -1,6 +1,6 @@
 /** @format */
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -13,9 +13,33 @@ function getRandomInt(min, max) {
 }
 
 export default function UserForm({ user }) {
+	const hiddenFileInput = useRef(null);
 	const [picture, setPicture] = useState(
 		user?.ref ? user.picture : `/ru${getRandomInt(1, 8)}.jpg`
 	);
+
+	const handleUploadButtonClick = (event) => {
+		hiddenFileInput.current.click();
+	};
+
+	const handleImageUpload = async (x) => {
+		const { files } = x.target;
+		const file = files[0];
+		if (file) {
+			const formData = new FormData();
+			formData.append("file", file);
+			formData.append("upload_preset", "uploads");
+
+			const data = await fetch(
+				"https://api.cloudinary.com/v1_1/cardsmemo/image/upload",
+				{
+					method: "POST",
+					body: formData,
+				}
+			).then((res) => res.json());
+			setPicture(data.secure_url);
+		}
+	};
 
 	const {
 		register,
@@ -66,27 +90,59 @@ export default function UserForm({ user }) {
 		}
 	};
 
-	const handleImageUpload = async (x) => {
-		const { files } = x.target;
-		const file = files[0];
-		if (file) {
-			const formData = new FormData();
-			formData.append("file", file);
-			formData.append("upload_preset", "uploads");
-
-			const data = await fetch(
-				"https://api.cloudinary.com/v1_1/cardsmemo/image/upload",
-				{
-					method: "POST",
-					body: formData,
-				}
-			).then((res) => res.json());
-			setPicture(data.secure_url);
-		}
-	};
-
 	return (
-		<form onSubmit={handleSubmit(user?.ref ? updateUser : createUser)}>
+		<form
+			onSubmit={handleSubmit(user?.ref ? updateUser : createUser)}
+			className='w-full'>
+			<div className='flex w-full'>
+				<div className='w-full'>
+					<label className='block text-sm font-bold mb-1' htmlFor='picture'>
+						Foto de perfil
+					</label>
+					<div className='w-full flex items-center justify-between'>
+						<Image
+							src={picture}
+							alt='User picture'
+							width={150}
+							height={150}
+							className='rounded-full'
+						/>
+						<div className='space-y-2'>
+							<button
+								type='button'
+								className='block rounded-full bg-sky-50 hover:bg-sky-100 px-4 text-sky-800 text-sm py-2 w-40 font-semibold'
+								onClick={() => setPicture(`/ru${getRandomInt(1, 8)}.jpg`)}>
+								Avatar aleatorio
+							</button>
+							<button
+								type='button'
+								className='block rounded-full bg-green-50 px-4 hover:bg-green-100 text-green-800 text-sm py-2 w-40 font-semibold'
+								onClick={() =>
+									setPicture(
+										user?.ref ? user.picture : `/ru${getRandomInt(1, 8)}.jpg`
+									)
+								}>
+								Imagen actual
+							</button>
+							<button
+								onClick={handleUploadButtonClick}
+								type='button'
+								className='block rounded-full bg-violet-50 px-4 hover:bg-violet-100 text-violet-800 text-sm py-2 w-40 font-semibold'>
+								Subir foto
+							</button>
+						</div>
+					</div>
+					<label className='block'>
+						<input
+							onChange={(e) => handleImageUpload(e)}
+							type='file'
+							ref={hiddenFileInput}
+							name='picture'
+							className='hidden'
+						/>
+					</label>
+				</div>
+			</div>
 			<div className='mb-4'>
 				<label className='block  text-sm font-bold mb-1' htmlFor='name'>
 					Nombre
@@ -109,7 +165,7 @@ export default function UserForm({ user }) {
 				<textarea
 					{...register("about", { required: true })}
 					id='about'
-					rows='12'
+					rows='4'
 					className='resize-none w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none'
 					placeholder='Cuéntanos sobre ti'
 				/>
@@ -133,51 +189,6 @@ export default function UserForm({ user }) {
 						El nombre de usuario es obligatorio
 					</p>
 				)}
-			</div>
-			<label className='block text-sm font-bold mb-1' htmlFor='picture'>
-				Foto de perfil
-			</label>
-			<div className='flex'>
-				<div className='mr-8'>
-					<label className='block'>
-						<input
-							onChange={(e) => handleImageUpload(e)}
-							type='file'
-							name='picture'
-							className='block w-full text-sm text-slate-500
-								file:mr-4 file:py-2 file:w-40
-								file:rounded-full file:border-0
-								file:text-sm file:font-semibold
-								file:bg-violet-50 file:text-violet-700
-								hover:file:bg-violet-100'
-						/>
-					</label>
-					<button
-						type='button'
-						className='rounded-full bg-sky-50 hover:bg-sky-100 px-4 text-sky-800 text-sm py-2 w-40 font-semibold my-2 mr-2'
-						onClick={() => setPicture(`/ru${getRandomInt(1, 8)}.jpg`)}>
-						Avatar aleatorio
-					</button>
-					{user && user.picture && (
-						<button
-							type='button'
-							className='rounded-full bg-green-50 px-4 hover:bg-green-100 text-green-800 text-sm py-2 w-40 font-semibold my-2 '
-							onClick={() =>
-								setPicture(
-									user?.ref ? user.picture : `/ru${getRandomInt(1, 8)}.jpg`
-								)
-							}>
-							Imagen actual
-						</button>
-					)}
-				</div>
-				<Image
-					src={picture}
-					alt='User picture'
-					width={100}
-					height={100}
-					className='rounded-full'
-				/>
 			</div>
 
 			<div className='flex'>
