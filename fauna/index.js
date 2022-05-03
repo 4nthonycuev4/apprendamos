@@ -14,6 +14,7 @@ import { LikeContent, FollowUser } from "./interactions/create";
 import { GetContentWithAuthor } from "./content/read";
 import { CreateComment } from "./comment/create";
 import { CreateContent } from "./content/create";
+import { DeleteContent } from "./content/delete";
 
 import { FaunaToJSON, ParseDocType } from "./utils";
 
@@ -32,6 +33,7 @@ const {
 	Get,
 	Let,
 	Update,
+	Delete,
 } = query;
 
 export default class FaunaClient {
@@ -165,16 +167,6 @@ export default class FaunaClient {
 			});
 	}
 
-	async getSingleContent(ref) {
-		return await this.client
-			.query(Get(Ref(Collection(ref.collection), ref.id)))
-			.then((res) => FaunaToJSON(res))
-			.catch((error) => {
-				console.log("error", error);
-				return null;
-			});
-	}
-
 	async getContent(username) {
 		return await this.client
 			.query(
@@ -225,6 +217,16 @@ export default class FaunaClient {
 					{ updated: true }
 				)
 			)
+			.then((res) => FaunaToJSON(res))
+			.catch((error) => {
+				console.log("error", error);
+				return null;
+			});
+	}
+
+	async deleteContent(ref) {
+		return await this.client
+			.query(DeleteContent(ref))
 			.then((res) => FaunaToJSON(res))
 			.catch((error) => {
 				console.log("error", error);

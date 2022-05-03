@@ -70,8 +70,10 @@ export default function CommentForm({
 	};
 
 	return (
-		<form className='w-full' onSubmit={handleSubmit(createComment)}>
-			<div className='flex space-x-2'>
+		<form
+			className='w-full flex justify-between'
+			onSubmit={handleSubmit(createComment)}>
+			<div className='flex space-x-4 w-full'>
 				{!isLoading && !error && user && (
 					<Image
 						src={user.picture}
@@ -93,14 +95,14 @@ export default function CommentForm({
 							: "Inicia sesión para comentar"
 					}
 				/>
-
-				<button
-					type='submit'
-					disabled={isSubmitting || !user}
-					className=' text-blue-500 disabled:text-gray-400'>
-					<PaperAirplaneIcon className='w-5' />
-				</button>
 			</div>
+
+			<button
+				type='submit'
+				disabled={isSubmitting || !user}
+				className=' text-blue-500 disabled:text-gray-400'>
+				<PaperAirplaneIcon className='w-5' />
+			</button>
 			{errors.comment && <p className='text-red-500'>Escribe un comentario</p>}
 		</form>
 	);

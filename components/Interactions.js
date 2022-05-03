@@ -76,59 +76,56 @@ export default function Interactions({
 
 	return (
 		<div className='space-y-4'>
-			<div className='flex items-center justify-between'>
-				{commentInput ? (
-					<CommentForm
-						contentRef={contentRef}
-						comments={comments}
-						setViewerStats={setViewerStats}
-						setStats={setStats}
-						setComments={setComments}
-					/>
-				) : (
-					<Link
-						href={`/@/${authorUsername}/${contentRef.collection.toLowerCase()}/${
-							contentRef.id
-						}`}>
-						<a>
-							<h1>Ver comentarios</h1>
-						</a>
-					</Link>
-				)}
-				<div className='flex space-x-4'>
-					<div className='flex text-red-400'>
-						<span>{stats.likes}</span>
-						<button disabled={!user?.ref} onClick={() => likeContent()}>
-							{viewerStats && viewerStats.like ? (
-								<HeartIconSolid className='w-5' />
-							) : (
-								<HeartIconOutline strokeWidth={1.5} className='w-5' />
-							)}
-						</button>
-					</div>
-					<div className='flex text-blue-400'>
-						<span>{stats.comments}</span>
-						<button disabled>
-							{viewerStats && viewerStats.comments > 0 ? (
-								<AnnotationIconSolid className='w-5' />
-							) : (
-								<AnnotationIconOutline strokeWidth={1.5} className='w-5' />
-							)}
-						</button>
-					</div>
-
-					<div className='flex text-gray-700'>
-						<span>{stats.saved}</span>
-						<button disabled>
-							{viewerStats && viewerStats.saved > 0 ? (
-								<BookmarkIconSolid className='w-5' />
-							) : (
-								<BookmarkIconOutline strokeWidth={1.5} className='w-5' />
-							)}
-						</button>
-					</div>
+			<div className='flex space-x-8 justify-center '>
+				<div className='flex text-blue-400'>
+					<span>{stats.comments}</span>
+					<button disabled>
+						{viewerStats && viewerStats.comments > 0 ? (
+							<AnnotationIconSolid className='w-5' />
+						) : (
+							<AnnotationIconOutline strokeWidth={1.5} className='w-5' />
+						)}
+					</button>
+				</div>
+				<div className='flex text-red-400'>
+					<span>{stats.likes}</span>
+					<button disabled={!user?.ref} onClick={() => likeContent()}>
+						{viewerStats && viewerStats.like ? (
+							<HeartIconSolid className='w-5' />
+						) : (
+							<HeartIconOutline strokeWidth={1.5} className='w-5' />
+						)}
+					</button>
+				</div>
+				<div className='flex text-gray-700'>
+					<span>{stats.saved}</span>
+					<button disabled>
+						{viewerStats && viewerStats.saved > 0 ? (
+							<BookmarkIconSolid className='w-5' />
+						) : (
+							<BookmarkIconOutline strokeWidth={1.5} className='w-5' />
+						)}
+					</button>
 				</div>
 			</div>
+			{commentInput ? (
+				<CommentForm
+					contentRef={contentRef}
+					comments={comments}
+					setViewerStats={setViewerStats}
+					setStats={setStats}
+					setComments={setComments}
+				/>
+			) : (
+				<Link
+					href={`/@/${authorUsername}/${contentRef.collection.toLowerCase()}/${
+						contentRef.id
+					}`}>
+					<a>
+						<h1>Ver comentarios</h1>
+					</a>
+				</Link>
+			)}
 			<Comments comments={comments} />
 		</div>
 	);

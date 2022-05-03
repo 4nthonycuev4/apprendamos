@@ -1,7 +1,7 @@
 /** @format */
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { useUser } from "@auth0/nextjs-auth0";
+
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkMath from "remark-math";
@@ -12,12 +12,9 @@ import rehypeStringify from "rehype-stringify";
 
 import TagsInput from "../TagsInput";
 import Tags from "../Tags";
-import { useEffect } from "react";
+import DeleteModal from "../DeleteModal";
 
-const defaultTags = [
-	{ parsed: "hello_w0rld", raw: "Hello w0rld" },
-	{ parsed: "bye", raw: "Bye " },
-];
+const defaultTags = [{ parsed: "hello_w0rld", raw: "Hello w0rld" }];
 
 async function MDtoHTML(md) {
 	const html = await unified()
@@ -43,6 +40,7 @@ export default function PostForm({ post, author }) {
 
 	const [sending, setSending] = useState(false);
 	const [previewing, setPreviewing] = useState(false);
+	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
 	const handlePreview = async () => {
 		if (previewing) {
@@ -104,6 +102,31 @@ export default function PostForm({ post, author }) {
 		}
 	};
 
+	const deletePost = async () => {
+		try {
+			const res = await fetch("/api/content/delete", {
+				method: "DELETE",
+
+				body: JSON.stringify({
+					ref: post.ref,
+				}),
+				headers: {
+					"Content-Type": "application/json",
+				},
+			})
+				.then((res) => res.json())
+				.catch((err) => console.error(err));
+
+			if (res.deleted) {
+				router.push(`/@/${author.username}/`);
+			} else {
+				console.error("Error eliminando post");
+			}
+		} catch (err) {
+			console.error(err);
+		}
+	};
+
 	const handleSubmit = () => {
 		if (post) {
 			updatePost();
@@ -132,7 +155,7 @@ export default function PostForm({ post, author }) {
 					<button
 						type='button'
 						onClick={() => handlePreview()}
-						className='py-2 px-4 w-40 rounded font-bold  bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600'>
+						className='py-2 px-4 w-40 rounded font-bold  bg-gradient-to-r from-sky-500 to-green-500 hover:from-sky-600 hover:to-green-600'>
 						Seguir editando
 					</button>
 				</div>
@@ -171,10 +194,28 @@ export default function PostForm({ post, author }) {
 					}
 					type='button'
 					onClick={() => handlePreview()}
-					className='py-2 px-4 w-40 rounded font-bold  bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 disabled:from-slate-400 disabled:to-slate-700 hover:disabled:from-slate-500 hover:disabled:to-gray-800'>
+					className='py-2 px-4 w-40 rounded font-bold  bg-gradient-to-r from-sky-500 to-green-500 hover:from-sky-600 hover:to-green-600 disabled:from-slate-400 disabled:to-slate-700 hover:disabled:from-slate-500 hover:disabled:to-gray-800'>
 					Preview
 				</button>
+				{post && (
+					<button
+						type='button'
+						onClick={() => {
+							setDeleteModalOpen(true);
+						}}
+						className='py-2 px-4 w-40 rounded font-bold  bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600'>
+						Eliminar
+					</button>
+				)}
 			</div>
+			{deleteModalOpen && (
+				<DeleteModal
+					onClose={() => {
+						setDeleteModalOpen(false);
+					}}
+					onDelete={deletePost}
+				/>
+			)}
 		</div>
 	);
 }

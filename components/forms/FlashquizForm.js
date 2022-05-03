@@ -1,17 +1,13 @@
 /** @format */
 
 import { useState } from "react";
-
 import { useRouter } from "next/router";
-import Link from "next/link";
 
+import DeleteModal from "../DeleteModal";
 import FlashcardList from "../lists/FlashcardList";
 import TagsInput from "../TagsInput";
 
-const defaultTags = [
-	{ parsed: "hello_w0rld", raw: "Hello w0rld" },
-	{ parsed: "bye", raw: "Bye " },
-];
+const defaultTags = [{ parsed: "hello_w0rld", raw: "Hello w0rld" }];
 
 export default function FlashquizForm({ flashquiz, author }) {
 	const [tags, setTags] = useState(flashquiz?.tags || defaultTags);
@@ -28,6 +24,7 @@ export default function FlashquizForm({ flashquiz, author }) {
 
 	const [error, setError] = useState(null);
 	const [sending, setSending] = useState(false);
+	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
 	const router = useRouter();
 
@@ -92,17 +89,29 @@ export default function FlashquizForm({ flashquiz, author }) {
 		}
 	};
 
-	const deleteQuiz = async () => {
-		setSending(true);
-		const q = await fetch("/api/content/create", {
-			method: "DELETE",
-			headers: {
-				"Content-Type": "application/json",
-			},
-		}).then((res) => res.json());
+	const deleteFlashquiz = async () => {
+		try {
+			const res = await fetch("/api/content/delete", {
+				method: "DELETE",
 
-		setSending(false);
-		router.push("/");
+				body: JSON.stringify({
+					ref: flashquiz.ref,
+				}),
+				headers: {
+					"Content-Type": "application/json",
+				},
+			})
+				.then((res) => res.json())
+				.catch((err) => console.error(err));
+
+			if (res.deleted) {
+				router.push(`/@/${author.username}/`);
+			} else {
+				console.error("Error eliminando flashquiz");
+			}
+		} catch (err) {
+			console.error(err);
+		}
 	};
 
 	const handleSubmit = () => {
@@ -159,13 +168,23 @@ export default function FlashquizForm({ flashquiz, author }) {
 
 				{flashquiz && (
 					<button
-						onClick={deleteQuiz}
-						className='bg-red-500 hover:bg-red-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2 disabled:bg-gray-200'
-						type='submit'>
+						type='button'
+						onClick={() => {
+							setDeleteModalOpen(true);
+						}}
+						className='py-2 px-4 w-40 rounded font-bold  bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600'>
 						Eliminar
 					</button>
 				)}
 			</div>
+			{deleteModalOpen && (
+				<DeleteModal
+					onClose={() => {
+						setDeleteModalOpen(false);
+					}}
+					onDelete={deleteFlashquiz}
+				/>
+			)}
 		</div>
 	);
 }

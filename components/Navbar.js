@@ -20,7 +20,7 @@ export default function Navbar() {
 				flex justify-between items-center
 				bg-white/30 backdrop-blur-md
 				border-b
-				z-50'>
+				z-10'>
 			<Link href='/'>
 				<a className='flex text-center text-gray-800'>
 					<CollectionIcon className='w-6 h-6' />
