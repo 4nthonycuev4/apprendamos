@@ -24,6 +24,7 @@ export default function Interactions({
 	startStats,
 	startComments = [],
 	commentInput,
+	minimal,
 }) {
 	const [viewerStats, setViewerStats] = useState(startViewerStats);
 	const [comments, setComments] = useState(startComments);
@@ -47,7 +48,7 @@ export default function Interactions({
 			setViewerStats(res);
 		};
 
-		if (!viewerStats?.ref) {
+		if (!viewerStats?.ref && user?.ref) {
 			getViewerStats();
 		}
 	});
@@ -123,7 +124,7 @@ export default function Interactions({
 					</a>
 				</Link>
 			)}
-			<Comments comments={comments} />
+			<Comments comments={comments} minimal={minimal} />
 		</div>
 	);
 }

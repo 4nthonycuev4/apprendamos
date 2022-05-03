@@ -48,6 +48,7 @@ export default function Post({
 				startStats={post.stats}
 				startComments={comments}
 				commentInput={commentInput}
+				minimal={minimal}
 			/>
 		</div>
 	);

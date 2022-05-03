@@ -5,7 +5,7 @@ import Link from "next/link";
 import moment from "moment";
 import { DotsHorizontalIcon } from "@heroicons/react/outline";
 
-export default function Comment({ comment, author }) {
+export default function Comment({ comment, author, minimal }) {
 	return (
 		<div className='flex items-start space-x-4'>
 			<div>
@@ -30,13 +30,15 @@ export default function Comment({ comment, author }) {
 							<span>{moment(comment.created).fromNow()}</span>
 						</a>
 					</Link>
-					<button>
-						<Link href={`/?comment=${comment.ref.id}`}>
-							<a>
-								<DotsHorizontalIcon className='text-gray-700 w-5' />
-							</a>
-						</Link>
-					</button>
+					{!minimal && (
+						<button>
+							<Link href={`/?comment=${comment.ref.id}`}>
+								<a>
+									<DotsHorizontalIcon className='text-gray-700 w-5' />
+								</a>
+							</Link>
+						</button>
+					)}
 				</div>
 				<p>{comment.message}</p>
 			</div>

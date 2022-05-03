@@ -6,7 +6,7 @@ import Post from "../items/Post";
 export default function Content({
 	content,
 	author,
-	minimal = false,
+	minimal,
 	showComments = false,
 	commentInput = false,
 }) {

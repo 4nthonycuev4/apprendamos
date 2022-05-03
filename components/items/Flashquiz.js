@@ -15,6 +15,7 @@ export default function Flashquiz({
 	comments,
 	startViewerStats,
 	commentInput = true,
+	minimal,
 }) {
 	return (
 		<div className='p-4 rounded-lg border space-y-2'>
@@ -45,6 +46,7 @@ export default function Flashquiz({
 				startStats={flashquiz.stats}
 				startComments={comments}
 				commentInput={commentInput}
+				minimal={minimal}
 			/>
 		</div>
 	);

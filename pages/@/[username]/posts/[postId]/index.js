@@ -23,7 +23,7 @@ export default function PostPage({ post, author, comments }) {
 				<title>{`${author.name}'s post`}</title>
 			</Head>
 
-			<Post post={post} author={author} comments={comments} />
+			<Post post={post} author={author} comments={comments} minimal={false} />
 		</>
 	);
 }
