@@ -5,34 +5,31 @@ import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0";
 
 export default function AuthorStats({ startStats, username }) {
-	const [stats, setStats] = useState(startStats);
 	const [viewerStats, setViewerStats] = useState({ following: false });
+	const [stats, setStats] = useState(startStats);
 
 	const { user } = useUser();
 
-	useEffect(async () => {
-		try {
-			const getViewerStats = async () => {
-				return await fetch("/api/interactions/user", {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({
-						username,
-					}),
-				})
-					.then((resx) => resx.json())
-					.catch((err) => console.log(err));
-			};
-			if (!viewerStats.ref) {
-				const x = await getViewerStats();
-				setViewerStats(x);
-			}
-		} catch (err) {
-			console.error(err);
+	useEffect(() => {
+		const getViewerStats = async () => {
+			const res = await fetch("/api/interactions/user", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					username,
+				}),
+			})
+				.then((resx) => resx.json())
+				.catch((err) => console.log(err));
+			setViewerStats(res);
+		};
+
+		if (!viewerStats?.ref) {
+			getViewerStats();
 		}
-	}, []);
+	});
 
 	const follow = async () => {
 		try {

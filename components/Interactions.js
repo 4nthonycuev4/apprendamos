@@ -26,36 +26,33 @@ export default function Interactions({
 	commentInput,
 }) {
 	const [viewerStats, setViewerStats] = useState(startViewerStats);
-	const [stats, setStats] = useState(startStats);
 	const [comments, setComments] = useState(startComments);
+	const [stats, setStats] = useState(startStats);
 
 	const { user } = useUser();
 
-	useEffect(async () => {
-		try {
-			const getViewerStats = async () => {
-				return await fetch("/api/interactions/content", {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({
-						ref: contentRef,
-					}),
-				})
-					.then((resx) => resx.json())
-					.catch((err) => console.log(err));
-			};
-			if (!viewerStats.ref) {
-				const x = await getViewerStats();
-				setViewerStats(x);
-			}
-		} catch (err) {
-			console.error(err);
-		}
-	}, []);
+	useEffect(() => {
+		const getViewerStats = async () => {
+			const res = await fetch("/api/interactions/content", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					ref: contentRef,
+				}),
+			})
+				.then((resx) => resx.json())
+				.catch((err) => console.log(err));
+			setViewerStats(res);
+		};
 
-	const likeContent = async () => {
+		if (!viewerStats?.ref) {
+			getViewerStats();
+		}
+	});
+
+	async function likeContent() {
 		try {
 			const resx = await fetch("/api/interactions/content/like", {
 				method: "POST",
@@ -72,7 +69,7 @@ export default function Interactions({
 		} catch (err) {
 			console.error(err);
 		}
-	};
+	}
 
 	return (
 		<div className='space-y-4'>

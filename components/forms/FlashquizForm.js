@@ -56,36 +56,30 @@ export default function FlashquizForm({ flashquiz, author }) {
 			router.push(
 				`/@/${res.author.username}/flashquizzes/${res.content.ref.id}/`
 			);
-			setTimeout(() => setSending(false), 2000);
 		} catch (err) {
 			console.error(err);
 		}
 	};
 
 	const updateFlashquiz = async () => {
-		try {
-			setSending(true);
-			const res = await fetch("/api/content/update", {
-				method: "PUT",
-				body: JSON.stringify({
-					data: { name, tags, flashcards },
-					ref: flashquiz.ref,
-				}),
-				headers: {
-					"Content-Type": "application/json",
-				},
-			})
-				.then((res) => res.json())
-				.catch((err) => console.error(err));
+		setSending(true);
+		const res = await fetch("/api/content/update", {
+			method: "PUT",
+			body: JSON.stringify({
+				data: { name, tags, flashcards },
+				ref: flashquiz.ref,
+			}),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((res) => res.json())
+			.catch((err) => console.error(err));
 
-			if (res.updated) {
-				router.push(`/@/${author.username}/flashquizzes/${flashquiz.ref.id}/`);
-			} else {
-				console.error("Error updating flashquiz");
-			}
-			setTimeout(() => setSending(false), 2000);
-		} catch (err) {
-			console.error(err);
+		if (res.updated) {
+			router.push(`/@/${author.username}/flashquizzes/${flashquiz.ref.id}/`);
+		} else {
+			console.error("Error updating flashquiz");
 		}
 	};
 

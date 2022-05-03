@@ -53,29 +53,24 @@ export default function PostForm({ post, author }) {
 	};
 
 	const updatePost = async () => {
-		try {
-			setSending(true);
-			const res = await fetch("/api/content/update", {
-				method: "PU",
-				body: JSON.stringify({
-					data: { bodyMD, bodyHTML, tags },
-					ref: post.ref,
-				}),
-				headers: {
-					"Content-Type": "application/json",
-				},
-			})
-				.then((res) => res.json())
-				.catch((err) => console.error(err));
+		setSending(true);
+		const res = await fetch("/api/content/update", {
+			method: "PUT",
+			body: JSON.stringify({
+				data: { bodyMD, bodyHTML, tags },
+				ref: post.ref,
+			}),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((res) => res.json())
+			.catch((err) => console.error(err));
 
-			if (res.updated) {
-				router.push(`/@/${author.username}/posts/${post.ref.id}/`);
-			} else {
-				console.error("Error updating post");
-			}
-			setTimeout(() => setSending(false), 2000);
-		} catch (err) {
-			console.error(err);
+		if (res.updated) {
+			router.push(`/@/${author.username}/posts/${post.ref.id}/`);
+		} else {
+			console.error("Error updating post");
 		}
 	};
 
@@ -96,7 +91,6 @@ export default function PostForm({ post, author }) {
 				.catch((err) => console.error(err));
 
 			router.push(`/@/${res.author.username}/posts/${res.content.ref.id}/`);
-			setTimeout(() => setSending(false), 2000);
 		} catch (err) {
 			console.error(err);
 		}
@@ -154,7 +148,7 @@ export default function PostForm({ post, author }) {
 					</button>
 					<button
 						type='button'
-						onClick={() => handlePreview()}
+						onClick={handlePreview}
 						className='py-2 px-4 w-40 rounded font-bold  bg-gradient-to-r from-sky-500 to-green-500 hover:from-sky-600 hover:to-green-600'>
 						Seguir editando
 					</button>
@@ -193,7 +187,7 @@ export default function PostForm({ post, author }) {
 						bodyMD.length > 2000
 					}
 					type='button'
-					onClick={() => handlePreview()}
+					onClick={handlePreview}
 					className='py-2 px-4 w-40 rounded font-bold  bg-gradient-to-r from-sky-500 to-green-500 hover:from-sky-600 hover:to-green-600 disabled:from-slate-400 disabled:to-slate-700 hover:disabled:from-slate-500 hover:disabled:to-gray-800'>
 					Preview
 				</button>

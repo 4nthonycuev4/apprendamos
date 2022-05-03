@@ -11,11 +11,12 @@ import FaunaClient from "../../../../../fauna";
 import FlashquizForm from "../../../../../components/forms/FlashquizForm";
 
 export default function EditFlashquizPage({ flashquiz, author }) {
+	const router = useRouter();
 	const { user, isLoading } = useUser();
+
 	if (isLoading) return <div>Cargando...</div>;
 
 	if ((!isLoading && !user) || user?.username !== author.username) {
-		const router = useRouter();
 		router.back();
 
 		return <div>Cargando...</div>;

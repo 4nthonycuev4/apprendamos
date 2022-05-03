@@ -14,7 +14,7 @@ export default withApiAuthRequired(async function updateContent(req, res) {
 
 		const client = new FaunaClient(accessToken);
 
-		const { ref, data } = req.body;
+		const { data, ref } = req.body;
 		const content = await client.updateContent(ref, data);
 
 		res.status(200).json(content);

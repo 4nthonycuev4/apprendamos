@@ -50,6 +50,7 @@ export default function Navbar() {
 								src={user.picture}
 								width={40}
 								height={40}
+								alt={user.name}
 								className='rounded-full'
 							/>
 						</a>

@@ -27,7 +27,7 @@ const DeleteTimedown = ({ onCancel, onDelete }) => {
 			setTimerOn(false);
 			onDelete();
 		}
-	}, [time]);
+	}, [time, onDelete]);
 
 	return (
 		<div className='text-center'>

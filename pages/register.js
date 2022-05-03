@@ -15,7 +15,7 @@ export default function Account({ user }) {
 		if (user.ref) {
 			router.push("/");
 		}
-	}, []);
+	}, [user, router]);
 
 	return (
 		<div>
