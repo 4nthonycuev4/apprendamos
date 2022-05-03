@@ -140,6 +140,28 @@ export default class FaunaClient {
 			});
 	}
 
+	async updateComment(ref, message) {
+		return await this.client
+			.query(
+				Update(Ref(Collection(ref.collection), ref.id), { data: { message } })
+			)
+			.then((res) => FaunaToJSON(res))
+			.catch((error) => {
+				console.log("error", error);
+				return null;
+			});
+	}
+
+	async deleteComment(ref) {
+		return await this.client
+			.query(Delete(Ref(Collection(ref.collection), ref.id)))
+			.then((res) => FaunaToJSON(res))
+			.catch((error) => {
+				console.log("error", error);
+				return null;
+			});
+	}
+
 	async getUserWithContent(username) {
 		return await this.client
 			.query(GetUserWithContent(username))

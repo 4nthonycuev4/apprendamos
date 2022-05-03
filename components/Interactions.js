@@ -124,7 +124,7 @@ export default function Interactions({
 					</a>
 				</Link>
 			)}
-			<Comments comments={comments} minimal={minimal} />
+			<Comments comments={comments} minimal={minimal} viewer={user} />
 		</div>
 	);
 }
