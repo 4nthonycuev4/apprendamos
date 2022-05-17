@@ -9,6 +9,7 @@ import { FollowUser, LikeContent } from "./interactions/create";
 import {
   GetViewerAuthorStats,
   GetViewerContentStats,
+  GetFollowingStatus
 } from "./interactions/read";
 import { CreateUser } from "./user/create";
 import { GetUserWithContent, GetViewer } from "./user/read";
@@ -289,6 +290,16 @@ export default class FaunaClient {
   async register(data) {
     return this.client
       .query(CreateUser(data))
+      .then((res) => FaunaToJSON(res))
+      .catch((error) => {
+        console.log("error", error);
+        return null;
+      });
+  }
+
+  async getFollowingStatus(username) {
+    return this.client
+      .query(GetFollowingStatus(username))
       .then((res) => FaunaToJSON(res))
       .catch((error) => {
         console.log("error", error);
