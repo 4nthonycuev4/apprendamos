@@ -1,26 +1,26 @@
 /** @format */
 
 import {
-	getAccessToken,
-	withApiAuthRequired,
-	getSession,
+  getAccessToken,
+  getSession,
+  withApiAuthRequired,
 } from "@auth0/nextjs-auth0";
 
 import FaunaClient from "../../../fauna";
 
 export default withApiAuthRequired(async function updateComment(req, res) {
-	try {
-		const { accessToken } = await getAccessToken(req, res);
-		const session = getSession(req, res);
+  try {
+    const { accessToken } = await getAccessToken(req, res);
+    const session = getSession(req, res);
 
-		const client = new FaunaClient(accessToken, session.user);
+    const client = new FaunaClient(accessToken, session.user);
 
-		const { commentRef, message } = req.body;
-		const comment = await client.updateComment(commentRef, message);
+    const { commentRef, message } = req.body;
+    const comment = await client.updateComment(commentRef, message);
 
-		res.status(200).json(comment);
-	} catch (error) {
-		console.log("error", error);
-		res.status(error.status || 500).json(error);
-	}
+    res.status(200).json(comment);
+  } catch (error) {
+    console.log("error", error);
+    res.status(error.status || 500).json(error);
+  }
 });

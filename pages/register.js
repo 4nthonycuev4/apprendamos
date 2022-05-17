@@ -1,33 +1,32 @@
 /** @format */
 
 import { useEffect } from "react";
-import { useRouter } from "next/router";
-import Head from "next/head";
-
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import Head from "next/head";
+import { useRouter } from "next/router";
 
 import UserForm from "../components/forms/UserForm";
 
 export default function Account({ user }) {
-	const router = useRouter();
+  const router = useRouter();
 
-	useEffect(() => {
-		if (user.ref) {
-			router.push("/");
-		}
-	}, [user, router]);
+  useEffect(() => {
+    if (user.ref) {
+      router.push("/");
+    }
+  }, [user, router]);
 
-	return (
-		<div>
-			<Head>
-				<title>Regístrate</title>
-			</Head>
+  return (
+    <div>
+      <Head>
+        <title>Regístrate</title>
+      </Head>
 
-			<main className='max-w-lg mx-auto'>
-				<h1 className='text-2xl mb-4'>Regístrate</h1>
-				<UserForm user={user} />
-			</main>
-		</div>
-	);
+      <main className="mx-auto max-w-lg">
+        <h1 className="mb-4 text-2xl">Regístrate</h1>
+        <UserForm user={user} />
+      </main>
+    </div>
+  );
 }
 export const getServerSideProps = withPageAuthRequired();

@@ -1,55 +1,89 @@
 /** @format */
-import Link from "next/link";
-import moment from "moment";
 import { DotsHorizontalIcon } from "@heroicons/react/outline";
+import moment from "moment";
+import Image from "next/image";
+import Link from "next/link";
+
+import FollowButton from "../buttons/Follow";
+import Interactions from "../Interactions";
+import Tags from "../Tags";
 
 import AuthorCard from "./AuthorCard";
-import Tags from "../Tags";
-import Interactions from "../Interactions";
 
 export default function Post({
-	post,
-	author,
-	comments,
-	startViewerStats,
-	minimal,
-	commentInput = true,
+  post,
+  author,
+  comments,
+  startViewerStats,
+  minimal,
+  commentInput = true,
 }) {
-	return (
-		<div className='p-4 rounded-lg border  space-y-2'>
-			<article
-				className={"prose" + (minimal ? " line-clamp-5" : "")}
-				dangerouslySetInnerHTML={{ __html: post.bodyHTML }}
-			/>
-			{minimal && (
-				<Link href={`/@/${author.username}/posts/${post.ref.id}`}>
-					<a className='hover:underline font-bold'>seguir leyendo...</a>
-				</Link>
-			)}
-			<Tags tags={post.tags}></Tags>
-			<div className='flex justify-between items-center'>
-				<AuthorCard author={author} />
+  if (minimal) {
+    return <></>;
+  }
+  return (
+    <article className="space-y-2 py-2 px-6">
+      <div className="flex items-center space-x-2">
+        <Link href={`/@/${author.username}`}>
+          <a>
+            <div className="relative h-12 w-12">
+              <Image
+                src={author.picture}
+                alt="Picture of the author"
+                layout="fill"
+                objectFit="fill"
+                className="rounded-full"
+              />
+            </div>
+          </a>
+        </Link>
+        <div>
+          <Link href={`/@/${author.username}`}>
+            <a>
+              <h1 className="font-semibold">
+                {author.name}
+                <span className="font-normal dark:text-gray-300">{` @${author.username}`}</span>
+              </h1>
+              <h2>haola </h2>
+            </a>
+          </Link>
 
-				<div className='flex space-x-1'>
-					<p className='text-right'>{moment(post.created).fromNow()}</p>
-					<button>
-						<Link href={`/@/${author.username}/posts/${post.ref.id}/options`}>
-							<a>
-								<DotsHorizontalIcon className='text-gray-700 w-5' />
-							</a>
-						</Link>
-					</button>
-				</div>
-			</div>
-			<Interactions
-				contentRef={post.ref}
-				authorUsername={author.username}
-				startViewerStats={startViewerStats}
-				startStats={post.stats}
-				startComments={comments}
-				commentInput={commentInput}
-				minimal={minimal}
-			/>
-		</div>
-	);
+          <div className="flex items-center justify-between text-xs font-normal">
+            <FollowButton />
+            <span className="text-sm dark:text-gray-300">
+              {moment(post.created).format("LL")}
+            </span>
+          </div>
+        </div>
+      </div>
+      <h1 className="text-3xl font-black">{post.title}</h1>
+      <div
+        className="prose prose-img:mx-auto prose-img:rounded-lg dark:prose-invert"
+        dangerouslySetInnerHTML={{ __html: post.bodyHTML }}
+      />
+      <Tags tags={post.tags} />
+      <div className="flex items-center justify-between">
+        <AuthorCard author={author} />
+
+        <div className="flex space-x-1">
+          <button type="button">
+            <Link href={`/@/${author.username}/posts/${post.ref.id}/options`}>
+              <a>
+                <DotsHorizontalIcon className="w-5 text-gray-700" />
+              </a>
+            </Link>
+          </button>
+        </div>
+      </div>
+      <Interactions
+        contentRef={post.ref}
+        authorUsername={author.username}
+        startViewerStats={startViewerStats}
+        startStats={post.stats}
+        startComments={comments}
+        commentInput={commentInput}
+        minimal={minimal}
+      />
+    </article>
+  );
 }

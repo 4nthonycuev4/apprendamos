@@ -1,215 +1,286 @@
 /** @format */
 import { useState } from "react";
 import { useRouter } from "next/router";
-
-import { unified } from "unified";
-import remarkParse from "remark-parse";
-import remarkMath from "remark-math";
-import remarkGfm from "remark-gfm";
-import remarkRehype from "remark-rehype";
 import rehypeKatex from "rehype-katex";
 import rehypeStringify from "rehype-stringify";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import { unified } from "unified";
 
-import TagsInput from "../TagsInput";
-import Tags from "../Tags";
 import DeleteModal from "../DeleteModal";
+import Tags from "../Tags";
+import TagsInput from "../TagsInput";
 
 const defaultTags = [{ parsed: "hello_w0rld", raw: "Hello w0rld" }];
 
 async function MDtoHTML(md) {
-	const html = await unified()
-		.use(remarkParse)
-		.use(remarkMath)
-		.use(remarkGfm)
-		.use(remarkRehype)
-		.use(rehypeKatex)
-		.use(rehypeStringify)
-		.process(md);
+  const html = await unified()
+    .use(remarkParse)
+    .use(remarkMath)
+    .use(remarkGfm)
+    .use(remarkRehype)
+    .use(rehypeKatex)
+    .use(rehypeStringify)
+    .process(md);
 
-	return String(html);
+  return String(html);
 }
 
 export default function PostForm({ post, author }) {
-	const router = useRouter();
+  const router = useRouter();
 
-	const [bodyHTML, setBodyHTML] = useState(post?.bodyHTML || null);
-	const [bodyMD, setBodyMD] = useState(
-		post?.bodyMD || `# Un buen título\nAlgo de texto ...`
-	);
-	const [tags, setTags] = useState(post?.tags || defaultTags);
+  const [title, setTitle] = useState(post ? post?.title : "");
 
-	const [sending, setSending] = useState(false);
-	const [previewing, setPreviewing] = useState(false);
-	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [bodyHTML, setBodyHTML] = useState(post?.bodyHTML || null);
+  const [bodyMD, setBodyMD] = useState(post?.bodyMD || "");
 
-	const handlePreview = async () => {
-		if (previewing) {
-			setPreviewing(false);
-		} else {
-			const html = await MDtoHTML(bodyMD);
-			setBodyHTML(html);
-			setPreviewing(true);
-		}
-	};
+  const [tags, setTags] = useState(post?.tags || defaultTags);
 
-	const updatePost = async () => {
-		setSending(true);
-		const res = await fetch("/api/content/update", {
-			method: "PUT",
-			body: JSON.stringify({
-				data: { bodyMD, bodyHTML, tags },
-				ref: post.ref,
-			}),
-			headers: {
-				"Content-Type": "application/json",
-			},
-		})
-			.then((res) => res.json())
-			.catch((err) => console.error(err));
+  const [sending, setSending] = useState(false);
+  const [previewing, setPreviewing] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-		if (res.updated) {
-			router.push(`/@/${author.username}/posts/${post.ref.id}/`);
-		} else {
-			console.error("Error updating post");
-		}
-	};
+  const handlePreview = async () => {
+    if (previewing) {
+      setPreviewing(false);
+    } else {
+      const html = await MDtoHTML(bodyMD);
+      setBodyHTML(html);
+      setPreviewing(true);
+    }
+  };
 
-	const createPost = async () => {
-		try {
-			setSending(true);
-			const res = await fetch("/api/content/create", {
-				method: "POST",
-				body: JSON.stringify({
-					data: { bodyMD, bodyHTML, tags },
-					type: "post",
-				}),
-				headers: {
-					"Content-Type": "application/json",
-				},
-			})
-				.then((res) => res.json())
-				.catch((err) => console.error(err));
+  const updatePost = async () => {
+    setSending(true);
+    const res = await fetch("/api/content/update", {
+      method: "PUT",
+      body: JSON.stringify({
+        data: { title, bodyMD, bodyHTML, tags },
+        ref: post.ref,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .catch((err) => console.error(err));
 
-			router.push(`/@/${res.author.username}/posts/${res.content.ref.id}/`);
-		} catch (err) {
-			console.error(err);
-		}
-	};
+    if (res.updated) {
+      router.push(`/@/${author.username}/posts/${post.ref.id}/`);
+    } else {
+      console.error("Error updating post");
+    }
+  };
 
-	const deletePost = async () => {
-		try {
-			const res = await fetch("/api/content/delete", {
-				method: "DELETE",
+  const createPost = async () => {
+    try {
+      setSending(true);
+      const res = await fetch("/api/content/create", {
+        method: "POST",
+        body: JSON.stringify({
+          data: { title, bodyMD, bodyHTML, tags },
+          type: "post",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .catch((err) => console.error(err));
 
-				body: JSON.stringify({
-					ref: post.ref,
-				}),
-				headers: {
-					"Content-Type": "application/json",
-				},
-			})
-				.then((res) => res.json())
-				.catch((err) => console.error(err));
+      router.push(`/@/${res.author.username}/posts/${res.content.ref.id}/`);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-			if (res.deleted) {
-				router.push(`/@/${author.username}/`);
-			} else {
-				console.error("Error eliminando post");
-			}
-		} catch (err) {
-			console.error(err);
-		}
-	};
+  const deletePost = async () => {
+    try {
+      const res = await fetch("/api/content/delete", {
+        method: "DELETE",
 
-	const handleSubmit = () => {
-		if (post) {
-			updatePost();
-		} else {
-			createPost();
-		}
-	};
+        body: JSON.stringify({
+          ref: post.ref,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .catch((err) => console.error(err));
 
-	if (previewing && bodyHTML) {
-		return (
-			<div className='rounded-lg border p-4'>
-				<article
-					className='prose'
-					dangerouslySetInnerHTML={{ __html: bodyHTML }}
-				/>
-				<div className='h-2'></div>
-				<Tags tags={tags} />
-				<div className='flex space-x-2 mt-2 text-white '>
-					<button
-						type='button'
-						onClick={handleSubmit}
-						disabled={sending}
-						className='py-2 px-4 w-40 rounded font-bold  bg-gradient-to-r from-sky-500 to-purple-500 hover:from-sky-600 hover:to-purple-600 disabled:from-slate-400 disabled:to-slate-700 hover:disabled:from-slate-500 hover:disabled:to-gray-800'>
-						{sending ? "Enviando..." : post ? "Actualizar" : "Crear"}
-					</button>
-					<button
-						type='button'
-						onClick={handlePreview}
-						className='py-2 px-4 w-40 rounded font-bold  bg-gradient-to-r from-sky-500 to-green-500 hover:from-sky-600 hover:to-green-600'>
-						Seguir editando
-					</button>
-				</div>
-			</div>
-		);
-	}
+      if (res.deleted) {
+        router.push(`/@/${author.username}/`);
+      } else {
+        console.error("Error eliminando post");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-	return (
-		<div className='rounded-lg border p-4'>
-			<label className='block text-gray-800 text-sm font-bold mb-1'>
-				Cuerpo (
-				{bodyMD.length < 50
-					? "escribe al menos 50 caracteres"
-					: `${bodyMD.length}/2000`}
-				)
-			</label>
-			<textarea
-				type='text'
-				id='body'
-				rows='20'
-				defaultValue={bodyMD}
-				className='resize-none w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none'
-				placeholder='Debe comenzar con un título (# Un buen título...)'
-				onChange={(e) => setBodyMD(e.target.value)}
-			/>
+  const handleSubmit = () => {
+    if (post) {
+      updatePost();
+    } else {
+      createPost();
+    }
+  };
 
-			<TagsInput tags={tags} handleOnTagsChange={setTags} />
+  if (previewing && bodyHTML) {
+    return (
+      <article className="rounded-lg p-4">
+        <h1 className="pb-6 text-3xl font-black tracking-tight">{title}</h1>
+        <div
+          className="prose mb-2 prose-img:mx-auto prose-img:rounded-lg dark:prose-invert"
+          dangerouslySetInnerHTML={{ __html: bodyHTML }}
+        />
+        <div className="h-2" />
+        <Tags tags={tags} disabled />
+        <div className="mt-2 flex space-x-2">
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={sending}
+            className="w-40 rounded bg-gradient-to-r from-sky-500 to-purple-500  py-2 px-4 font-bold hover:from-sky-600 hover:to-purple-600 disabled:from-slate-400 disabled:to-slate-700 hover:disabled:from-slate-500 hover:disabled:to-gray-800"
+          >
+            {sending ? "Enviando..." : post ? "Actualizar" : "Crear"}
+          </button>
+          <button
+            type="button"
+            onClick={handlePreview}
+            className="w-40 rounded bg-gradient-to-r from-sky-500 to-green-500  py-2 px-4 font-bold hover:from-sky-600 hover:to-green-600"
+          >
+            Seguir editando
+          </button>
+        </div>
+      </article>
+    );
+  }
 
-			<div className='flex space-x-2 mt-2 text-white '>
-				<button
-					disabled={
-						!bodyMD ||
-						!bodyMD.startsWith("# ") ||
-						bodyMD.length < 50 ||
-						bodyMD.length > 2000
-					}
-					type='button'
-					onClick={handlePreview}
-					className='py-2 px-4 w-40 rounded font-bold  bg-gradient-to-r from-sky-500 to-green-500 hover:from-sky-600 hover:to-green-600 disabled:from-slate-400 disabled:to-slate-700 hover:disabled:from-slate-500 hover:disabled:to-gray-800'>
-					Preview
-				</button>
-				{post && (
-					<button
-						type='button'
-						onClick={() => {
-							setDeleteModalOpen(true);
-						}}
-						className='py-2 px-4 w-40 rounded font-bold  bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600'>
-						Eliminar
-					</button>
-				)}
-			</div>
-			{deleteModalOpen && (
-				<DeleteModal
-					onClose={() => {
-						setDeleteModalOpen(false);
-					}}
-					onDelete={deletePost}
-				/>
-			)}
-		</div>
-	);
+  return (
+    <div className="rounded-lg px-4 py-2">
+      <label className="text-sm font-bold">Título</label>
+      <input
+        type="text"
+        placeholder="Un buen título"
+        defaultValue={title}
+        className="mb-4 w-full rounded-lg dark:bg-gray-700"
+        onChange={(e) => setTitle(e.target.value)}
+      />
+
+      <label className="text-sm font-bold">Cuerpo</label>
+      <textarea
+        type="text"
+        id="body"
+        rows="20"
+        defaultValue={bodyMD}
+        className="w-full resize-none rounded-lg border px-3 py-2 focus:outline-none
+				dark:bg-gray-700
+				"
+        placeholder="Debe comenzar con un título (# Un buen título...)"
+        onChange={(e) => setBodyMD(e.target.value.trim())}
+      />
+
+      <TagsInput tags={tags} handleOnTagsChange={setTags} />
+
+      <table className="my-4 w-full table-auto border-collapse border border-slate-500">
+        <thead>
+          <tr>
+            <th className="border border-slate-600">Requisito</th>
+            <th className="border border-slate-600">Valor actual</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="border border-slate-700 px-2">
+              Título entre 5 y 10 palabras
+            </td>
+            <td className="border border-slate-700 px-2 text-center">
+              {title.trim().split(/\s+/).length}
+            </td>
+          </tr>
+          <tr>
+            <td className="border border-slate-600 px-2">Cuerpo sin títulos</td>
+            <td className="border border-slate-600 px-2 text-center">
+              {bodyMD
+                .split(/\n/)
+                .some(
+                  (line) =>
+                    line.startsWith("# ") ||
+                    line.startsWith(" # ") ||
+                    line.startsWith("  # ") ||
+                    line.startsWith("   # ")
+                )
+                ? "No cumple"
+                : "Cumple"}
+            </td>
+          </tr>
+          <tr>
+            <td className="border border-slate-600 px-2">
+              Cuerpo entre 15 y 2000 palabras
+            </td>
+            <td className="border border-slate-600 px-2 text-center">
+              {bodyMD.trim().split(/\s+/).length}
+            </td>
+          </tr>
+          <tr>
+            <td className="border border-slate-600 px-2">Máximo 8 tags</td>
+            <td className="border border-slate-600 px-2 text-center">
+              {tags.length}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div className="mt-2 flex space-x-2 text-white ">
+        <button
+          disabled={
+            !bodyMD ||
+            !title ||
+            bodyMD
+              .split(/\n/)
+              .some(
+                (line) =>
+                  line.startsWith("# ") ||
+                  line.startsWith(" # ") ||
+                  line.startsWith("  # ") ||
+                  line.startsWith("   # ")
+              ) ||
+            bodyMD.trim().split(/\s+/).length < 15 ||
+            bodyMD.trim().split(/\s+/).length > 2000 ||
+            title.trim().split(/\s+/).length < 5 ||
+            title.trim().split(/\s+/).length > 10 ||
+            tags.length > 8
+          }
+          type="button"
+          onClick={handlePreview}
+          className="w-40 rounded bg-gradient-to-r from-sky-500 to-green-500  py-2 px-4 font-bold hover:from-sky-600 hover:to-green-600 disabled:from-slate-400 disabled:to-slate-700 hover:disabled:from-slate-500 hover:disabled:to-gray-800"
+        >
+          Preview
+        </button>
+        {post && (
+          <button
+            type="button"
+            onClick={() => {
+              setDeleteModalOpen(true);
+            }}
+            className="w-40 rounded bg-gradient-to-r from-pink-500 to-red-500  py-2 px-4 font-bold hover:from-pink-600 hover:to-red-600"
+          >
+            Eliminar
+          </button>
+        )}
+      </div>
+      {deleteModalOpen && (
+        <DeleteModal
+          onClose={() => {
+            setDeleteModalOpen(false);
+          }}
+          onDelete={deletePost}
+        />
+      )}
+    </div>
+  );
 }
