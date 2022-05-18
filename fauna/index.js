@@ -55,11 +55,7 @@ export default class FaunaClient {
   async getViewer() {
     return this.client
       .query(GetViewer())
-      .then((res) => {
-        const x = FaunaToJSON(res);
-        console.log("x", x);
-        return x;
-      })
+      .then((res) => FaunaToJSON(res))
       .catch((error) => {
         console.log("error", error);
         return null;
@@ -240,12 +236,6 @@ export default class FaunaClient {
   }
 
   async createContent(data, type) {
-    if (type === "post") {
-      if (data.bodyHTML === undefined || data.bodyHTML === "") {
-        return null;
-      }
-    }
-
     return this.client
       .query(CreateContent(data, type))
       .then((res) => FaunaToJSON(res))

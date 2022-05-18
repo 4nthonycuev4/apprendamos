@@ -70,7 +70,7 @@ export default function FlashcardList({
           onClick={() => {
             handleAddItem();
           }}
-          className="mb-2 flex items-center space-x-1 rounded-md border bg-red-400 p-1 text-gray-600 disabled:bg-red-100"
+          className="mb-2 flex items-center space-x-1 rounded-md bg-red-400 p-1 text-gray-600 disabled:bg-red-100"
         >
           <h1 className="text-sm">Añadir</h1>
           <PlusCircleIcon className="w-4" />
@@ -80,7 +80,7 @@ export default function FlashcardList({
           onClick={() => {
             handleDeleteEmptyItems();
           }}
-          className="mb-2 flex items-center space-x-1 rounded-md border bg-green-400 p-1 text-gray-600"
+          className="mb-2 flex items-center space-x-1 rounded-md bg-green-400 p-1 text-gray-600"
         >
           <h1 className="text-sm">Quitar vacíos</h1>
           <FilterIcon className="w-4" />
@@ -110,7 +110,7 @@ export default function FlashcardList({
                           </button>
                           <div className="grid w-full grid-cols-2 gap-2">
                             <input
-                              className="h-12 rounded-md border p-2"
+                              className="h-12 rounded-md p-2 dark:bg-gray-700"
                               type="text"
                               defaultValue={front}
                               placeholder="Front"
@@ -123,7 +123,7 @@ export default function FlashcardList({
                               }}
                             />
                             <input
-                              className="h-12 rounded-md border p-2"
+                              className="h-12 rounded-md  p-2 dark:bg-gray-700"
                               type="text"
                               defaultValue={back}
                               placeholder="Back"

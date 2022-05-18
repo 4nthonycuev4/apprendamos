@@ -60,7 +60,7 @@ export default function PostForm({ post, author }) {
     const res = await fetch("/api/content/update", {
       method: "PUT",
       body: JSON.stringify({
-        data: { title, bodyMD, bodyHTML, tags },
+        data: { title, bodyMD, body: bodyHTML, tags },
         ref: post.ref,
       }),
       headers: {
@@ -83,7 +83,7 @@ export default function PostForm({ post, author }) {
       const res = await fetch("/api/content/create", {
         method: "POST",
         body: JSON.stringify({
-          data: { title, bodyMD, bodyHTML, tags },
+          data: { title, bodyMD, body: bodyHTML, tags },
           type: "post",
         }),
         headers: {
@@ -164,7 +164,7 @@ export default function PostForm({ post, author }) {
   }
 
   return (
-    <div className="rounded-lg px-4 py-2">
+    <div className="rounded-lg px-6 py-2">
       <label className="text-sm font-bold">Título</label>
       <input
         type="text"
@@ -183,7 +183,7 @@ export default function PostForm({ post, author }) {
         className="w-full resize-none rounded-lg border px-3 py-2 focus:outline-none
 				dark:bg-gray-700
 				"
-        placeholder="Debe comenzar con un título (# Un buen título...)"
+        placeholder="¿De qué quieres hablar? :D"
         onChange={(e) => setBodyMD(e.target.value.trim())}
       />
 

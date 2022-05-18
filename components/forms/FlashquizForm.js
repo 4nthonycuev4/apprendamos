@@ -11,7 +11,8 @@ const defaultTags = [{ parsed: "hello_w0rld", raw: "Hello w0rld" }];
 
 export default function FlashquizForm({ flashquiz, author }) {
   const [tags, setTags] = useState(flashquiz?.tags || defaultTags);
-  const [name, setName] = useState(flashquiz?.name || "");
+  const [title, setTitle] = useState(flashquiz?.title || "");
+  const [body, setBody] = useState(flashquiz?.body || "");
   const [flashcards, setFlashcards] = useState(
     flashquiz?.flashcards || [
       {
@@ -43,7 +44,7 @@ export default function FlashquizForm({ flashquiz, author }) {
       const res = await fetch("/api/content/create", {
         method: "POST",
         body: JSON.stringify({
-          data: { name, tags, flashcards },
+          data: { title, body, tags, flashcards },
           type: "flashquiz",
         }),
         headers: {
@@ -66,7 +67,7 @@ export default function FlashquizForm({ flashquiz, author }) {
     const res = await fetch("/api/content/update", {
       method: "PUT",
       body: JSON.stringify({
-        data: { name, tags, flashcards },
+        data: { title, body, tags, flashcards },
         ref: flashquiz.ref,
       }),
       headers: {
@@ -117,21 +118,42 @@ export default function FlashquizForm({ flashquiz, author }) {
   };
 
   return (
-    <div className="rounded-lg border p-4">
+    <div className="rounded-lg px-6 py-2">
       <div className="mb-4">
         <label
-          className="mb-1 block text-sm font-bold text-gray-800"
-          htmlFor="name"
+          className="mb-1 block text-sm font-bold "
+          htmlFor="title"
         >
-          Nombre
+          Title
         </label>
         <input
           type="text"
-          id="name"
-          onChange={(e) => setName(e.target.value)}
-          defaultValue={name}
-          className="w-full rounded border bg-white px-3 py-2 text-gray-700 outline-none"
+          id="title"
+          onChange={(e) => setTitle(e.target.value)}
+          defaultValue={title}
+          className="w-full rounded border bg-white px-3 py-2 outline-none dark:bg-gray-700"
           placeholder="Las teorías del origen de la vida"
+        />
+        {error && (
+          <p className="font-bold text-red-900">El nombre es obligatorio</p>
+        )}
+      </div>
+
+      <div>
+        <label
+          className="mb-1 block text-sm font-bold "
+          htmlFor="body"
+        >
+          Body
+        </label>
+        <textarea
+          type="text"
+          id="body"
+          onChange={(e) => setBody(e.target.value)}
+          defaultValue={body}
+          rows="5"
+          className="w-full rounded border bg-white px-3 py-2 outline-none dark:bg-gray-700"
+          placeholder="¿De qué trata este flashquiz?"
         />
         {error && (
           <p className="font-bold text-red-900">El nombre es obligatorio</p>
@@ -140,7 +162,7 @@ export default function FlashquizForm({ flashquiz, author }) {
 
       <div className="mb-4">
         <label
-          className="mb-1 mt-3 block text-sm font-bold text-gray-800"
+          className="mb-1 mt-3 block text-sm font-bold"
           htmlFor="flashcards"
         >
           Flashcards ({flashcards.length}/30)
