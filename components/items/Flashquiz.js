@@ -17,7 +17,7 @@ export default function Flashquiz({
 }) {
   if (minimal) {
     return (
-      <article className="space-y-2 py-2 px-6">
+      <article className="space-y-2 py-2 px-6 overflow-hidden">
         <BasicAuthorCard author={author} />
         <Link href={`/@/${author.username}/flashquizzes/${flashquiz.ref.id}`}>
           <a>
@@ -27,7 +27,7 @@ export default function Flashquiz({
         <div
           className="prose prose-sm line-clamp-2 prose-img:mx-auto prose-img:rounded-lg dark:prose-invert"
           // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: flashquiz.body }}
+          dangerouslySetInnerHTML={{ __html: flashquiz.body.slice(0, 250) + "..." }}
         />
         <Link href={`/@/${author.username}/flashquizzes/${flashquiz.ref.id}`}>
           <a>

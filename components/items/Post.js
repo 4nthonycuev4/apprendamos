@@ -24,7 +24,7 @@ export default function Post({
         <div
           className="prose prose-sm line-clamp-2 prose-img:mx-auto prose-img:rounded-lg dark:prose-invert"
           // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: post.body }}
+          dangerouslySetInnerHTML={{ __html: post.body.slice(0, 250) }}
         />
         <Link href={`/@/${author.username}/posts/${post.ref.id}`}>
           <a>
