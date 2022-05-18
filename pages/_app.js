@@ -14,12 +14,12 @@ import "../styles/app.css";
 
 moment.updateLocale("es", {
   relativeTime: {
-    future: "in %s",
+    future: "%s",
     past: "%s",
     s: "justo ahora",
-    ss: "%ss",
+    ss: "%s s",
     m: "1 min",
-    mm: "%dm",
+    mm: "%d min",
     h: "1 hora",
     hh: "%dh",
     d: "1 día",
@@ -38,14 +38,18 @@ export default function MyApp({ Component, pageProps }) {
       <UserProvider>
         <SWRConfig
           value={{
-            refreshInterval: 30000,
+            refreshInterval: 60000,
             fetcher: (resource, init) =>
               fetch(resource, init).then((res) => res.json()),
           }}
         >
           <div className="max-w-screen min-h-screen dark:bg-neutral-900">
-            <div className="mx-auto flex min-h-screen max-w-xl flex-col dark:bg-gray-900 dark:text-slate-300 ">
-              <main className="h-full flex-grow bg-gray-100 text-slate-800 dark:bg-gray-800 dark:text-white">
+            <div className="
+                mx-auto max-w-xl
+                min-h-screen flex flex-col justify-between
+              dark:bg-gray-900 dark:text-slate-300
+            ">
+              <main className="grow bg-gray-100 text-slate-800 dark:bg-gray-800 dark:text-white">
                 <Component {...pageProps} />
               </main>
               <Footer />

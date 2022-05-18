@@ -15,6 +15,7 @@ export function ParseDocType(ref) {
 
 export function FaunaToJSON(obj) {
   if (Array.isArray(obj)) {
+
     return obj.map((e) => FaunaToJSON(e));
   }
   if (typeof obj === "object") {
@@ -32,19 +33,18 @@ export function FaunaToJSON(obj) {
     }
     Object.keys(obj).forEach((k) => {
       if (k === "data") {
-        const d = obj[k];
+        const data = obj.data;
         delete obj.data;
 
-        Object.keys(d).forEach((dataKey) => {
-          obj[dataKey] = FaunaToJSON(d[dataKey]);
-        });
+        Object.keys(data).forEach((dataKey) => {
+          obj[dataKey] = FaunaToJSON(data[dataKey]);
+        })
       } else if (obj[k] === null || obj[k] === undefined) {
         delete obj[k];
       } else {
         obj[k] = FaunaToJSON(obj[k]);
       }
     });
-
     return obj;
   }
   return obj;

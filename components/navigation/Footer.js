@@ -18,8 +18,9 @@ export default function Footer() {
   return (
     <footer
       className="
-				sticky bottom-0 z-50 grid
-				h-14 grid-cols-5 justify-center
+        bottom-0 sticky z-50
+        h-14
+        grid grid-cols-5 justify-center
 				bg-gray-300
 				text-gray-900
 				dark:bg-gray-900

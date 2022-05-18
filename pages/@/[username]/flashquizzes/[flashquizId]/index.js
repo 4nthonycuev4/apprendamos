@@ -6,14 +6,14 @@ import Flashquiz from "../../../../../components/items/Flashquiz";
 import Navbar from "../../../../../components/navigation/Navbar";
 import FaunaClient from "../../../../../fauna";
 
-export default function Quiz({ flashquiz, author, comments }) {
+export default function SingleFlashquizPage({ flashquiz, author }) {
   return (
     <>
       <Head>
-        <title>{`${author.name}: "${flashquiz.name}" flashquiz`}</title>
+        <title>{`${author.name}'s flashquiz`}</title>
       </Head>
-      <Navbar title={`${author.name}'s flashquiz`} />
-      <Flashquiz flashquiz={flashquiz} author={author} comments={comments} />
+      <Navbar title="Flashquiz" />
+      <Flashquiz flashquiz={flashquiz} author={author} />
     </>
   );
 }
@@ -24,13 +24,13 @@ export async function getServerSideProps(context) {
 
     const faunaClient = new FaunaClient();
 
-    const { content, author, comments } =
+    const { content, author } =
       await faunaClient.getSingleContentWithAuthor({
         collection: "Flashquizzes",
         id: flashquizId,
       });
 
-    return { props: { flashquiz: content, author, comments } };
+    return { props: { flashquiz: content, author: author } };
   } catch (error) {
     return { props: { errorCode: 500 } };
   }

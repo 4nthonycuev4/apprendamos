@@ -39,7 +39,7 @@ export default function FollowButton({ username }) {
         className="h-6 w-20 rounded bg-black text-xs font-semibold text-white"
         onClick={toggleFollow}
       >
-        No seguir
+        Siguiendo
       </button>
     );
   }

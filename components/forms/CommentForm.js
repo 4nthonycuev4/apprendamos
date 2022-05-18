@@ -67,9 +67,10 @@ export default function CommentForm({
         message = rawComment;
       }
       document.getElementById(htmlId).innerText = "";
-      setIsSubmitting(false);
+
       commentToUpdate ? updateComment(message) : createComment(message, coins);
     }
+    setIsSubmitting(false);
   };
 
   const createComment = async (message, coins) => {
@@ -88,7 +89,7 @@ export default function CommentForm({
     setViewerStats(res.viewerStats);
     setStats(res.stats);
     setComments(
-      [{ comment: res.comment, author: res.author }].concat(comments)
+      [{ ...res.comment, author: res.author }].concat(comments)
     );
   };
 
@@ -169,6 +170,7 @@ export default function CommentForm({
 							break-word border-0 border-b-2 border-gray-200  bg-gray-100 p-2 
 							
 							text-gray-800
+              dark:text-white
 							empty:before:text-gray-400
 							
 							empty:before:content-['Agrega_un_comentario...']
@@ -193,7 +195,7 @@ export default function CommentForm({
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={isSubmitting || !user}
+            disabled={isSubmitting || !user || error}
             className=" mt-2 text-blue-500 disabled:text-gray-400"
           >
             <PaperAirplaneIcon className="w-5" />

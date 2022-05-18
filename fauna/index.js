@@ -1,11 +1,12 @@
 /** @format */
 import { Client, query } from "faunadb";
 
-import { CreateComment } from "./comment/create";
+import { CreateComment } from "./comments/create";
 import { CreateContent } from "./content/create";
 import { DeleteContent } from "./content/delete";
 import { GetContentWithAuthor } from "./content/read";
 import { FollowUser, LikeContent } from "./interactions/create";
+import { GetContentComments } from "./comments/read";
 import {
   GetViewerAuthorStats,
   GetViewerContentStats,
@@ -15,6 +16,7 @@ import { CreateUser } from "./user/create";
 import { GetUserWithContent, GetViewer } from "./user/read";
 import { UpdateViewer } from "./user/update";
 import { FaunaToJSON, ParseDocType } from "./utils";
+import { GetMinimalUser } from './user/read';
 
 const {
   Ref,
@@ -23,6 +25,8 @@ const {
   Join,
   Match,
   Var,
+  Map,
+  Get,
   Lambda,
   Index,
   If,
@@ -76,6 +80,18 @@ export default class FaunaClient {
         return null;
       });
   }
+
+  async getContentComments(ref) {
+    const docType = ParseDocType(ref);
+    return this.client
+      .query(GetContentComments(Ref(Collection(ref.collection), ref.id), docType))
+      .then((res) => FaunaToJSON(res))
+      .catch((error) => {
+        console.log("error", error);
+        return null;
+      });
+  }
+
 
   async getViewerAuthorStats(username) {
     return this.client
@@ -171,14 +187,18 @@ export default class FaunaClient {
       });
   }
 
-  async getSingleContentWithAuthor(ref, comments = 30) {
-    const docType = ParseDocType(ref);
+  async getSingleContentWithAuthor(ref) {
     return this.client
       .query(
-        GetContentWithAuthor(
-          Ref(Collection(ref.collection), ref.id),
-          docType,
-          comments
+        Let(
+          {
+            content: Get(Ref(Collection(ref.collection), ref.id)),
+            author: GetMinimalUser(Select(["data", "authorRef"], Var("content"))),
+          },
+          {
+            content: Var("content"),
+            author: Var("author"),
+          }
         )
       )
       .then((res) => FaunaToJSON(res))
@@ -188,19 +208,26 @@ export default class FaunaClient {
       });
   }
 
-  async getContent(username) {
+  async getContent() {
     return this.client
       .query(
-        query.Map(
+        Map(
           Paginate(
-            Join(Match("all_content"), Index("content_sorted_popularity"))
+            Join(Match(Index("all_content")), Index("content_sorted_popularity"))
           ),
           Lambda(
-            ["score", "ref"],
-            If(
-              Equals(Select(["collection", "id"], Var("ref")), "Posts"),
-              GetContentWithAuthor(Var("ref"), "post", 3, username),
-              GetContentWithAuthor(Var("ref"), "flashquiz", 3, username)
+            ["score", "ref", "title", "body", "created", "authorRef"],
+            Let(
+              {
+                author: GetMinimalUser(Var("authorRef")),
+              },
+              {
+                ref: Var("ref"),
+                title: Var("title"),
+                body: Var("body"),
+                created: Var("created"),
+                author: Var("author"),
+              }
             )
           )
         )
@@ -259,13 +286,20 @@ export default class FaunaClient {
     return this.client
       .query(
         query.Map(
-          Paginate(Match(Index("content_by_tag"), tag_parsed)),
+          Paginate(Join(Match(Index("content_by_tag"), tag_parsed), Index("content_sorted_popularity"))),
           Lambda(
-            ["score", "ref"],
-            If(
-              Equals(Select(["collection", "id"], Var("ref")), "Posts"),
-              GetContentWithAuthor(Var("ref"), "post", 3),
-              GetContentWithAuthor(Var("ref"), "flashquiz", 3)
+            ["score", "ref", "title", "body", "created", "authorRef"],
+            Let(
+              {
+                author: GetMinimalUser(Var("authorRef")),
+              },
+              {
+                ref: Var("ref"),
+                title: Var("title"),
+                body: Var("body"),
+                created: Var("created"),
+                author: Var("author"),
+              }
             )
           )
         )

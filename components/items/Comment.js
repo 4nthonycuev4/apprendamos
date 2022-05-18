@@ -26,8 +26,6 @@ export default function Comment({ comment, author, minimal, selectComment }) {
               <span className="font-bold">{author.name}</span>
               <span> · </span>
               <span>@{author.username}</span>
-              <span> · </span>
-              <span>{moment(comment.created).fromNow()}</span>
             </a>
           </Link>
           {!minimal && (
@@ -42,6 +40,7 @@ export default function Comment({ comment, author, minimal, selectComment }) {
           )}
         </div>
         <p>{comment.message}</p>
+        <h1 className="font-thin text-sm text-right">{moment(comment.created).fromNow()}</h1>
       </div>
     </div>
   );

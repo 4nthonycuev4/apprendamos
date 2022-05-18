@@ -1,6 +1,5 @@
 /** @format */
 
-import { useUser } from "@auth0/nextjs-auth0";
 import Head from "next/head";
 import useSWR from "swr";
 
@@ -8,16 +7,11 @@ import Content from "../components/lists/Content";
 import Navbar from "../components/navigation/Navbar";
 
 export default function Home() {
-  const { user, isLoading } = useUser();
 
-  const getUrl = () =>
-    user && user.username
-      ? `/api/content?username=${user.username}`
-      : "/api/content";
 
-  const { data: content } = useSWR(!isLoading ? getUrl() : null);
+  const { data: content } = useSWR("/api/content");
 
-  if (isLoading || !content) {
+  if (!content) {
     return <p>Cargando...</p>;
   }
 
@@ -39,7 +33,7 @@ export default function Home() {
         />
       </Head>
       <Navbar title="Inicio" />
-      <Content content={content} showComments minimal />
+      <Content content={content} />
     </>
   );
 }

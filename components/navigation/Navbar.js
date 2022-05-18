@@ -12,7 +12,8 @@ export default function Navbar({ title }) {
   return (
     <nav
       className="
-				sticky top-0 z-10 flex 
+				top-0 sticky z-50
+        flex 
 				items-center justify-between bg-gray-300
 				px-4
 				py-2

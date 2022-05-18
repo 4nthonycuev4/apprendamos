@@ -61,15 +61,22 @@ export function GetUserWithContent(username) {
         Paginate(
           Join(
             Match(Index("content_by_authorRef"), Var("userRef")),
-            Index("content_sorted_ts")
+            Index("content_sorted_created")
           )
         ),
-        Lambda(["ts", "ref"], Get(Var("ref")))
-      ),
+        Lambda(["created", "ref", "title", "body", "authorRef"], Let(
+          {}, {
+          title: Var("title"),
+          body: Var("body"),
+          created: Var("created"),
+          ref: Var("ref"),
+        }
+
+        )))
+
     },
     {
       user: Var("user"),
       content: Var("content"),
-    }
-  );
+    })
 }

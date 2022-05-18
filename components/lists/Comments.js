@@ -7,16 +7,19 @@ import Comment from "../items/Comment";
 export default function CommentList({ comments, minimal, viewer }) {
   const [commentSelected, setCommentSelected] = useState(null);
 
+  if (!comments || comments.length === 0) {
+    return <p>Sin comentarios</p>;
+  }
+
   return (
     <div className="space-y-2">
       {Object.keys(comments).map((key) => {
-        if (comments[key].comment) {
+        if (comments[key].ref) {
           return (
             <Comment
-              key={comments[key].comment.ref.id}
-              comment={comments[key].comment}
+              key={comments[key].ref.id}
+              comment={comments[key]}
               author={comments[key].author}
-              minimal={minimal}
               selectComment={setCommentSelected}
             />
           );

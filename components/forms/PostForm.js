@@ -1,12 +1,15 @@
 /** @format */
 import { useState } from "react";
 import { useRouter } from "next/router";
+
+
 import rehypeKatex from "rehype-katex";
 import rehypeStringify from "rehype-stringify";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
+
 import { unified } from "unified";
 
 import DeleteModal from "../DeleteModal";
@@ -33,8 +36,8 @@ export default function PostForm({ post, author }) {
 
   const [title, setTitle] = useState(post ? post?.title : "");
 
-  const [bodyHTML, setBodyHTML] = useState(post?.bodyHTML || null);
-  const [bodyMD, setBodyMD] = useState(post?.bodyMD || "");
+  const [bodyHTML, setBodyHTML] = useState(post?.body || null);
+  const [bodyMD, setBodyMD] = useState(post?.bodyMD || null);
 
   const [tags, setTags] = useState(post?.tags || defaultTags);
 
@@ -205,7 +208,7 @@ export default function PostForm({ post, author }) {
           <tr>
             <td className="border border-slate-600 px-2">Cuerpo sin títulos</td>
             <td className="border border-slate-600 px-2 text-center">
-              {bodyMD
+              {bodyMD && bodyMD
                 .split(/\n/)
                 .some(
                   (line) =>
@@ -223,7 +226,7 @@ export default function PostForm({ post, author }) {
               Cuerpo entre 15 y 2000 palabras
             </td>
             <td className="border border-slate-600 px-2 text-center">
-              {bodyMD.trim().split(/\s+/).length}
+              {bodyMD?.trim().split(/\s+/).length}
             </td>
           </tr>
           <tr>

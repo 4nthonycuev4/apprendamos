@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 
 import Content from "../../components/lists/Content";
 import FaunaClient from "../../fauna";
+import Navbar from './../../components/navigation/Navbar';
 
 export default function TagPage({ content }) {
   const router = useRouter();
@@ -27,16 +28,8 @@ export default function TagPage({ content }) {
           crossOrigin="anonymous"
         />
       </Head>
-      <h1 className="mb-2 text-center text-2xl font-extrabold">
-        Contenido con #{tag}
-      </h1>
-      {content && content.length > 0 ? (
-        <Content content={content} minimal />
-      ) : (
-        <div>
-          <h1>Sin contenido :(</h1>
-        </div>
-      )}
+      <Navbar title={`#${tag}`} />
+      <Content content={content} />
     </>
   );
 }

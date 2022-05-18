@@ -26,7 +26,7 @@ export default function PostPage({ post, author, comments }) {
       </Head>
       <Navbar title="Post" />
 
-      <Post post={post} author={author} comments={comments} minimal={false} />
+      <Post post={post} author={author} />
     </>
   );
 }
@@ -34,16 +34,15 @@ export default function PostPage({ post, author, comments }) {
 export async function getServerSideProps(context) {
   const { postId } = context.query;
   const faunaClient = new FaunaClient();
-  const res = await faunaClient.getSingleContentWithAuthor({
+  const { content, author } = await faunaClient.getSingleContentWithAuthor({
     collection: "Posts",
     id: postId,
   });
 
   return {
     props: {
-      post: res.content,
-      author: res.author,
-      comments: res.comments,
+      post: content,
+      author: author,
     },
   };
 }

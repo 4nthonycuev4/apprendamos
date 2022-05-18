@@ -6,9 +6,6 @@ import Post from "../items/Post";
 export default function Content({
   content,
   author,
-  minimal,
-  showComments = false,
-  commentInput = false,
 }) {
   if (content.length < 1) {
     return <h1>Sin contenido</h1>;
@@ -23,8 +20,7 @@ export default function Content({
                 key={x.ref.id}
                 flashquiz={x}
                 author={author}
-                minimal={minimal}
-                commentInput={commentInput}
+                minimal
               />
             );
           if (x.ref.collection === "Posts")
@@ -32,9 +28,8 @@ export default function Content({
               <Post
                 key={x.ref.id}
                 post={x}
-                minimal={minimal}
+                minimal
                 author={author}
-                commentInput={commentInput}
               />
             );
         })}
@@ -44,28 +39,22 @@ export default function Content({
   return (
     <div className="divide-y divide-gray-300 dark:divide-gray-600">
       {content.map((x) => {
-        if (x.content.ref.collection === "Flashquizzes")
+        if (x.ref.collection === "Flashquizzes")
           return (
             <Flashquiz
-              key={x.content.ref.id}
-              flashquiz={x.content}
-              minimal={minimal}
+              key={x.ref.id}
+              flashquiz={x}
               author={x.author}
-              startViewerStats={x.viewerStats}
-              comments={x.comments}
-              showComments={showComments}
+              minimal
             />
           );
-        if (x.content.ref.collection === "Posts")
+        if (x.ref.collection === "Posts")
           return (
             <Post
-              key={x.content.ref.id}
-              post={x.content}
-              minimal={minimal}
+              key={x.ref.id}
+              post={x}
               author={x.author}
-              startViewerStats={x.viewerStats}
-              comments={x.comments}
-              showComments={showComments}
+              minimal
             />
           );
       })}

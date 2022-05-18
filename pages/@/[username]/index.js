@@ -34,7 +34,7 @@ export default function Profile({ user, content, errorCode, errorMessage }) {
       </Head>
       <Navbar title={`@${user.username}`} />
       <BigProfile profile={user} />
-      <Content content={content} author={user} minimal />
+      <Content content={content} author={user} />
     </>
   );
 }

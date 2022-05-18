@@ -15,7 +15,7 @@ export default function CardView({ cards }) {
   }
 
   return (
-    <div className="px-4">
+    <div>
       <button
         type="button"
         className="w-full"
@@ -37,9 +37,8 @@ export default function CardView({ cards }) {
         >
           <ArrowRightIcon className="h-5 w-5" />
         </button>
-        <span className="mx-5 font-bold">{`${viewing + 1}/${
-          cards.length
-        }`}</span>
+        <span className="mx-5 font-bold">{`${viewing + 1}/${cards.length
+          }`}</span>
         <button
           type="button"
           disabled={viewing === 0}

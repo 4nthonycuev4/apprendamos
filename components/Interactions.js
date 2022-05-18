@@ -18,45 +18,37 @@ import CommentForm from "./forms/CommentForm";
 import Comments from "./lists/Comments";
 
 export default function Interactions({
-  authorUsername,
   contentRef,
-  startViewerStats = { like: false, comments: 0, saved: false },
   startStats,
-  startComments = [],
-  commentInput,
-  minimal,
 }) {
-  const [viewerStats, setViewerStats] = useState(startViewerStats);
-  const [comments, setComments] = useState(startComments);
+  const [viewerStats, setViewerStats] = useState({ like: false, comments: 0, saved: false });
+  const [comments, setComments] = useState(null);
   const [stats, setStats] = useState(startStats);
 
   const { user } = useUser();
 
   useEffect(() => {
     const getViewerStats = async () => {
-      const res = await fetch("/api/interactions/content", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ref: contentRef,
-        }),
-      })
-        .then((resx) => resx.json())
+      const viewerStats = await fetch(`/api/${contentRef.collection}/${contentRef.id}/viewerStats`)
+        .then((res) => res.json())
         .catch((err) => console.log(err));
-      setViewerStats(res);
+      setViewerStats(viewerStats);
     };
 
-    if (!viewerStats?.ref && user?.ref) {
-      getViewerStats();
-    }
-  });
+    const getComments = async () => {
+      const comments = await fetch(`/api/${contentRef.collection}/${contentRef.id}/comments`)
+        .then((res) => res.json())
+        .catch((err) => console.log(err));
+      setComments(comments);
+    };
+    getViewerStats();
+    getComments();
+  }, []);
 
   async function likeContent() {
     try {
       const resx = await fetch("/api/interactions/content/like", {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
@@ -110,26 +102,14 @@ export default function Interactions({
           </button>
         </div>
       </div>
-      {commentInput ? (
-        <CommentForm
-          contentRef={contentRef}
-          comments={comments}
-          setViewerStats={setViewerStats}
-          setStats={setStats}
-          setComments={setComments}
-        />
-      ) : (
-        <Link
-          href={`/@/${authorUsername}/${contentRef.collection.toLowerCase()}/${
-            contentRef.id
-          }`}
-        >
-          <a>
-            <h1>Ver comentarios</h1>
-          </a>
-        </Link>
-      )}
-      <Comments comments={comments} minimal={minimal} viewer={user} />
+      <CommentForm
+        contentRef={contentRef}
+        comments={comments}
+        setViewerStats={setViewerStats}
+        setStats={setStats}
+        setComments={setComments}
+      />
+      <Comments comments={comments} viewer={user} />
     </div>
   );
 }
