@@ -23,6 +23,19 @@ export default function PostPage({ post, author, comments }) {
           crossOrigin="anonymous"
         />
         <title>{`${author.username}'s post`}</title>
+        <meta property="og:url" content="cardsmemo.com" />
+        <meta property="og:type" content="website" />
+        <meta property="fb:app_id" content="328834189100104" />
+        <meta
+          property="og:title"
+          content={`${author.name}: ${post.title} || Cardsmemo`}
+        />
+        <meta name="twitter:card" content="summary" />
+        <meta
+          property="og:description"
+          content={`${post.bodyMD.slice(0, 40)}... Cardsmemo te permite compartir publicaciones y flashcards con los demás usuarios de la red. Regístrate y empieza a crear y compartir tu propia red de conocimiento.`}
+        />
+        <meta property="og:image" content="https://res.cloudinary.com/cardsmemo/image/upload/v1652936748/app_src/ioo_swpsqz.jpg" />
       </Head>
       <Navbar title="Post" />
 
