@@ -7,8 +7,8 @@ export default function Content({
   content,
   author,
 }) {
-  if (content.length < 1) {
-    return <h1>Sin contenido</h1>;
+  if (!content || content.length < 1) {
+    return <h1 className="pt-2 px-6">No se encontró contenido :(</h1>;
   }
   if (author) {
     return (
