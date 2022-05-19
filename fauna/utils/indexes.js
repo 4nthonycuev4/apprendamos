@@ -1,6 +1,6 @@
 /** @format */
 
-import { Create, CreateIndex, Query } from "faunadb";
+import { CreateIndex, Query } from "faunadb";
 import { Select } from 'faunadb';
 
 CreateIndex({
@@ -20,18 +20,18 @@ CreateIndex({
               likes: Select(["data", "stats", "likes"], Var("content")),
               comments: Select(["data", "stats", "comments"], Var("content")),
 
-              txtime: Select(["data", "created"], Var("content")),
-              unixstarttime: Time("2020-01-01T00:00:00+00:00"),
-              ageInSecsSinceUnix: TimeDiff(
-                Var("unixstarttime"),
-                Var("txtime"),
-                "hour"
+              creationTime: Select(["data", "created"], Var("content")),
+              referenceTime: Time("2022-01-01T00:00:00+00:00"),
+              relativeAge: TimeDiff(
+                Var("referenceTime"),
+                Var("creationTime"),
+                "hours"
               ),
             },
             Add(
               Multiply(Var("likesfactor"), Var("likes")),
               Multiply(Var("commentsFactor"), Var("comments")),
-              Multiply(Var("ageFactor"), Var("ageInSecsSinceUnix"))
+              Multiply(Var("ageFactor"), Var("relativeAge"))
             )
           )
         )

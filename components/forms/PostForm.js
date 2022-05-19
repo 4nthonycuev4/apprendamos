@@ -199,7 +199,7 @@ export default function PostForm({ post, author }) {
         <tbody>
           <tr>
             <td className="border border-slate-700 px-2">
-              Título entre 5 y 10 palabras
+              Título entre 3 y 10 palabras
             </td>
             <td className="border border-slate-700 px-2 text-center">
               {title.trim().split(/\s+/).length}
@@ -254,7 +254,7 @@ export default function PostForm({ post, author }) {
               ) ||
             bodyMD.trim().split(/\s+/).length < 15 ||
             bodyMD.trim().split(/\s+/).length > 2000 ||
-            title.trim().split(/\s+/).length < 5 ||
+            title.trim().split(/\s+/).length < 3 ||
             title.trim().split(/\s+/).length > 10 ||
             tags.length > 8
           }
