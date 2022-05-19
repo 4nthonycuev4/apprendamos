@@ -7,13 +7,7 @@ import Content from "../components/lists/Content";
 import Navbar from "../components/navigation/Navbar";
 
 export default function Home() {
-
-
   const { data: content } = useSWR("/api/content");
-
-  if (!content) {
-    return <p>Cargando...</p>;
-  }
 
   return (
     <>
