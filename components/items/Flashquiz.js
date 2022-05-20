@@ -18,7 +18,12 @@ export default function Flashquiz({
   if (minimal) {
     return (
       <article className="space-y-2 py-2 px-6 overflow-hidden">
-        <BasicAuthorCard author={author} />
+        <div className="flex justify-between items-center">
+          <BasicAuthorCard author={author} />
+          <button type="button" className="h-6 w-24 rounded text-sm font-bold text-white bg-gradient-to-r from-red-600 to-red-700">
+            Flashquiz
+          </button>
+        </div>
         <Link href={`/@/${author.username}/flashquizzes/${flashquiz.ref.id}`}>
           <a>
             <h1 className="text-2xl font-bold">{flashquiz.title}</h1>

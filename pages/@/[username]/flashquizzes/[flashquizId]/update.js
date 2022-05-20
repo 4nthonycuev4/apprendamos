@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 
 import FlashquizForm from "../../../../../components/forms/FlashquizForm";
 import FaunaClient from "../../../../../fauna";
+import Navbar from "../../../../../components/navigation/Navbar";
 
 export default function EditFlashquizPage({ flashquiz, author }) {
   const router = useRouter();
@@ -27,7 +28,7 @@ export default function EditFlashquizPage({ flashquiz, author }) {
         <title>Editar Flashquiz</title>
       </Head>
 
-      <h1 className="mb-4  text-2xl text-gray-800">Editar un flashquiz</h1>
+      <Navbar title="Editar un flashquiz" />
       <FlashquizForm flashquiz={flashquiz} author={author} />
     </>
   );

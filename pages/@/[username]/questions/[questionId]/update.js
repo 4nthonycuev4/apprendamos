@@ -5,11 +5,12 @@
 import { useUser } from "@auth0/nextjs-auth0";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import Navbar from "../../../../../components/navigation/Navbar";
 
-import PostForm from "../../../../../components/forms/PostForm";
+import QuestionForm from "../../../../../components/forms/QuestionForm";
 import FaunaClient from "../../../../../fauna";
 
-export default function EditPostPage({ post, author }) {
+export default function EditQuestionPage({ question, author }) {
   const { user, isLoading } = useUser();
   const router = useRouter();
 
@@ -22,7 +23,7 @@ export default function EditPostPage({ post, author }) {
   return (
     <div>
       <Head>
-        <title>Editar Post</title>
+        <title>Editar Pregunta</title>
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css"
@@ -37,26 +38,26 @@ export default function EditPostPage({ post, author }) {
         />
       </Head>
 
-      <h1 className="mb-4  text-2xl text-gray-800">Editar un post</h1>
-      <PostForm post={post} author={author} />
+      <Navbar title="Editar una pregunta" />
+      <QuestionForm question={question} author={author} />
     </div>
   );
 }
 
 export async function getServerSideProps(context) {
-  const { postId } = context.query;
+  const { questionId } = context.query;
   const faunaClient = new FaunaClient();
   const res = await faunaClient.getSingleContentWithAuthor(
     {
-      collection: "Posts",
-      id: postId,
+      collection: "Questions",
+      id: questionId,
     },
     0
   );
 
   return {
     props: {
-      post: res.content,
+      question: res.content,
       author: res.author,
     },
   };

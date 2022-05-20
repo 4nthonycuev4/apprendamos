@@ -2,10 +2,11 @@
 
 import Head from "next/head";
 
-import Post from "../../../../../components/items/Post";
+import Question from "../../../../../components/items/Question";
+import Navbar from "../../../../../components/navigation/Navbar";
 import FaunaClient from "../../../../../fauna";
 
-export default function PostPage({ post, author, comments }) {
+export default function QuestionPage({ question, author }) {
   return (
     <>
       <Head>
@@ -21,27 +22,40 @@ export default function PostPage({ post, author, comments }) {
           integrity="sha384-0fdwu/T/EQMsQlrHCCHoH10pkPLlKA1jL5dFyUOvB3lfeT2540/2g6YgSi2BL14p"
           crossOrigin="anonymous"
         />
-        <title>{`${author.name}'s post`}</title>
+        <title>{`${author.username}'s question`}</title>
+        <meta property="og:url" content="cardsmemo.com" />
+        <meta property="og:type" content="website" />
+        <meta property="fb:app_id" content="328834189100104" />
+        <meta
+          property="og:title"
+          content={`${author.name}: ${question.title} || Cardsmemo`}
+        />
+        <meta name="twitter:card" content="summary" />
+        <meta
+          property="og:description"
+          content={`${question.bodyMD.slice(0, 40)}... Cardsmemo te permite compartir publicaciones y flashcards con los demás usuarios de la red. Regístrate y empieza a crear y compartir tu propia red de conocimiento.`}
+        />
+        <meta property="og:image" content={author.picture} />
       </Head>
+      <Navbar title="Question" />
 
-      <Post post={post} author={author} comments={comments} minimal={false} />
+      <Question question={question} author={author} />
     </>
   );
 }
 
 export async function getServerSideProps(context) {
-  const { postId } = context.query;
+  const { questionId } = context.query;
   const faunaClient = new FaunaClient();
-  const res = await faunaClient.getSingleContentWithAuthor({
-    collection: "Posts",
-    id: postId,
+  const { content, author } = await faunaClient.getSingleContentWithAuthor({
+    collection: "Questions",
+    id: questionId,
   });
 
   return {
     props: {
-      post: res.content,
-      author: res.author,
-      comments: res.comments,
+      question: content,
+      author: author,
     },
   };
 }

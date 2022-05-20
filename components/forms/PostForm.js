@@ -206,7 +206,7 @@ export default function PostForm({ post, author }) {
             </td>
           </tr>
           <tr>
-            <td className="border border-slate-600 px-2">Cuerpo sin títulos</td>
+            <td className="border border-slate-600 px-2">Cuerpo sin títulos H1 (# ...)</td>
             <td className="border border-slate-600 px-2 text-center">
               {bodyMD && bodyMD
                 .split(/\n/)

@@ -7,6 +7,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 
 import PostForm from "../../../../../components/forms/PostForm";
+import Navbar from "../../../../../components/navigation/Navbar";
 import FaunaClient from "../../../../../fauna";
 
 export default function EditPostPage({ post, author }) {
@@ -36,8 +37,7 @@ export default function EditPostPage({ post, author }) {
           crossOrigin="anonymous"
         />
       </Head>
-
-      <h1 className="mb-4  text-2xl text-gray-800">Editar un post</h1>
+      <Navbar title="Editar un post" />
       <PostForm post={post} author={author} />
     </div>
   );

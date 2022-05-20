@@ -2,6 +2,7 @@
 
 import Flashquiz from "../items/Flashquiz";
 import Post from "../items/Post";
+import Question from './../items/Question';
 
 export default function Content({
   content,
@@ -32,6 +33,15 @@ export default function Content({
                 author={author}
               />
             );
+          if (x.ref.collection === "Questions")
+            return (
+              <Question
+                key={x.ref.id}
+                question={x}
+                minimal
+                author={author}
+              />
+            );
         })}
       </div>
     );
@@ -53,6 +63,15 @@ export default function Content({
             <Post
               key={x.ref.id}
               post={x}
+              author={x.author}
+              minimal
+            />
+          );
+        if (x.ref.collection === "Questions")
+          return (
+            <Question
+              key={x.ref.id}
+              question={x}
               author={x.author}
               minimal
             />

@@ -8,7 +8,7 @@ import CommentForm from "./forms/CommentForm";
 import Comment from "./items/Comment";
 
 export default function CommentOptionsModal({
-  onClose = () => {},
+  onClose = () => { },
   comment,
   viewer,
 }) {
@@ -36,10 +36,10 @@ export default function CommentOptionsModal({
       open
       onClose={onClose}
       initialFocus={overlayRef}
-      className="fixed inset-0 z-10 flex items-center justify-center"
+      className="fixed inset-0 z-10 flex items-center justify-center w-full"
     >
-      <Dialog.Overlay ref={overlayRef} className="fixed inset-0 bg-white" />
-      <div className="solid py-auto relative h-full w-full items-center justify-center space-y-4">
+      <div className="fixed inset-0 dark:bg-slate-700 max-w-xl mx-auto" />
+      <div className="solid py-auto relative h-full w-auto mx-6 items-center justify-center space-y-4">
         <div className="mx-auto mt-10 w-full space-y-8 px-4 sm:w-1/2">
           {viewer?.username === comment.author.username ? (
             <CommentForm commentToUpdate={comment.comment} />
@@ -70,6 +70,6 @@ export default function CommentOptionsModal({
           </div>
         </div>
       </div>
-    </Dialog>
+    </Dialog >
   );
 }

@@ -6,7 +6,7 @@ import Post from "../../../../../components/items/Post";
 import Navbar from "../../../../../components/navigation/Navbar";
 import FaunaClient from "../../../../../fauna";
 
-export default function PostPage({ post, author, comments }) {
+export default function PostPage({ post, author }) {
   return (
     <>
       <Head>
@@ -35,7 +35,7 @@ export default function PostPage({ post, author, comments }) {
           property="og:description"
           content={`${post.bodyMD.slice(0, 40)}... Cardsmemo te permite compartir publicaciones y flashcards con los demás usuarios de la red. Regístrate y empieza a crear y compartir tu propia red de conocimiento.`}
         />
-        <meta property="og:image" content="https://res.cloudinary.com/cardsmemo/image/upload/v1652936748/app_src/ioo_swpsqz.jpg" />
+        <meta property="og:image" content={author.picture} />
       </Head>
       <Navbar title="Post" />
 

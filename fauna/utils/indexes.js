@@ -180,3 +180,13 @@ CreateIndex({
   ],
   serialized: true
 })
+
+CreateIndex(
+  {
+    name: "all_content",
+    source: {
+      collection: [Collection("Posts"), Collection("Flashquizzes"), Collection("Questions")],
+    },
+    serialized: true,
+  }
+)

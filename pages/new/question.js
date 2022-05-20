@@ -3,6 +3,7 @@ import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import Head from "next/head";
 
 import QuestionForm from "../../components/forms/QuestionForm";
+import Navbar from "../../components/navigation/Navbar";
 
 export default function CreateQuestionPage() {
   return (
@@ -22,10 +23,7 @@ export default function CreateQuestionPage() {
           crossOrigin="anonymous"
         />
       </Head>
-      <h1 className="text-center text-2xl font-extrabold">
-        Crear una pregunta
-      </h1>
-
+      <Navbar title="Crear una pregunta" />
       <QuestionForm />
     </>
   );
