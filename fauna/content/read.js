@@ -7,6 +7,22 @@ import { GetMinimalUser, GetUserRefByUsername } from "../user/read";
 
 const { Let, Select, Index, Get, If, Var, Exists, Match } = query;
 
+export function GetMinimalContent(ref) {
+  return Let(
+    {
+      content: Get(ref),
+      author: GetMinimalUser(Select(["data", "authorRef"], Var("content"))),
+    },
+    {
+      ref,
+      title: Select(["data", "title"], Var("content")),
+      body: Select(["data", "body"], Var("content")),
+      created: Select(["data", "created"], Var("content")),
+      author: Var("author"),
+    }
+  )
+}
+
 export function GetContentWithAuthor(
   contentRef,
   docType,

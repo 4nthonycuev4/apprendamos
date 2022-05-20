@@ -4,7 +4,7 @@ import { Client, query } from "faunadb";
 import { CreateComment } from "./comments/create";
 import { CreateContent } from "./content/create";
 import { DeleteContent } from "./content/delete";
-import { GetContentWithAuthor } from "./content/read";
+import { GetMinimalContent } from "./content/read";
 import { FollowUser, LikeContent } from "./interactions/create";
 import { GetContentComments } from "./comments/read";
 import {
@@ -22,7 +22,7 @@ const {
   Ref,
   Collection,
   Paginate,
-  Join,
+  Join, Intersection,
   Match,
   Var,
   Map,
@@ -181,6 +181,44 @@ export default class FaunaClient {
         console.log("error", error);
         return null;
       });
+  }
+
+  async search(string) {
+    const onlyUnique = (value, index, self) => {
+      return self.indexOf(value) === index;
+    }
+
+    let words = string.match(/\b(\w+)\b/g);
+    words = words.filter(onlyUnique);
+
+    return this.client
+      .query(
+        Map(
+          Paginate(
+            Intersection(
+              ...words.map((word) =>
+                Match(
+                  Index("search_index"),
+                  word,
+                )
+              )
+            )
+          ),
+          Lambda("ref",
+            If(
+              Equals(Collection("Users"), Select(["collection"], Var("ref"))),
+              GetMinimalUser(Var("ref")),
+              GetMinimalContent(Var("ref"))
+            )
+          )
+        )
+      )
+      .then((res) => FaunaToJSON(res))
+      .catch((error) => {
+        console.log("error", error);
+        return null;
+      });
+
   }
 
   async getSingleContentWithAuthor(ref) {

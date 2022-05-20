@@ -6,7 +6,7 @@ import useSWR from "swr";
 import Content from "../components/lists/Content";
 import Navbar from "../components/navigation/Navbar";
 
-export default function Home() {
+export default function HomePage() {
   const { data: content } = useSWR("/api/content");
 
   return (

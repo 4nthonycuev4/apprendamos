@@ -13,7 +13,7 @@ export default function FollowButton({ username }) {
         body: JSON.stringify({
           username,
         }),
-      }).then((res) => res.json());
+      }).then((res) => res.json()).catch(console.log);
       setFollowing(followingStatus);
     };
     getFollowing();

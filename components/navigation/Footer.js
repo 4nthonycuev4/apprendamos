@@ -33,7 +33,7 @@ export default function Footer() {
           </button>
         </a>
       </Link>
-      <Link href="/">
+      <Link href="/search">
         <a className="flex items-center justify-center">
           <button type="button" className="px-4">
             <SearchIcon className="h-6 w-6" />

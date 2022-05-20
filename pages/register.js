@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 
 import UserForm from "../components/forms/UserForm";
 
-export default function Account({ user }) {
+export default function RegisterPage({ user }) {
   const router = useRouter();
 
   useEffect(() => {

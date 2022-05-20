@@ -3,6 +3,7 @@
 import Flashquiz from "../items/Flashquiz";
 import Post from "../items/Post";
 import Question from './../items/Question';
+import FullAuthorCard from './../items/FullAuthorCard';
 
 export default function Content({
   content,
@@ -49,6 +50,13 @@ export default function Content({
   return (
     <div className="divide-y divide-gray-300 dark:divide-gray-600">
       {content.map((x) => {
+        if (x.username)
+          return (
+            <div key={x.username} className="px-6 py-2">
+              <FullAuthorCard
+                author={x}
+              /></div>
+          );
         if (x.ref.collection === "Flashquizzes")
           return (
             <Flashquiz
@@ -76,6 +84,7 @@ export default function Content({
               minimal
             />
           );
+
       })}
     </div>
   );
