@@ -76,7 +76,7 @@ export default function SearchPage() {
                     <Content content={content} /> :
                     <div className="px-6 py-2 space-y-4">
                         <h1 className="font-bold text-6xl italic">Prueba buscando algo interesante :D</h1>
-                        <p className="font-bold text-xl">Parece que no encontramos nada relacionado :(</p>
+                        {searchString && <p className="font-bold text-xl">Parece que no encontramos nada relacionado a "{searchString}" :(</p>}
                     </div>
 
             }

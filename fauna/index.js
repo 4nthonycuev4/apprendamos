@@ -188,7 +188,7 @@ export default class FaunaClient {
       return self.indexOf(value) === index;
     }
 
-    let words = string.match(/\b(\w+)\b/g);
+    let words = string.toLowerCase().match(/\b(\w+)\b/g);
     words = words.filter(onlyUnique);
 
     return this.client
