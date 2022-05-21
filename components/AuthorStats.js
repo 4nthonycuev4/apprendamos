@@ -29,7 +29,7 @@ export default function AuthorStats({ startStats, username }) {
     if (!viewerStats?.ref && user?.ref) {
       getViewerStats();
     }
-  });
+  }, []);
 
   const follow = async () => {
     try {
