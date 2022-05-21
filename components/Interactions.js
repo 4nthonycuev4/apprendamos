@@ -82,7 +82,7 @@ export default function Interactions({
           <button
             type="button"
             disabled={!user?.ref}
-            onClick={() => likeContent()}
+            onClick={likeContent}
           >
             {viewerStats && viewerStats.like ? (
               <HeartIconSolid className="w-5" />

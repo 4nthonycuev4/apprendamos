@@ -237,7 +237,7 @@ export function FollowUser(username) {
         data: {
           stats: {
             following: Add(
-              Select(["data", "stats", "following"], Get(Var("authorRef"))),
+              Select(["data", "stats", "following"], Get(Var("viewerRef"))),
               If(Var("newFollowingStatus"), 1, -1)
             ),
           },
