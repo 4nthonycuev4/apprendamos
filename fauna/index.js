@@ -17,12 +17,14 @@ import { GetUserWithContent, GetViewer } from "./user/read";
 import { UpdateViewer } from "./user/update";
 import { FaunaToJSON, ParseDocType } from "./utils";
 import { GetMinimalUser } from './user/read';
+import { CreateSearchIndex, WordPartGenerator } from './utils/searchIndex';
 
 const {
   Ref,
   Collection,
   Paginate,
-  Join, Intersection,
+  Join,
+  Intersection,
   Match,
   Var,
   Map,
@@ -35,6 +37,10 @@ const {
   Let,
   Update,
   Delete,
+  Union,
+  GT,
+  Count,
+  Filter
 } = query;
 
 export default class FaunaClient {
@@ -184,16 +190,20 @@ export default class FaunaClient {
   }
 
   async search(string) {
-    const onlyUnique = (value, index, self) => {
-      return self.indexOf(value) === index;
-    }
+    let words = string
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .match(/\b(\w+)\b/g);
 
-    let words = string.toLowerCase().match(/\b(\w+)\b/g);
-    words = words.filter(onlyUnique);
+    words = words.filter(
+      (value, index, self) =>
+        self.indexOf(value) === index
+    );
 
     return this.client
       .query(
-        Map(
+        query.Map(
           Paginate(
             Intersection(
               ...words.map((word) =>
