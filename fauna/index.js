@@ -40,7 +40,8 @@ const {
   Union,
   GT,
   Count,
-  Filter
+  Filter,
+  NGram
 } = query;
 
 export default class FaunaClient {
@@ -196,20 +197,24 @@ export default class FaunaClient {
       .toLowerCase()
       .match(/\b(\w+)\b/g);
 
-    words = words.filter(
-      (value, index, self) =>
-        self.indexOf(value) === index
-    );
-
     return this.client
       .query(
         query.Map(
           Paginate(
             Intersection(
-              ...words.map((word) =>
-                Match(
+              Map(
+                Union(
+                  Let(
+                    {
+                      indexes: [4, 5, 6, 7, 8, 9, 10],
+                      ngramsArray: query.Map(Var('indexes'), Lambda('l', NGram(words, Var('l'), Var('l'))))
+                    },
+                    Var('ngramsArray')
+                  )
+                ),
+                Lambda('ngram', Match(
                   Index("search_index"),
-                  word,
+                  Var("ngram"))
                 )
               )
             )
@@ -226,7 +231,7 @@ export default class FaunaClient {
       .then((res) => FaunaToJSON(res))
       .catch((error) => {
         console.log("error", error);
-        return null;
+        return [];
       });
 
   }
