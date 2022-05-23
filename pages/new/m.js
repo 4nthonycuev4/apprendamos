@@ -3,7 +3,7 @@
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import Head from "next/head";
 
-import memoramaForm from "../../components/forms/memoramaForm";
+import MemoramaForm from "../../components/forms/MemoramaForm";
 import Navbar from "../../components/navigation/Navbar";
 
 export default function Home() {

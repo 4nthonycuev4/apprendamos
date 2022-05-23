@@ -2,7 +2,7 @@
 
 import Head from "next/head";
 
-import Memorama from "../../../components/items/memorama";
+import Memorama from "../../../components/items/Memorama";
 import Navbar from "../../../components/navigation/Navbar";
 import FaunaClient from "../../../fauna";
 
