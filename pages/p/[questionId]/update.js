@@ -5,10 +5,10 @@
 import { useUser } from "@auth0/nextjs-auth0";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import Navbar from "../../../../../components/navigation/Navbar";
+import Navbar from "../../../components/navigation/Navbar";
 
-import QuestionForm from "../../../../../components/forms/QuestionForm";
-import FaunaClient from "../../../../../fauna";
+import QuestionForm from "../../../components/forms/QuestionForm";
+import FaunaClient from "../../../fauna";
 
 export default function EditQuestionPage({ question, author }) {
   const { user, isLoading } = useUser();

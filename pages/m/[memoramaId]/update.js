@@ -6,9 +6,9 @@ import { useUser } from "@auth0/nextjs-auth0";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
-import memoramaForm from "../../../../../components/forms/memoramaForm";
-import FaunaClient from "../../../../../fauna";
-import Navbar from "../../../../../components/navigation/Navbar";
+import MemoramaForm from "../../../components/forms/MemoramaForm";
+import FaunaClient from "../../../fauna";
+import Navbar from "../../../components/navigation/Navbar";
 
 export default function EditmemoramaPage({ memorama, author }) {
   const router = useRouter();

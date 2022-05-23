@@ -9,7 +9,7 @@ import TagsInput from "../TagsInput";
 
 const defaultTags = [{ parsed: "hello_w0rld", raw: "Hello w0rld" }];
 
-export default function memoramaForm({ memorama, author }) {
+export default function MemoramaForm({ memorama, author }) {
   const [tags, setTags] = useState(memorama?.tags || defaultTags);
   const [title, setTitle] = useState(memorama?.title || "");
   const [body, setBody] = useState(memorama?.body || "");

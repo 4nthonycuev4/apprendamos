@@ -6,7 +6,7 @@ import Article from "../../../components/items/Article";
 import Navbar from "../../../components/navigation/Navbar";
 import FaunaClient from "../../../fauna";
 
-export default function PostPage({ article, author }) {
+export default function ArticlePage({ article, author }) {
   return (
     <>
       <Head>

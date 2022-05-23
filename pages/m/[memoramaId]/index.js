@@ -2,9 +2,9 @@
 
 import Head from "next/head";
 
-import memorama from "../../../../../components/items/memorama";
-import Navbar from "../../../../../components/navigation/Navbar";
-import FaunaClient from "../../../../../fauna";
+import Memorama from "../../../components/items/memorama";
+import Navbar from "../../../components/navigation/Navbar";
+import FaunaClient from "../../../fauna";
 
 export default function SinglememoramaPage({ memorama, author }) {
   return (

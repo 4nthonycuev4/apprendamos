@@ -6,11 +6,11 @@ import { useUser } from "@auth0/nextjs-auth0";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
-import PostForm from "../../../../../components/forms/PostForm";
+import ArticleForm from "../../../components/forms/ArticleForm";
 import Navbar from "../../../components/navigation/Navbar";
 import FaunaClient from "../../../fauna";
 
-export default function EditPostPage({ post, author }) {
+export default function EditArticlePage({ article, author }) {
   const { user, isLoading } = useUser();
   const router = useRouter();
 
@@ -23,7 +23,7 @@ export default function EditPostPage({ post, author }) {
   return (
     <div>
       <Head>
-        <title>Editar Post</title>
+        <title>Editar Article</title>
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css"
@@ -37,26 +37,26 @@ export default function EditPostPage({ post, author }) {
           crossOrigin="anonymous"
         />
       </Head>
-      <Navbar title="Editar un post" />
-      <PostForm post={post} author={author} />
+      <Navbar title="Editar un article" />
+      <ArticleForm article={article} author={author} />
     </div>
   );
 }
 
 export async function getServerSideProps(context) {
-  const { postId } = context.query;
+  const { articleId } = context.query;
   const faunaClient = new FaunaClient();
   const res = await faunaClient.getSingleContentWithAuthor(
     {
-      collection: "Posts",
-      id: postId,
+      collection: "Articles",
+      id: articleId,
     },
     0
   );
 
   return {
     props: {
-      post: res.content,
+      article: res.content,
       author: res.author,
     },
   };
