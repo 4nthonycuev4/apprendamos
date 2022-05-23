@@ -63,9 +63,6 @@ export async function getServerSideProps(context) {
     return { props: { errorCode: 404, errorMessage: "User not found" } };
   }
 
-  console.log('user', user)
-  console.log('content', content)
-
   return {
     props: {
       user,

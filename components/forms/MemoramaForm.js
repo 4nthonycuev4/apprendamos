@@ -55,7 +55,7 @@ export default function MemoramaForm({ memorama, author }) {
         .catch((err) => console.error(err));
 
       router.push(
-        `/${res.author.username}/m/${res.content.ref.id}/`
+        `/${res.author.username}/m/${res.content.faunaRef.id}/`
       );
     } catch (err) {
       console.error(err);
@@ -68,7 +68,7 @@ export default function MemoramaForm({ memorama, author }) {
       method: "PUT",
       body: JSON.stringify({
         data: { title, body, tags, flashcards },
-        ref: memorama.ref,
+        ref: memorama.faunaRef,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -78,7 +78,7 @@ export default function MemoramaForm({ memorama, author }) {
       .catch((err) => console.error(err));
 
     if (res.updated) {
-      router.push(`/m/${memorama.ref.id}/`);
+      router.push(`/m/${memorama.faunaRef.id}/`);
     } else {
       console.error("Error updating memorama");
     }
@@ -90,7 +90,7 @@ export default function MemoramaForm({ memorama, author }) {
         method: "DELETE",
 
         body: JSON.stringify({
-          ref: memorama.ref,
+          ref: memorama.faunaRef,
         }),
         headers: {
           "Content-Type": "application/json",

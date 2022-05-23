@@ -61,7 +61,7 @@ export default function ArticleForm({ article, author }) {
       method: "PUT",
       body: JSON.stringify({
         data: { title, bodyMD, body: bodyHTML, tags },
-        ref: article.ref,
+        ref: article.faunaRef,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -71,7 +71,7 @@ export default function ArticleForm({ article, author }) {
       .catch((err) => console.error(err));
 
     if (res.updated) {
-      router.push(`/a/${article.ref.id}/`);
+      router.push(`/a/${article.faunaRef.id}/`);
     } else {
       console.error("Error updating article");
     }
@@ -93,7 +93,7 @@ export default function ArticleForm({ article, author }) {
         .then((res) => res.json())
         .catch((err) => console.error(err));
 
-      router.push(`/${res.author.username}/a/${res.content.ref.id}/`);
+      router.push(`/${res.author.username}/a/${res.content.faunaRef.id}/`);
     } catch (err) {
       console.error(err);
     }
@@ -105,7 +105,7 @@ export default function ArticleForm({ article, author }) {
         method: "DELETE",
 
         body: JSON.stringify({
-          ref: article.ref,
+          ref: article.faunaRef,
         }),
         headers: {
           "Content-Type": "application/json",

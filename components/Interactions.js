@@ -72,7 +72,7 @@ export default function Interactions({
           <span>{stats.likes}</span>
           <button
             type="button"
-            disabled={!user?.ref}
+            disabled={!user?.faunaRef}
             onClick={likeContent}
           >
             {viewerStats && viewerStats.like ? (

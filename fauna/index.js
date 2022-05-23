@@ -27,7 +27,6 @@ const {
   Intersection,
   Match,
   Var,
-  Map,
   Get,
   Lambda,
   Index,
@@ -41,7 +40,8 @@ const {
   GT,
   Count,
   Filter,
-  NGram
+  NGram,
+  Map
 } = query;
 
 export default class FaunaClient {
@@ -166,9 +166,10 @@ export default class FaunaClient {
       });
   }
 
-  async getUserWithContent(username) {
+  async getUserWithContent(username, afterId, afterCollection) {
+    const afterRef = afterId ? Ref(Collection(afterCollection), afterId) : null;
     return this.client
-      .query(GetUserWithContent(username))
+      .query(GetUserWithContent(username, afterRef))
       .then((res) => FaunaToJSON(res))
       .catch((error) => {
         console.log("error", error);
@@ -177,15 +178,14 @@ export default class FaunaClient {
   }
 
   async search(string) {
-    let words = string
+    let word = string
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase()
-      .match(/\b(\w+)\b/g);
 
     return this.client
       .query(
-        query.Map(
+        Map(
           Paginate(
             Intersection(
               Map(
@@ -193,7 +193,7 @@ export default class FaunaClient {
                   Let(
                     {
                       indexes: [4, 5, 6, 7, 8, 9, 10],
-                      ngramsArray: query.Map(Var('indexes'), Lambda('l', NGram(words, Var('l'), Var('l'))))
+                      ngramsArray: Map(Var('indexes'), Lambda('l', NGram(word, Var('l'), Var('l'))))
                     },
                     Var('ngramsArray')
                   )
@@ -203,9 +203,12 @@ export default class FaunaClient {
                   Var("ngram"))
                 )
               )
-            )
+            ),
+            {
+              after: 0,
+            }
           ),
-          Lambda("ref",
+          Lambda(["ref"],
             If(
               Equals(Collection("users"), Select(["collection"], Var("ref"))),
               GetMinimalUser(Var("ref")),

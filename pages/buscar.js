@@ -16,9 +16,8 @@ export default function SearchPage() {
     const [content, setContent] = useState([]);
 
     const fetchSearch = async () => {
-        const response = await fetch(`/api/search?searchString=${textInput.trim()}`);
-        const data = await response.json();
-        setContent(data);
+        const response = await fetch(`/api/search?searchString=${textInput.trim()}`).then((res) => res.json());
+        setContent(response.data);
     };
 
 

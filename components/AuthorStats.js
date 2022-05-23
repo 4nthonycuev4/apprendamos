@@ -26,7 +26,7 @@ export default function AuthorStats({ startStats, username }) {
       setViewerStats(res);
     };
 
-    if (!viewerStats?.ref && user?.ref) {
+    if (!viewerStats?.faunaRef && user?.faunaRef) {
       getViewerStats();
     }
   }, []);
@@ -57,7 +57,7 @@ export default function AuthorStats({ startStats, username }) {
           type="button"
           className="h-6 w-32 rounded bg-gradient-to-r from-sky-500 to-purple-500 px-4 text-sm font-normal text-white hover:from-sky-600 hover:to-purple-600"
         >
-          <Link href="/settings">
+          <Link href="/configurar">
             <a>Editar perfil</a>
           </Link>
         </button>

@@ -8,8 +8,6 @@ export default async function Search(req, res) {
 
         const { searchString } = req.query;
 
-        console.log('searchString', searchString)
-
         const content = await client.search(searchString);
 
         res.status(200).json(content);

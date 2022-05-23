@@ -11,7 +11,7 @@ export default function RegisterPage({ user }) {
   const router = useRouter();
 
   useEffect(() => {
-    if (user.ref) {
+    if (user.faunaRef) {
       router.push("/");
     }
   }, [user, router]);

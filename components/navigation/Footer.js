@@ -2,7 +2,6 @@
 
 import { useUser } from "@auth0/nextjs-auth0";
 import {
-  BellIcon,
   LoginIcon,
   MenuIcon,
   PlusIcon,
@@ -33,21 +32,21 @@ export default function Footer() {
           </button>
         </a>
       </Link>
-      <Link href="/search">
+      <Link href="/buscar">
         <a className="flex items-center justify-center">
           <button type="button" className="px-4">
             <SearchIcon className="h-6 w-6" />
           </button>
         </a>
       </Link>
-      <Link href="/new">
+      <Link href="/nuevo">
         <a className="flex items-center justify-center">
           <button type="button" className="px-4">
             <PlusIcon className="h-6 w-6" />
           </button>
         </a>
       </Link>
-      {!error && !isLoading && user?.ref ? (
+      {!error && !isLoading && user?.faunaRef ? (
         <Link href={`/${user.username}`}>
           <a className="flex items-center justify-center">
             <div className="relative h-10 w-10">
@@ -70,7 +69,7 @@ export default function Footer() {
           </a>
         </Link>
       )}
-      <Link href="/more">
+      <Link href="/mas">
         <a className="flex items-center justify-center">
           <button type="button" className="px-4">
             <MenuIcon className="h-6 w-6" />

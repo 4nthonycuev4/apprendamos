@@ -1,6 +1,7 @@
 /** @format */
 import { query } from "faunadb";
 import { GetMinimalContentWithoutAuthor } from "../content/read";
+import { GetContentCreatedAfterCursor } from './../content/read';
 
 const {
   CurrentIdentity,
@@ -19,7 +20,7 @@ const {
 } = query;
 
 export function GetUserRefByUsername(username) {
-  return Select([0], Paginate(Match(Index("userRef_by_username"), username)));
+  return Select([0], Paginate(Match(Index("user_by_username"), username)));
 }
 
 export function GetUserRefByAccountConnection(accountConnection) {
@@ -50,7 +51,7 @@ export function GetMinimalUser(userRef) {
   );
 }
 
-export function GetUserWithContent(username) {
+export function GetUserWithContent(username, afterRef) {
   return Let(
     {
       userRefMatch: Match(Index("user_by_username"), username),
@@ -68,7 +69,8 @@ export function GetUserWithContent(username) {
             Index("content_sorted_created")
           ),
           {
-            size: 2,
+            size: 20,
+            after: afterRef != null && GetContentCreatedAfterCursor(afterRef)
           }
         ),
         Lambda(["created", "ref"], GetMinimalContentWithoutAuthor(Var("ref")))), false),

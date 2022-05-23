@@ -29,7 +29,7 @@ export default function CommentForm({
 
   useEffect(() => {
     const setCommentToUpdate = (comment) => {
-      document.getElementById(comment.ref.id).innerText = comment.message;
+      document.getElementById(comment.faunaRef.id).innerText = comment.message;
     };
 
     if (commentToUpdate) {
@@ -40,7 +40,7 @@ export default function CommentForm({
   const handleSubmit = () => {
     setIsSubmitting(true);
     const htmlId = commentToUpdate
-      ? commentToUpdate.ref.id
+      ? commentToUpdate.faunaRef.id
       : `commentInput${contentRef.id}`;
 
     const rawComment = document.getElementById(htmlId).innerText;
@@ -100,7 +100,7 @@ export default function CommentForm({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        commentRef: commentToUpdate.ref,
+        commentRef: commentToUpdate.faunaRef,
         message,
       }),
     });
@@ -128,7 +128,7 @@ export default function CommentForm({
         <div className="flex w-full items-start space-x-4">
           <div className="w-full">
             <div
-              id={commentToUpdate.ref.id}
+              id={commentToUpdate.faunaRef.id}
               type="text"
               className="min-w-4 w-full border-0 border-b-2 border-gray-200 p-2 empty:before:text-gray-400 empty:before:content-['Agrega_un_comentario...'] focus:ring-0"
               contentEditable={Boolean(user)}

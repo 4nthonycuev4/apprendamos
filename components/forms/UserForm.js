@@ -14,7 +14,7 @@ function getRandomInt(min, max) {
 export default function UserForm({ user }) {
   const hiddenFileInput = useRef(null);
   const [picture, setPicture] = useState(
-    user?.ref ? user.picture : `/ru${getRandomInt(1, 8)}.jpg`
+    user?.faunaRef ? user.picture : `/ru${getRandomInt(1, 8)}.jpg`
   );
 
   const handleUploadButtonClick = (event) => {
@@ -91,7 +91,7 @@ export default function UserForm({ user }) {
 
   return (
     <form
-      onSubmit={handleSubmit(user?.ref ? updateUser : createUser)}
+      onSubmit={handleSubmit(user?.faunaRef ? updateUser : createUser)}
       className="w-full px-4 py-2"
     >
       <div className="flex w-full">
@@ -120,7 +120,7 @@ export default function UserForm({ user }) {
                 className="block w-40 rounded-full bg-green-50 px-4 py-2 text-sm font-semibold text-green-800 hover:bg-green-100"
                 onClick={() =>
                   setPicture(
-                    user?.ref ? user.picture : `/ru${getRandomInt(1, 8)}.jpg`
+                    user?.faunaRef ? user.picture : `/ru${getRandomInt(1, 8)}.jpg`
                   )
                 }
               >
@@ -210,7 +210,7 @@ export default function UserForm({ user }) {
           className="focus:shadow-outline mr-2 rounded bg-red-800 py-2 px-4 font-bold text-white hover:bg-red-900 focus:outline-none"
           type="submit"
         >
-          {user?.ref ? "Actualizar" : "Crear"}
+          {user?.faunaRef ? "Actualizar" : "Crear"}
         </button>
       </div>
     </form>

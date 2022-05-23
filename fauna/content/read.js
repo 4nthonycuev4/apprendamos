@@ -7,6 +7,10 @@ import { GetMinimalUser, GetUserRefByUsername } from "../user/read";
 
 const { Let, Select, Index, Get, If, Var, Exists, Match, Paginate, Map, Multiply, TimeDiff, Add, Join, Ref, Collection, Time, Lambda } = query;
 
+export const GetContentCreatedAfterCursor = (ref) => If(
+  Exists(ref),
+  [Select(["data", "created"], Get(ref)), ref],
+);
 
 const GetContentPopularityAfterCursor = (ref) => Let(
   {
@@ -70,7 +74,7 @@ export const GetContentList = (afterRef) => Map(
   Paginate(
     Join(Match(Index("all_content")), Index("content_sorted_popularity")),
     {
-      size: 2,
+      size: 20,
       after: afterRef != null &&
         GetContentPopularityAfterCursor(afterRef)
     }

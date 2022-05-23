@@ -51,9 +51,6 @@ export async function getServerSideProps(context) {
     collection: "articles",
     id: articleId,
   });
-
-  console.log('content', content)
-
   return {
     props: {
       article: content,

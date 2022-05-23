@@ -61,7 +61,7 @@ export default function QuestionForm({ question, author }) {
       method: "PUT",
       body: JSON.stringify({
         data: { title, bodyMD, body: bodyHTML, tags },
-        ref: question.ref,
+        ref: question.faunaRef,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -71,7 +71,7 @@ export default function QuestionForm({ question, author }) {
       .catch((err) => console.error(err));
 
     if (res.updated) {
-      router.push(`/p/${question.ref.id}/`);
+      router.push(`/p/${question.faunaRef.id}/`);
     } else {
       console.error("Error updating question");
     }
@@ -93,7 +93,7 @@ export default function QuestionForm({ question, author }) {
         .then((res) => res.json())
         .catch((err) => console.error(err));
 
-      router.push(`/${res.author.username}/p/${res.content.ref.id}/`);
+      router.push(`/${res.author.username}/p/${res.content.faunaRef.id}/`);
     } catch (err) {
       console.error(err);
     }
@@ -105,7 +105,7 @@ export default function QuestionForm({ question, author }) {
         method: "DELETE",
 
         body: JSON.stringify({
-          ref: question.ref,
+          ref: question.faunaRef,
         }),
         headers: {
           "Content-Type": "application/json",

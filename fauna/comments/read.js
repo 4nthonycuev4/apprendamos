@@ -60,7 +60,7 @@ export function GetContentComments(parentRef, afterRef) {
           Index("comments_sorted_created")
         ),
         {
-          size: 2,
+          size: 20,
           after: afterRef !== null && GetComment(afterRef)
         }
       ),
