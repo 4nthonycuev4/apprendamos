@@ -8,7 +8,7 @@ export default function AboutPage() {
   return (
     <>
       <Head>
-        <title>Cardsmemo || Flashcards & posts</title>
+        <title>Apprendamos || Flashcards & articles</title>
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css"

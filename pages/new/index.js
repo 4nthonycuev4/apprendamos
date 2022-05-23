@@ -12,19 +12,19 @@ export default function CreatePage() {
   return (
     <>
       <Head>
-        <title>Cardsmemo</title>
+        <title>Apprendamos</title>
       </Head>
       <Navbar title="Crear contenido" />
       <div className="mt-2 flex flex-col space-y-2 px-20">
-        <Link href="/new/post">
+        <Link href="/new/article">
           <a className="flex justify-center rounded-lg border py-2">
-            <button type="button">Crear post</button>
+            <button type="button">Crear article</button>
           </a>
         </Link>
-        <Link href="/new/flashquiz">
+        <Link href="/new/memorama">
           <a className="flex justify-center border">
             <button type="button" className="rounded-lg  py-2">
-              Crear flashquiz
+              Crear memorama
             </button>
           </a>
         </Link>

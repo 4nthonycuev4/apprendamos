@@ -1,10 +1,7 @@
 /** @format */
 
 import {
-  CollectionIcon,
-  LoginIcon,
-  LogoutIcon,
-  PlusIcon,
+  CollectionIcon
 } from "@heroicons/react/solid";
 import Link from "next/link";
 
@@ -25,8 +22,8 @@ export default function Navbar({ title }) {
       <Link href="/">
         <a className="flex text-center ">
           <CollectionIcon className="h-6 w-6" />
-          <span className="pl-1 font-light">cards</span>
-          <span className="font-bold">memo</span>
+          <span className="pl-1 font-bold">app</span>
+          <span className="font-light">rendamos</span>
         </a>
       </Link>
     </nav>

@@ -24,7 +24,7 @@ const {
 
 export function LikeContent(contentRef, docType) {
   const likes = {};
-  ["flashquiz", "post", "question", "answer"].map((x) => {
+  ["memorama", "article", "question", "answer"].map((x) => {
     if (x === docType) {
       likes[x] = 1;
     } else {
@@ -83,14 +83,14 @@ export function LikeContent(contentRef, docType) {
             following: false,
             likes,
             saved: {
-              flashquiz: 0,
-              post: 0,
+              memorama: 0,
+              article: 0,
               question: 0,
               answer: 0,
             },
             comments: {
-              flashquiz: 0,
-              post: 0,
+              memorama: 0,
+              article: 0,
               question: 0,
               answer: 0,
             },
@@ -193,16 +193,16 @@ export function FollowUser(username) {
             userRef: Var("viewerRef"),
             authorRef: Var("authorRef"),
             following: true,
-            likes: { flashquiz: 0, post: 0, question: 0, answer: 0 },
+            likes: { memorama: 0, article: 0, question: 0, answer: 0 },
             saved: {
-              flashquiz: 0,
-              post: 0,
+              memorama: 0,
+              article: 0,
               question: 0,
               answer: 0,
             },
             comments: {
-              flashquiz: 0,
-              post: 0,
+              memorama: 0,
+              article: 0,
               question: 0,
               answer: 0,
             },

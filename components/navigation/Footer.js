@@ -48,7 +48,7 @@ export default function Footer() {
         </a>
       </Link>
       {!error && !isLoading && user?.ref ? (
-        <Link href={`/@/${user.username}`}>
+        <Link href={`/${user.username}`}>
           <a className="flex items-center justify-center">
             <div className="relative h-10 w-10">
               <Image

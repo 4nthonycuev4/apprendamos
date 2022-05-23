@@ -31,44 +31,44 @@ const {
   Now,
 } = query;
 
-export function GetPost(
-  postRef,
+export function GetArticle(
+  articleRef,
   withAuthor = true,
   comments = 3,
   withViewerStats = false
 ) {
   return Let(
     {
-      post: Get(postRef),
+      article: Get(articleRef),
 
-      authorRef: Select(["data", "authorRef"], Var("post")),
+      authorRef: Select(["data", "authorRef"], Var("article")),
       author: withAuthor ? GetMinimalUser(Var("authorRef")) : {},
-      comments: GetContentComments(postRef, "post", comments),
+      comments: GetContentComments(articleRef, "article", comments),
 
       viewerRef: withViewerStats ? GetViewerRef() : null,
 
-      viewerPostStatsMatch: withViewerStats
+      viewerArticleStatsMatch: withViewerStats
         ? Match(
-            Index("stats_by_postRef_and_userRef"),
-            Var("viewerRef"),
-            postRef
-          )
+          Index("stats_by_articleRef_and_userRef"),
+          Var("viewerRef"),
+          articleRef
+        )
         : null,
-      viewerPostStats: withViewerStats
+      viewerArticleStats: withViewerStats
         ? If(
-            Exists(Var("viewerPostStatsMatch")),
-            Get(Var("viewerPostStatsMatch")),
-            {}
-          )
+          Exists(Var("viewerArticleStatsMatch")),
+          Get(Var("viewerArticleStatsMatch")),
+          {}
+        )
         : null,
 
-      viewerPostStats: Var("viewerPostStats"),
+      viewerArticleStats: Var("viewerArticleStats"),
     },
     {
-      post: Var("post"),
+      article: Var("article"),
       author: Var("author"),
       comments: Var("comments"),
-      viewerPostStats: Var("viewerPostStats"),
+      viewerArticleStats: Var("viewerArticleStats"),
     }
   );
 }

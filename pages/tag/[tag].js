@@ -14,7 +14,7 @@ export default function TagPage({ content }) {
   return (
     <>
       <Head>
-        <title>#{tag} posts & flashquizzes</title>
+        <title>#{tag} articles & memoramas</title>
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css"

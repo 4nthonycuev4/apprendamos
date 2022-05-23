@@ -7,8 +7,8 @@ import { GetViewerRef } from "../user/read";
 const { Create, Update, Collection, Let, Var, Get, Select, Add, Now } = query;
 
 function ParseCollection(x) {
-  return x === "flashquiz"
-    ? "Flashquizzes"
+  return x === "memorama"
+    ? "memoramas"
     : `${x[0].toUpperCase() + x.slice(1)}s`;
 }
 

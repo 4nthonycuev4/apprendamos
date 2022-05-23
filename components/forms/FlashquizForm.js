@@ -9,12 +9,12 @@ import TagsInput from "../TagsInput";
 
 const defaultTags = [{ parsed: "hello_w0rld", raw: "Hello w0rld" }];
 
-export default function FlashquizForm({ flashquiz, author }) {
-  const [tags, setTags] = useState(flashquiz?.tags || defaultTags);
-  const [title, setTitle] = useState(flashquiz?.title || "");
-  const [body, setBody] = useState(flashquiz?.body || "");
+export default function memoramaForm({ memorama, author }) {
+  const [tags, setTags] = useState(memorama?.tags || defaultTags);
+  const [title, setTitle] = useState(memorama?.title || "");
+  const [body, setBody] = useState(memorama?.body || "");
   const [flashcards, setFlashcards] = useState(
-    flashquiz?.flashcards || [
+    memorama?.flashcards || [
       {
         id: (Math.random() + 1).toString(36).substring(7),
         front: "hola",
@@ -37,7 +37,7 @@ export default function FlashquizForm({ flashquiz, author }) {
     setFlashcards(items1);
   }
 
-  const createFlashquiz = async () => {
+  const creatememorama = async () => {
     try {
       setSending(true);
       deleteEmptyFlashcards();
@@ -45,7 +45,7 @@ export default function FlashquizForm({ flashquiz, author }) {
         method: "POST",
         body: JSON.stringify({
           data: { title, body, tags, flashcards },
-          type: "flashquiz",
+          type: "memorama",
         }),
         headers: {
           "Content-Type": "application/json",
@@ -55,20 +55,20 @@ export default function FlashquizForm({ flashquiz, author }) {
         .catch((err) => console.error(err));
 
       router.push(
-        `/@/${res.author.username}/flashquizzes/${res.content.ref.id}/`
+        `/${res.author.username}/m/${res.content.ref.id}/`
       );
     } catch (err) {
       console.error(err);
     }
   };
 
-  const updateFlashquiz = async () => {
+  const updatememorama = async () => {
     setSending(true);
     const res = await fetch("/api/content/update", {
       method: "PUT",
       body: JSON.stringify({
         data: { title, body, tags, flashcards },
-        ref: flashquiz.ref,
+        ref: memorama.ref,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -78,19 +78,19 @@ export default function FlashquizForm({ flashquiz, author }) {
       .catch((err) => console.error(err));
 
     if (res.updated) {
-      router.push(`/@/${author.username}/flashquizzes/${flashquiz.ref.id}/`);
+      router.push(`/m/${memorama.ref.id}/`);
     } else {
-      console.error("Error updating flashquiz");
+      console.error("Error updating memorama");
     }
   };
 
-  const deleteFlashquiz = async () => {
+  const deletememorama = async () => {
     try {
       const res = await fetch("/api/content/delete", {
         method: "DELETE",
 
         body: JSON.stringify({
-          ref: flashquiz.ref,
+          ref: memorama.ref,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -100,9 +100,9 @@ export default function FlashquizForm({ flashquiz, author }) {
         .catch((err) => console.error(err));
 
       if (res.deleted) {
-        router.push(`/@/${author.username}/`);
+        router.push(`/`);
       } else {
-        console.error("Error eliminando flashquiz");
+        console.error("Error eliminando memorama");
       }
     } catch (err) {
       console.error(err);
@@ -110,10 +110,10 @@ export default function FlashquizForm({ flashquiz, author }) {
   };
 
   const handleSubmit = () => {
-    if (flashquiz) {
-      updateFlashquiz();
+    if (memorama) {
+      updatememorama();
     } else {
-      createFlashquiz();
+      creatememorama();
     }
   };
 
@@ -153,7 +153,7 @@ export default function FlashquizForm({ flashquiz, author }) {
           defaultValue={body}
           rows="5"
           className="w-full rounded border bg-white px-3 py-2 outline-none dark:bg-gray-700"
-          placeholder="¿De qué trata este flashquiz?"
+          placeholder="¿De qué trata este memorama?"
         />
         {error && (
           <p className="font-bold text-red-900">El nombre es obligatorio</p>
@@ -182,10 +182,10 @@ export default function FlashquizForm({ flashquiz, author }) {
           disabled={sending}
           type="button"
         >
-          {sending ? "Enviando..." : flashquiz ? "Actualizar" : "Crear"}
+          {sending ? "Enviando..." : memorama ? "Actualizar" : "Crear"}
         </button>
 
-        {flashquiz && (
+        {memorama && (
           <button
             type="button"
             onClick={() => {
@@ -202,7 +202,7 @@ export default function FlashquizForm({ flashquiz, author }) {
           onClose={() => {
             setDeleteModalOpen(false);
           }}
-          onDelete={deleteFlashquiz}
+          onDelete={deletememorama}
         />
       )}
     </div>

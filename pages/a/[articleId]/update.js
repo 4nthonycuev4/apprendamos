@@ -7,8 +7,8 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 
 import PostForm from "../../../../../components/forms/PostForm";
-import Navbar from "../../../../../components/navigation/Navbar";
-import FaunaClient from "../../../../../fauna";
+import Navbar from "../../../components/navigation/Navbar";
+import FaunaClient from "../../../fauna";
 
 export default function EditPostPage({ post, author }) {
   const { user, isLoading } = useUser();

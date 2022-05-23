@@ -12,7 +12,6 @@ import {
   BookmarkIcon as BookmarkIconSolid,
   HeartIcon as HeartIconSolid,
 } from "@heroicons/react/solid";
-import Link from "next/link";
 
 import CommentForm from "./forms/CommentForm";
 import Comments from "./lists/Comments";
@@ -22,7 +21,6 @@ export default function Interactions({
   startStats,
 }) {
   const [viewerStats, setViewerStats] = useState({ like: false, comments: 0, saved: false });
-  const [comments, setComments] = useState(null);
   const [stats, setStats] = useState(startStats);
 
   const { user } = useUser();
@@ -35,14 +33,7 @@ export default function Interactions({
       setViewerStats(viewerStats);
     };
 
-    const getComments = async () => {
-      const comments = await fetch(`/api/${contentRef.collection}/${contentRef.id}/comments`)
-        .then((res) => res.json())
-        .catch((err) => console.log(err));
-      setComments(comments);
-    };
     getViewerStats();
-    getComments();
   }, []);
 
   async function likeContent() {
@@ -104,12 +95,10 @@ export default function Interactions({
       </div>
       <CommentForm
         contentRef={contentRef}
-        comments={comments}
         setViewerStats={setViewerStats}
         setStats={setStats}
-        setComments={setComments}
       />
-      <Comments comments={comments} viewer={user} />
+      <Comments contentRef={contentRef} />
     </div>
   );
 }

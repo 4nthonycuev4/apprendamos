@@ -4,36 +4,35 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-export default function PostOptionsPage() {
+export default function memoramaOptionsPage() {
   const router = useRouter();
   const { user, error, isLoading } = useUser();
-  const { username, postId } = router.query;
+  const { username, memoramaId } = router.query;
   return (
     <>
       <Head>
-        <title>Post</title>
+        <title>Flasquiz</title>
       </Head>
       <div className="grid grid-cols-1 gap-2">
-        <Link href={`/@/${username}/posts/${postId}`}>
+        <Link href={`/${username}/m/${memoramaId}`}>
           <button
             type="button"
             className="mx-32 rounded-lg border py-2 hover:bg-slate-100"
           >
-            <a>Ir al post</a>
+            <a>Ir al memorama</a>{" "}
           </button>
         </Link>
         {!error && !isLoading && user?.username === username && (
-          <Link href={`/@/${username}/posts/${postId}/update`}>
+          <Link href={`/${username}/m/${memoramaId}/update`}>
             <button
               type="button"
               className="mx-32 rounded-lg border py-2 hover:bg-slate-100"
             >
-              <a className="w-full">Editar o eliminar</a>
+              <a>Editar o eliminar</a>{" "}
             </button>
           </Link>
         )}
-
-        <Link href={`/@/${username}/posts/${postId}/report`}>
+        <Link href={`/${username}/m/${memoramaId}/report`}>
           <button
             type="button"
             className="mx-32 rounded-lg border py-2 hover:bg-slate-100"

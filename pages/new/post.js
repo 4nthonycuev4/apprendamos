@@ -2,14 +2,14 @@
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import Head from "next/head";
 
-import PostForm from "../../components/forms/PostForm";
+import ArticleForm from "../../components/forms/ArticleForm";
 import Navbar from "../../components/navigation/Navbar";
 
-export default function CreatePostPage() {
+export default function CreateArticlePage() {
   return (
     <>
       <Head>
-        <title>Create Post</title>
+        <title>Create Article</title>
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css"
@@ -23,8 +23,8 @@ export default function CreatePostPage() {
           crossOrigin="anonymous"
         />
       </Head>
-      <Navbar title="Crear un post" />
-      <PostForm />
+      <Navbar title="Crear un article" />
+      <ArticleForm />
     </>
   );
 }

@@ -31,15 +31,15 @@ async function MDtoHTML(md) {
   return String(html);
 }
 
-export default function PostForm({ post, author }) {
+export default function ArticleForm({ article, author }) {
   const router = useRouter();
 
-  const [title, setTitle] = useState(post ? post?.title : "");
+  const [title, setTitle] = useState(article ? article?.title : "");
 
-  const [bodyHTML, setBodyHTML] = useState(post?.body || null);
-  const [bodyMD, setBodyMD] = useState(post?.bodyMD || null);
+  const [bodyHTML, setBodyHTML] = useState(article?.body || null);
+  const [bodyMD, setBodyMD] = useState(article?.bodyMD || null);
 
-  const [tags, setTags] = useState(post?.tags || defaultTags);
+  const [tags, setTags] = useState(article?.tags || defaultTags);
 
   const [sending, setSending] = useState(false);
   const [previewing, setPreviewing] = useState(false);
@@ -55,13 +55,13 @@ export default function PostForm({ post, author }) {
     }
   };
 
-  const updatePost = async () => {
+  const updateArticle = async () => {
     setSending(true);
     const res = await fetch("/api/content/update", {
       method: "PUT",
       body: JSON.stringify({
         data: { title, bodyMD, body: bodyHTML, tags },
-        ref: post.ref,
+        ref: article.ref,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -71,9 +71,9 @@ export default function PostForm({ post, author }) {
       .catch((err) => console.error(err));
 
     if (res.updated) {
-      router.push(`/@/${author.username}/posts/${post.ref.id}/`);
+      router.push(`/a/${article.ref.id}/`);
     } else {
-      console.error("Error updating post");
+      console.error("Error updating article");
     }
   };
 
@@ -84,7 +84,7 @@ export default function PostForm({ post, author }) {
         method: "POST",
         body: JSON.stringify({
           data: { title, bodyMD, body: bodyHTML, tags },
-          type: "post",
+          type: "article",
         }),
         headers: {
           "Content-Type": "application/json",
@@ -93,19 +93,19 @@ export default function PostForm({ post, author }) {
         .then((res) => res.json())
         .catch((err) => console.error(err));
 
-      router.push(`/@/${res.author.username}/posts/${res.content.ref.id}/`);
+      router.push(`/${res.author.username}/a/${res.content.ref.id}/`);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const deletePost = async () => {
+  const deleteArticle = async () => {
     try {
       const res = await fetch("/api/content/delete", {
         method: "DELETE",
 
         body: JSON.stringify({
-          ref: post.ref,
+          ref: article.ref,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -115,9 +115,9 @@ export default function PostForm({ post, author }) {
         .catch((err) => console.error(err));
 
       if (res.deleted) {
-        router.push(`/@/${author.username}/`);
+        router.push(`/`);
       } else {
-        console.error("Error eliminando post");
+        console.error("Error eliminando article");
       }
     } catch (err) {
       console.error(err);
@@ -125,10 +125,10 @@ export default function PostForm({ post, author }) {
   };
 
   const handleSubmit = () => {
-    if (post) {
-      updatePost();
+    if (article) {
+      updateArticle();
     } else {
-      createPost();
+      createArticle();
     }
   };
 
@@ -149,7 +149,7 @@ export default function PostForm({ post, author }) {
             disabled={sending}
             className="w-40 rounded bg-gradient-to-r from-sky-500 to-purple-500  py-2 px-4 font-bold hover:from-sky-600 hover:to-purple-600 disabled:from-slate-400 disabled:to-slate-700 hover:disabled:from-slate-500 hover:disabled:to-gray-800"
           >
-            {sending ? "Enviando..." : post ? "Actualizar" : "Crear"}
+            {sending ? "Enviando..." : article ? "Actualizar" : "Crear"}
           </button>
           <button
             type="button"
@@ -264,7 +264,7 @@ export default function PostForm({ post, author }) {
         >
           Preview
         </button>
-        {post && (
+        {article && (
           <button
             type="button"
             onClick={() => {
@@ -281,7 +281,7 @@ export default function PostForm({ post, author }) {
           onClose={() => {
             setDeleteModalOpen(false);
           }}
-          onDelete={deletePost}
+          onDelete={deleteArticle}
         />
       )}
     </div>

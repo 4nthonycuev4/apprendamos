@@ -21,7 +21,7 @@ export default function Comment({ comment, author, minimal, selectComment }) {
       </div>
       <div className="w-full">
         <div className="flex justify-between">
-          <Link href={`/@/${author.username}`}>
+          <Link href={`/${author.username}`}>
             <a className="hover:underline">
               <span className="font-bold">{author.name}</span>
               <span> · </span>

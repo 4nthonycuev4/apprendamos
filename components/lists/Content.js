@@ -1,7 +1,7 @@
 /** @format */
 
-import Flashquiz from "../items/Flashquiz";
-import Post from "../items/Post";
+import Memorama from "../items/Memorama";
+import Article from "../items/Article";
 import Question from './../items/Question';
 import FullAuthorCard from './../items/FullAuthorCard';
 
@@ -16,29 +16,29 @@ export default function Content({
     return (
       <div className="divide-y divide-gray-300 dark:divide-gray-600">
         {content.map((x) => {
-          if (x.ref.collection === "Flashquizzes")
+          if (x.faunaRef.collection === "memoramas")
             return (
-              <Flashquiz
-                key={x.ref.id}
-                flashquiz={x}
+              <Memorama
+                key={x.faunaRef.id}
+                {...x}
                 author={author}
                 minimal
               />
             );
-          if (x.ref.collection === "Posts")
+          if (x.faunaRef.collection === "articles")
             return (
-              <Post
-                key={x.ref.id}
-                post={x}
+              <Article
+                key={x.faunaRef.id}
+                {...x}
                 minimal
                 author={author}
               />
             );
-          if (x.ref.collection === "Questions")
+          if (x.faunaRef.collection === "questions")
             return (
               <Question
-                key={x.ref.id}
-                question={x}
+                key={x.faunaRef.id}
+                {...x}
                 minimal
                 author={author}
               />
@@ -57,29 +57,29 @@ export default function Content({
                 author={x}
               /></div>
           );
-        if (x.ref.collection === "Flashquizzes")
+        if (x.faunaRef.collection === "memoramas")
           return (
-            <Flashquiz
-              key={x.ref.id}
-              flashquiz={x}
+            <Memorama
+              key={x.faunaRef.id}
+              {...x}
               author={x.author}
               minimal
             />
           );
-        if (x.ref.collection === "Posts")
+        if (x.faunaRef.collection === "articles")
           return (
-            <Post
-              key={x.ref.id}
-              post={x}
+            <Article
+              key={x.faunaRef.id}
+              {...x}
               author={x.author}
               minimal
             />
           );
-        if (x.ref.collection === "Questions")
+        if (x.faunaRef.collection === "questions")
           return (
             <Question
-              key={x.ref.id}
-              question={x}
+              key={x.faunaRef.id}
+              {...x}
               author={x.author}
               minimal
             />

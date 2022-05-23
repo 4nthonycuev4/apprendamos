@@ -1,7 +1,7 @@
 /** @format */
 
-export function UpdateFlashquiz(flashquizRef, name, tags, flashcards) {
-  Update(flashquizRef, {
+export function Updatememorama(memoramaRef, name, tags, flashcards) {
+  Update(memoramaRef, {
     data: {
       name,
       tags,

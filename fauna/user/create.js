@@ -18,7 +18,7 @@ const {
 export function CreateUser(data) {
   return Let(
     {
-      user: Create(Collection("Users"), {
+      user: Create(Collection("users"), {
         data: {
           ...data,
           joined: Now(),
@@ -27,8 +27,8 @@ export function CreateUser(data) {
             given: { likes: 0, saved: 0, comments: 0 },
             followers: 0,
             following: 0,
-            posts: 0,
-            flashquizzes: 0,
+            articles: 0,
+            memoramas: 0,
             questions: 0,
             answers: 0,
           },

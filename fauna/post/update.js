@@ -1,7 +1,7 @@
 /** @format */
 
-export function UpdatePost(postRef, body, tags) {
-  Update(postRef, {
+export function UpdateArticle(articleRef, body, tags) {
+  Update(articleRef, {
     data: {
       body,
       tags,

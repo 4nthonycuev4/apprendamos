@@ -30,7 +30,7 @@ export default function UserForm({ user }) {
       formData.append("upload_preset", "uploads");
 
       const data = await fetch(
-        "https://api.cloudinary.com/v1_1/cardsmemo/image/upload",
+        "https://api.cloudinary.com/v1_1/apprendamos/image/upload",
         {
           method: "POST",
           body: formData,
@@ -184,12 +184,15 @@ export default function UserForm({ user }) {
         <input
           type="text"
           id="username"
-          {...register("username", { required: true })}
+          {...register("username", { required: true, minLength: 4, maxLength: 20, pattern: /^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+)*$/ })}
           className="w-full rounded border bg-white px-3 py-2 text-gray-700 outline-none"
         />
         {errors.username && (
           <p className="font-bold text-red-900">
-            El nombre de usuario es obligatorio
+            {errors.username.type === "required" && "El nombre de usuario es obligatorio"}
+            {errors.username.type === "minLength" && "El nombre de usuario debe tener al menos 4 caracteres"}
+            {errors.username.type === "maxLength" && "El nombre de usuario no puede tener más de 20 caracteres"}
+            {errors.username.type === "pattern" && "El nombre de usuario solo puede contener (letras y números) y (guiones y puntos) entre ellos"}
           </p>
         )}
       </div>

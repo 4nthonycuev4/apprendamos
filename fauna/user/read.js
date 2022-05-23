@@ -1,5 +1,6 @@
 /** @format */
 import { query } from "faunadb";
+import { GetMinimalContentWithoutAuthor } from "../content/read";
 
 const {
   CurrentIdentity,
@@ -12,6 +13,9 @@ const {
   Match,
   Index,
   Join,
+  If,
+  Exists,
+  Map
 } = query;
 
 export function GetUserRefByUsername(username) {
@@ -36,15 +40,12 @@ export function GetViewer() {
 export function GetMinimalUser(userRef) {
   return Let(
     {
-      data: Select(
-        ["data", 0],
-        Paginate(Match(Index("minimalUser_by_userRef"), userRef))
-      ),
+      user: Get(userRef),
     },
     {
-      username: Select(0, Var("data")),
-      name: Select(1, Var("data")),
-      picture: Select(2, Var("data")),
+      username: Select(["data", "username"], Var("user")),
+      name: Select(["data", "name"], Var("user")),
+      picture: Select(["data", "picture"], Var("user")),
     }
   );
 }
@@ -52,28 +53,25 @@ export function GetMinimalUser(userRef) {
 export function GetUserWithContent(username) {
   return Let(
     {
-      userRef: Select(
+      userRefMatch: Match(Index("user_by_username"), username),
+
+      userRef: If(Exists(Var("userRefMatch")), Select(
         [0],
-        Paginate(Match(Index("userRef_by_username"), username))
-      ),
-      user: Get(Var("userRef")),
-      content: query.Map(
+        Paginate(Var("userRefMatch"))
+      ), false),
+
+      user: If(Exists(Var("userRefMatch")), Get(Var("userRef")), false),
+      content: If(Exists(Var("userRefMatch")), Map(
         Paginate(
           Join(
-            Match(Index("content_by_authorRef"), Var("userRef")),
+            Match(Index("content_by_author"), Var("userRef")),
             Index("content_sorted_created")
-          )
+          ),
+          {
+            size: 2,
+          }
         ),
-        Lambda(["created", "ref", "title", "body", "authorRef"], Let(
-          {}, {
-          title: Var("title"),
-          body: Var("body"),
-          created: Var("created"),
-          ref: Var("ref"),
-        }
-
-        )))
-
+        Lambda(["created", "ref"], GetMinimalContentWithoutAuthor(Var("ref")))), false),
     },
     {
       user: Var("user"),

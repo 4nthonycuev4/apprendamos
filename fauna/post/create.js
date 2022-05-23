@@ -7,13 +7,13 @@ import { GetViewerRef } from "../user/read";
 const { Get, Var, Collection, Let, Select, Create, Now, Update, Do, Add } =
   query;
 
-export function CreatePost(body, tags) {
+export function CreateArticle(body, tags) {
   return Let(
     {
       authorRef: GetViewerRef(),
       author: Get(Var("viewerRef")),
 
-      post: Create(Collection("Posts"), {
+      article: Create(Collection("articles"), {
         data: {
           body,
           tags,
@@ -31,11 +31,11 @@ export function CreatePost(body, tags) {
       Update(Var("authorRef"), {
         data: {
           stats: {
-            posts: Add(Select(["data", "stats", "posts"], Var("author")), 1),
+            articles: Add(Select(["data", "stats", "articles"], Var("author")), 1),
           },
         },
       }),
-      Select(["ref"], Var("post"))
+      Select(["ref"], Var("article"))
     )
   );
 }

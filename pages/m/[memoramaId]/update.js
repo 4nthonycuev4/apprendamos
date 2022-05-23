@@ -6,11 +6,11 @@ import { useUser } from "@auth0/nextjs-auth0";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
-import FlashquizForm from "../../../../../components/forms/FlashquizForm";
+import memoramaForm from "../../../../../components/forms/memoramaForm";
 import FaunaClient from "../../../../../fauna";
 import Navbar from "../../../../../components/navigation/Navbar";
 
-export default function EditFlashquizPage({ flashquiz, author }) {
+export default function EditmemoramaPage({ memorama, author }) {
   const router = useRouter();
   const { user, isLoading } = useUser();
 
@@ -25,30 +25,30 @@ export default function EditFlashquizPage({ flashquiz, author }) {
   return (
     <>
       <Head>
-        <title>Editar Flashquiz</title>
+        <title>Editar memorama</title>
       </Head>
 
-      <Navbar title="Editar un flashquiz" />
-      <FlashquizForm flashquiz={flashquiz} author={author} />
+      <Navbar title="Editar un memorama" />
+      <MemoramaForm memorama={memorama} author={author} />
     </>
   );
 }
 
 export async function getServerSideProps(context) {
-  const { flashquizId } = context.query;
+  const { memoramaId } = context.query;
   const faunaClient = new FaunaClient();
 
   const res = await faunaClient.getSingleContentWithAuthor(
     {
-      collection: "Flashquizzes",
-      id: flashquizId,
+      collection: "memoramas",
+      id: memoramaId,
     },
     0
   );
 
   return {
     props: {
-      flashquiz: res.content,
+      memorama: res.content,
       author: res.author,
     },
   };

@@ -69,8 +69,8 @@ export default function TagsInput({ tags, handleOnTagsChange }) {
 
               if (newTag.parsed.length < 3) {
                 setError("El tag debe al menos 3 caracteres.");
-              } else if (newTag.parsed.length > 16) {
-                setError("El tag debe a lo mucho 16 caracteres.");
+              } else if (newTag.parsed.length > 20) {
+                setError("El tag debe a lo mucho 20 caracteres.");
               } else if (!/^[A-Za-z0-9_-]*$/.test(newTag.parsed)) {
                 setError(
                   "Caracteres inválidos. Solo se permiten letras, números, guiones y espacios."

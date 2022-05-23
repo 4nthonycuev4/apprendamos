@@ -4,8 +4,6 @@ import { query } from "faunadb";
 
 import { GetViewerRef } from "../user/read";
 
-import { GetContentComments } from "./read";
-
 const {
   Create,
   Collection,
@@ -24,22 +22,13 @@ const {
   Paginate,
 } = query;
 
-export function CreateComment(contentRef, docType, message, coins) {
-  const comments = {};
-  ["flashquiz", "post", "question", "answer"].map((x) => {
-    if (x === docType) {
-      comments[x] = 1;
-    } else {
-      comments[x] = 0;
-    }
-  });
-
+export function CreateComment(ref, collection, message, coins) {
   return Let(
     {
       viewerRef: GetViewerRef(),
       viewer: Get(Var("viewerRef")),
 
-      viewerContentStatsRefMatch: Match(
+      contentStatsRefMatch: Match(
         Index(`stats_by_${docType}Ref_and_userRef`),
         contentRef,
         Var("viewerRef")
@@ -96,14 +85,14 @@ export function CreateComment(contentRef, docType, message, coins) {
             authorRef: Var("authorRef"),
             following: false,
             likes: {
-              flashquiz: 0,
-              post: 0,
+              memorama: 0,
+              article: 0,
               question: 0,
               answer: 0,
             },
             saved: {
-              flashquiz: 0,
-              post: 0,
+              memorama: 0,
+              article: 0,
               question: 0,
               answer: 0,
             },

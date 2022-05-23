@@ -18,7 +18,7 @@ export function CreateSearchIndex() {
         name: 'search_index',
         source: [
             {
-                collection: [Collection('Posts'), Collection('Questions'), Collection('Flashquizzes')],
+                collection: [Collection('Articles'), Collection('Questions'), Collection('memoramas')],
                 fields: {
                     wordparts: Query(Lambda('content', Union(
                         Let(

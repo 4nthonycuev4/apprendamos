@@ -2,11 +2,11 @@
 
 import Head from "next/head";
 
-import Post from "../../../../../components/items/Post";
-import Navbar from "../../../../../components/navigation/Navbar";
-import FaunaClient from "../../../../../fauna";
+import Question from "../../../components/items/Question";
+import Navbar from "../../../components/navigation/Navbar";
+import FaunaClient from "../../../fauna";
 
-export default function PostPage({ post, author }) {
+export default function QuestionPage({ question, author }) {
   return (
     <>
       <Head>
@@ -22,39 +22,40 @@ export default function PostPage({ post, author }) {
           integrity="sha384-0fdwu/T/EQMsQlrHCCHoH10pkPLlKA1jL5dFyUOvB3lfeT2540/2g6YgSi2BL14p"
           crossOrigin="anonymous"
         />
-        <title>{`${author.username}'s post`}</title>
-        <meta property="og:url" content="cardsmemo.com" />
+        <title>{`${author.username}'s question`}</title>
+        <meta property="og:url" content="apprendamos.com" />
         <meta property="og:type" content="website" />
         <meta property="fb:app_id" content="328834189100104" />
         <meta
           property="og:title"
-          content={`${author.name}: ${post.title} || Cardsmemo`}
+          content={`${author.name}: ${question.title} || Apprendamos`}
         />
         <meta name="twitter:card" content="summary" />
         <meta
           property="og:description"
-          content={`${post.bodyMD.slice(0, 40)}... Cardsmemo te permite compartir publicaciones y flashcards con los demás usuarios de la red. Regístrate y empieza a crear y compartir tu propia red de conocimiento.`}
+          content={`${question.bodyMD.slice(0, 40)}... Apprendamos te permite compartir publicaciones y flashcards con los demás usuarios de la red. Regístrate y empieza a crear y compartir tu propia red de conocimiento.`}
         />
         <meta property="og:image" content={author.picture} />
       </Head>
-      <Navbar title="Post" />
+      <Navbar title="Question" />
 
-      <Post post={post} author={author} />
+      <Question {...question} author={author} />
     </>
   );
 }
 
 export async function getServerSideProps(context) {
-  const { postId } = context.query;
+  const { questionId } = context.query;
   const faunaClient = new FaunaClient();
-  const { content, author } = await faunaClient.getSingleContentWithAuthor({
-    collection: "Posts",
-    id: postId,
+
+  const { content, author } = await faunaClient.getSingleContent({
+    collection: "questions",
+    id: questionId,
   });
 
   return {
     props: {
-      post: content,
+      question: content,
       author: author,
     },
   };

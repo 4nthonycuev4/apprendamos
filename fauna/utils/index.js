@@ -7,45 +7,62 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 
-export function ParseDocType(ref) {
-  return ref.collection === "Flashquizzes"
-    ? "flashquiz"
-    : ref.collection.slice(0, -1).toLowerCase();
-}
 
 export function FaunaToJSON(obj) {
   if (Array.isArray(obj)) {
-
     return obj.map((e) => FaunaToJSON(e));
   }
   if (typeof obj === "object") {
-    if (Object.keys(obj).length === 1 && obj.data && Array.isArray(obj.data)) {
-      return FaunaToJSON(obj.data);
+    if (obj.after || obj.before) {
+      if (obj.after && obj.after[0] !== false) {
+        return {
+          afterRef: FaunaToJSON(obj.after.at(-1)),
+          data: FaunaToJSON(obj.data),
+        };
+      }
+      return {
+        afterRef: false,
+        data: FaunaToJSON(obj.data),
+      }
     }
+
+    if (obj.ref && obj.ts && obj.data) {
+      return {
+        faunaRef: {
+          collection: obj.ref.collection.id,
+          id: obj.ref.id,
+        },
+        updated: obj.ts / 1000,
+        ...FaunaToJSON(obj.data),
+      };
+    }
+
     if (obj.collection && obj.id) {
       return {
         collection: obj.collection.id,
         id: obj.id,
       };
     }
+
     if (obj.value) {
       return obj.value;
     }
+
     Object.keys(obj).forEach((k) => {
       if (k === "data") {
-        const data = obj.data;
-        delete obj.data;
+        const d = obj[k]
+        delete obj.data
 
-        Object.keys(data).forEach((dataKey) => {
-          obj[dataKey] = FaunaToJSON(data[dataKey]);
+        Object.keys(d).forEach(dataKey => {
+          obj[dataKey] = FaunaToJSON(d[dataKey])
         })
+
       } else if (obj[k] === null || obj[k] === undefined) {
         delete obj[k];
       } else {
         obj[k] = FaunaToJSON(obj[k]);
       }
     });
-    return obj;
   }
   return obj;
 }

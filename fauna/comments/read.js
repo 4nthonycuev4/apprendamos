@@ -1,6 +1,6 @@
 /** @format */
 
-import { query } from "faunadb";
+import { Divide, query } from "faunadb";
 
 import { GetMinimalUser } from "../user/read";
 
@@ -29,49 +29,55 @@ const {
   Contains,
   Abort,
   Now,
+  Map
 } = query;
 
-export function GetCommentWithMinimalAuthor(commentRef) {
+
+function GetComment(ref) {
   return Let(
     {
-      comment: Get(commentRef),
-
-      authorRef: Select(["data", "authorRef"], Var("comment")),
-      author: GetMinimalUser(Var("authorRef")),
+      comment: Get(ref),
     },
-    {
-      author: Var("author"),
-      comment: Var("comment"),
-    }
-  );
+    [
+      Select(["data", "created"], Var("comment")),
+      Select(["data", "message"], Var("comment")),
+      Select(["data", "author"], Var("comment")),
+      Select(["data", "stats", "likes"], Var("comment")),
+      Select(["data", "stats", "comments"], Var("comment")),
+      Select(["ref"], Var("comment")),
+      Select(["ts"], Var("comment")),
+    ]
+  )
 }
 
-export function GetCommentsWithMinimalAuthor(commentRefs) {
-  return query.Map(
-    commentRefs,
-    Lambda(["created", "ref", "message", "coins", "authorRef"],
-      Let(
+
+export function GetContentComments(parentRef, afterRef) {
+  return (
+    Map(
+      Paginate(
+        Join(
+          Match(Index('comments_by_parent'), parentRef),
+          Index("comments_sorted_created")
+        ),
         {
-          author: GetMinimalUser(Var("authorRef"))
-        },
-        {
-          ref: Var("ref"),
-          message: Var("message"),
-          coins: Var("coins"),
-          author: Var("author"),
-          created: Var("created"),
+          size: 2,
+          after: afterRef !== null && GetComment(afterRef)
         }
-      ))
-  );
-}
-
-export function GetContentComments(contentRef, docType) {
-  return GetCommentsWithMinimalAuthor(
-    Paginate(
-      Join(
-        Match(Index(`comments_by_${docType}Ref`), contentRef),
-        Index("comments_sorted_created")
-      )
+      ),
+      Lambda(["created", "message", "author", "likes", "comments", "ref", "ts"],
+        Let(
+          {
+            author: GetMinimalUser(Var("author"))
+          },
+          {
+            faunaRef: Var("ref"),
+            message: Var("message"),
+            author: Var("author"),
+            created: Var("created"),
+            updated: Divide(Var("ts"), 1000),
+            stats: { likes: Var("likes"), comments: Var("comments") },
+          }
+        ))
     )
-  );
+  )
 }

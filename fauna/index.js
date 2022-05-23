@@ -17,7 +17,7 @@ import { GetUserWithContent, GetViewer } from "./user/read";
 import { UpdateViewer } from "./user/update";
 import { FaunaToJSON, ParseDocType } from "./utils";
 import { GetMinimalUser } from './user/read';
-import { CreateSearchIndex, WordPartGenerator } from './utils/searchIndex';
+import { GetContentList } from './content/read';
 
 const {
   Ref,
@@ -69,25 +69,11 @@ export default class FaunaClient {
       });
   }
 
-  async getSinglePostWithMinimalAuthorAndComments(postId) {
-    return this.client
-      .query(
-        GetPostWithMinimalAuthorAndComments(Ref(Collection("Posts"), postId))
-      )
-      .then((res) => {
-        const doc = FaunaToJSON(res);
-        return { ...doc.post, author: doc.author, comments: doc.comments };
-      })
-      .catch((error) => {
-        console.log("error", error);
-        return null;
-      });
-  }
 
-  async getContentComments(ref) {
-    const docType = ParseDocType(ref);
+  async getContentComments(ref, afterId) {
+    const afterRef = afterId ? Ref(Collection("comments"), afterId) : null;
     return this.client
-      .query(GetContentComments(Ref(Collection(ref.collection), ref.id), docType))
+      .query(GetContentComments(Ref(Collection(ref.collection), ref.id), afterRef))
       .then((res) => FaunaToJSON(res))
       .catch((error) => {
         console.log("error", error);
@@ -221,7 +207,7 @@ export default class FaunaClient {
           ),
           Lambda("ref",
             If(
-              Equals(Collection("Users"), Select(["collection"], Var("ref"))),
+              Equals(Collection("users"), Select(["collection"], Var("ref"))),
               GetMinimalUser(Var("ref")),
               GetMinimalContent(Var("ref"))
             )
@@ -236,13 +222,13 @@ export default class FaunaClient {
 
   }
 
-  async getSingleContentWithAuthor(ref) {
+  async getSingleContent(ref) {
     return this.client
       .query(
         Let(
           {
             content: Get(Ref(Collection(ref.collection), ref.id)),
-            author: GetMinimalUser(Select(["data", "authorRef"], Var("content"))),
+            author: GetMinimalUser(Select(["data", "author"], Var("content"))),
           },
           {
             content: Var("content"),
@@ -257,30 +243,10 @@ export default class FaunaClient {
       });
   }
 
-  async getContent() {
+  async getFeed(afterId, afterCollection) {
+    const afterRef = afterId ? Ref(Collection(afterCollection), afterId) : null;
     return this.client
-      .query(
-        Map(
-          Paginate(
-            Join(Match(Index("all_content")), Index("content_sorted_popularity"))
-          ),
-          Lambda(
-            ["score", "ref", "title", "body", "created", "authorRef"],
-            Let(
-              {
-                author: GetMinimalUser(Var("authorRef")),
-              },
-              {
-                ref: Var("ref"),
-                title: Var("title"),
-                body: Var("body"),
-                created: Var("created"),
-                author: Var("author"),
-              }
-            )
-          )
-        )
-      )
+      .query(GetContentList(afterRef))
       .then((res) => FaunaToJSON(res))
       .catch((error) => {
         console.log("error", error);

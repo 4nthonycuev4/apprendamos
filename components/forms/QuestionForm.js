@@ -71,7 +71,7 @@ export default function QuestionForm({ question, author }) {
       .catch((err) => console.error(err));
 
     if (res.updated) {
-      router.push(`/@/${author.username}/questions/${question.ref.id}/`);
+      router.push(`/p/${question.ref.id}/`);
     } else {
       console.error("Error updating question");
     }
@@ -93,7 +93,7 @@ export default function QuestionForm({ question, author }) {
         .then((res) => res.json())
         .catch((err) => console.error(err));
 
-      router.push(`/@/${res.author.username}/questions/${res.content.ref.id}/`);
+      router.push(`/${res.author.username}/p/${res.content.ref.id}/`);
     } catch (err) {
       console.error(err);
     }
@@ -115,7 +115,7 @@ export default function QuestionForm({ question, author }) {
         .catch((err) => console.error(err));
 
       if (res.deleted) {
-        router.push(`/@/${author.username}/`);
+        router.push(`/`);
       } else {
         console.error("Error eliminando question");
       }

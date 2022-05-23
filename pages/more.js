@@ -14,7 +14,7 @@ export default function MorePage() {
   return (
     <>
       <Head>
-        <title>Cardsmemo || Flashcards & posts</title>
+        <title>Apprendamos || Flashcards & articles</title>
       </Head>
       <Navbar title="Más opciones" />
       <div className="grid grid-cols-1 gap-3">

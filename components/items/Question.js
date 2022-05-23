@@ -8,9 +8,15 @@ import Interactions from "../Interactions";
 import Tags from "../Tags";
 
 export default function Question({
-  question,
+  faunaRef,
+  title,
+  created,
+  updated,
+  stats,
+  body,
   author,
   minimal,
+  tags,
 }) {
   if (minimal) {
     return (
@@ -21,20 +27,20 @@ export default function Question({
             Pregunta
           </button>
         </div>
-        <Link href={`/@/${author.username}/questions/${question.ref.id}`}>
+        <Link href={`/p/${faunaRef.id}`}>
           <a>
-            <h1 className="text-2xl font-bold">{question.title}</h1>
+            <h1 className="text-2xl font-bold">{title}</h1>
           </a>
         </Link>
         <div
           className="prose prose-sm line-clamp-2 prose-img:mx-auto prose-img:rounded-lg dark:prose-invert"
           // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: question.body.slice(0, 250) }}
+          dangerouslySetInnerHTML={{ __html: body.slice(0, 250) }}
         />
-        <Link href={`/@/${author.username}/questions/${question.ref.id}`}>
+        <Link href={`/p/${faunaRef.id}`}>
           <a>
             <p className="text-right text-sm dark:text-gray-300">
-              Hace {moment(question.created).fromNow()}
+              Hace {moment(created).fromNow()}
             </p>
           </a>
         </Link>
@@ -44,20 +50,20 @@ export default function Question({
   return (
     <article className="space-y-2 py-2 px-6">
       <FullAuthorCard author={author} />
-      <h1 className="text-3xl font-black">{question.title}</h1>
+      <h1 className="text-3xl font-black">{title}</h1>
       <div
         className="prose prose-img:mx-auto prose-img:rounded-lg dark:prose-invert text-ellipsis overflow-hidden"
         // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: question.body }}
+        dangerouslySetInnerHTML={{ __html: body }}
       />
       <div className="text-right text-sm dark:text-gray-300">
-        <p>Creado el {moment(question.created).format("LL")}</p>
-        <p>Editado por última vez el {moment(question.ts / 1000).format("LL")}</p>
+        <p>Creado el {moment(created).format("LL")}</p>
+        <p>Editado por última vez el {moment(updated).format("LL")}</p>
       </div>
-      <Tags tags={question.tags} />
+      <Tags tags={tags} />
       <Interactions
-        contentRef={question.ref}
-        startStats={question.stats}
+        contentRef={faunaRef}
+        startStats={stats}
       />
     </article>
   );
