@@ -2,16 +2,24 @@
 
 import Error from "next/error";
 import Head from "next/head";
+import useSWRInfinite from 'swr/infinite'
 
 import BigProfile from "../components/items/BigProfile";
-import Content from "../components/lists/Content";
+import { Content } from "../components/items/Content";
 import Navbar from "../components/navigation/Navbar";
 import FaunaClient from "../fauna";
 
-export default function Profile({ user, content, errorCode, errorMessage }) {
+export default function Profile({ user, errorCode, errorMessage }) {
   if (errorCode) {
     return <Error statusCode={errorCode} title={errorMessage} />;
   }
+
+  const getKey = (pageIndex, previousPageData) => {
+    if (previousPageData && !previousPageData.data) return null
+    if (pageIndex === 0) return '/api/content'
+    return `/api/content?afterId=${previousPageData.afterRef.id}&afterCollection=${previousPageData.afterRef.collection}`
+  }
+  const { data, size, setSize, error } = useSWRInfinite(getKey)
 
   return (
     <>
@@ -47,7 +55,19 @@ export default function Profile({ user, content, errorCode, errorMessage }) {
       </Head>
       <Navbar title={`@${user.username}`} />
       <BigProfile profile={user} />
-      <Content content={content.data} author={user} />
+      {
+        error ? <div className="mx-6">Hubo un error :(</div> :
+          !data ? <div className="mx-6">Cargando ...</div> : (<>
+            {data.map((page) => (
+              page.data.map(item => <Content key={item.faunaRef.id} {...item} />)
+            ))}
+            <div className="h-20"></div>
+            <div className="flex justify-center">
+              <button className="w-32 h-8 bg-cyan-500 rounded text-white disabled:hidden" disabled={!data.at(-1)?.afterRef.id} onClick={() => setSize(size + 1)}>
+                Mostrar más
+              </button>
+            </div></>)
+      }
     </>
   );
 }
@@ -58,7 +78,7 @@ export async function getServerSideProps(context) {
 
   const client = new FaunaClient();
 
-  const { user, content } = await client.getUserWithContent(username);
+  const { user } = await client.getUserWithContent(username);
   if (!user) {
     return { props: { errorCode: 404, errorMessage: "User not found" } };
   }
@@ -66,7 +86,6 @@ export async function getServerSideProps(context) {
   return {
     props: {
       user,
-      content,
     },
   };
 }

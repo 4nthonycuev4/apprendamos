@@ -38,7 +38,7 @@ export default function MyApp({ Component, pageProps }) {
       <UserProvider>
         <SWRConfig
           value={{
-            refreshInterval: 60000,
+            refreshInterval: 300000,
             fetcher: (resource, init) =>
               fetch(resource, init).then((res) => res.json()),
           }}

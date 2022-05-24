@@ -74,7 +74,7 @@ export const GetContentList = (afterRef) => Map(
   Paginate(
     Join(Match(Index("all_content")), Index("content_sorted_popularity")),
     {
-      size: 20,
+      size: 5,
       after: afterRef != null &&
         GetContentPopularityAfterCursor(afterRef)
     }

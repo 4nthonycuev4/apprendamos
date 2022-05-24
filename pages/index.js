@@ -1,45 +1,18 @@
 /** @format */
 
 import Head from "next/head";
-import { useState, useEffect } from "react";
+import useSWRInfinite from 'swr/infinite'
 
-import Content from "../components/lists/Content";
+import { Content } from "../components/items/Content";
 import Navbar from "../components/navigation/Navbar";
 
 export default function HomePage() {
-  const [content, setContent] = useState([]);
-  const [afterRef, setAfterRef] = useState(null);
-
-  useEffect(() => {
-    const fetchContent = async () => {
-      const res = await fetch("/api/content")
-        .then((res) => res.json())
-        .catch((error) => {
-          console.log("error", error);
-          return null;
-        });
-
-      if (res) {
-        setContent(res.data);
-        setAfterRef(res.afterRef);
-      }
-    };
-    fetchContent();
-  }, []);
-
-  const fetchMoreContent = async () => {
-    const res = await fetch(`/api/content?afterId=${afterRef.id}&afterCollection=${afterRef.collection}`)
-      .then((res) => res.json())
-      .catch((error) => {
-        console.log("error", error);
-        return null;
-      });
-
-    if (res) {
-      setContent(content.concat(res.data));
-      setAfterRef(res.afterRef);
-    }
+  const getKey = (pageIndex, previousPageData) => {
+    if (previousPageData && !previousPageData.data) return null
+    if (pageIndex === 0) return '/api/content'
+    return `/api/content?afterId=${previousPageData.afterRef.id}&afterCollection=${previousPageData.afterRef.collection}`
   }
+  const { data, size, setSize, error } = useSWRInfinite(getKey)
 
   return (
     <>
@@ -72,12 +45,19 @@ export default function HomePage() {
         <meta property="og:image" content="https://res.cloudinary.com/apprendamos/image/upload/v1652936748/app_src/ioo_swpsqz.jpg" />
       </Head>
       <Navbar title="Inicio" />
-      <Content content={content || []} />
+
       {
-        afterRef &&
-        <button className="w-32 bg-red-600 mx-auto" onClick={fetchMoreContent}>
-          Mostrar más
-        </button>
+        error ? <div className="mx-6">Hubo un error :(</div> :
+          !data ? <div className="mx-6">Cargando ...</div> : (<>
+            {data.map((page) => (
+              page.data.map(item => <Content key={item.faunaRef.id} {...item} />)
+            ))}
+            <div className="h-20"></div>
+            <div className="flex justify-center">
+              <button className="w-32 h-8 bg-cyan-500 rounded text-white disabled:hidden" disabled={!data.at(-1)?.afterRef.id} onClick={() => setSize(size + 1)}>
+                Mostrar más
+              </button>
+            </div></>)
       }
     </>
   );

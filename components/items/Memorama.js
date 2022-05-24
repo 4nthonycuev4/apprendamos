@@ -17,6 +17,7 @@ export default function memorama({
   updated,
   stats,
   body,
+  tags,
   flashcards,
   author,
   minimal,
@@ -61,7 +62,7 @@ export default function memorama({
 
     <div className="text-right text-sm dark:text-gray-300">
       <p>Creado el {moment(created).format("LL")}</p>
-      <p>Editado por última vez el {moment(ts / 1000).format("LL")}</p>
+      <p>Editado por última vez el {moment(updated).format("LL")}</p>
     </div>
     <Tags tags={tags} />
     <Interactions

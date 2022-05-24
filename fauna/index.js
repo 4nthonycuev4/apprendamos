@@ -279,7 +279,7 @@ export default class FaunaClient {
       )
       .then((res) => FaunaToJSON(res))
       .catch((error) => {
-        console.log("error", error);
+        console.log("error", error.message);
         return null;
       });
   }
@@ -289,8 +289,8 @@ export default class FaunaClient {
       .query(DeleteContent(ref))
       .then((res) => FaunaToJSON(res))
       .catch((error) => {
-        console.log("error", error);
-        return null;
+        console.log('error', error)
+        return { error: { message: error.message, description: error.description } };
       });
   }
 

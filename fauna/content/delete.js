@@ -4,27 +4,32 @@ import { query } from "faunadb";
 
 import { GetViewerRef } from "../user/read";
 
-const { Delete, Ref, Collection, Let, Update, Add, Get, Select, Var } = query;
+const { Delete, Ref, Collection, Let, Update, Add, Exists, Select, Var, If, Equals, Abort, Get } = query;
 
 export function DeleteContent(ref) {
   return Let(
     {
-      authorRef: GetViewerRef(),
-      content: Delete(Ref(Collection(ref.collection), ref.id)),
-      author: Update(Var("authorRef"), {
-        data: {
-          stats: {
-            [`${ref.collection.toLowerCase()}`]: Add(
-              Select(
-                ["data", "stats", `${ref.collection.toLowerCase()}`],
-                Get(Var("authorRef"))
-              ),
-              -1
-            ),
-          },
+      contentRef: Ref(Collection(ref.collection), ref.id),
+      content: Delete(Var("contentRef")),
+
+      authorRef: Select(["data", "author"], Var("content")),
+      viewerRef: GetViewerRef(),
+      status: If(Equals(Var("authorRef"), Var("viewerRef")), "done", Abort("It is forbidden to delete other user's content.")),
+
+      author: Update(
+        Var("authorRef"),
+        {
+          data: {
+            stats: {
+              [ref.collection]: Add(Select(["data", "stats", ref.collection], Get(Var("authorRef"))), -1),
+            }
+          }
         },
-      }),
+      )
+
     },
-    { deleted: true }
-  );
+    {
+      status: Var("status"),
+    }
+  )
 }

@@ -6,6 +6,7 @@ import BasicAuthorCard from './BasicAuthorCard';
 import FullAuthorCard from './FullAuthorCard';
 import Interactions from "../Interactions";
 import Tags from "../Tags";
+import ContentOptionsButton from "../buttons/ContentOptions";
 
 export default function Question({
   faunaRef,
@@ -23,9 +24,6 @@ export default function Question({
       <article className="space-y-2 py-2 px-6">
         <div className="flex justify-between items-center">
           <BasicAuthorCard author={author} />
-          <button type="button" className="h-6 w-24 rounded text-sm font-bold text-white bg-gradient-to-r from-sky-500 to-sky-600">
-            Pregunta
-          </button>
         </div>
         <Link href={`/p/${faunaRef.id}`}>
           <a>

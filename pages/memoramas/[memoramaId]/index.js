@@ -26,7 +26,7 @@ export default function SinglememoramaPage({ memorama, author }) {
         <meta property="og:image" content={author.picture} />
       </Head>
       <Navbar title="memorama" />
-      <Memorama memorama={memorama} author={author} />
+      <Memorama {...memorama} author={author} />
     </>
   );
 }
@@ -38,7 +38,7 @@ export async function getServerSideProps(context) {
     const faunaClient = new FaunaClient();
 
     const { content, author } =
-      await faunaClient.getSingleContentWithAuthor({
+      await faunaClient.getSingleContent({
         collection: "memoramas",
         id: memoramaId,
       });

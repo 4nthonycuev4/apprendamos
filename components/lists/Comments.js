@@ -47,7 +47,7 @@ export default function CommentList({ contentRef, viewer }) {
         );
 
       })}
-      {setAfterRef && (
+      {afterRef && afterRef.id && (
         <button
 
           type="button"

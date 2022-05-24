@@ -17,8 +17,8 @@ export default function Footer() {
   return (
     <footer
       className="
-        bottom-0 sticky z-50
-        h-14
+        bottom-0 sticky z-10
+        h-14 
         grid grid-cols-5 justify-center
 				bg-gray-300
 				text-gray-900
@@ -56,6 +56,7 @@ export default function Footer() {
                 layout="fill"
                 objectFit="fill"
                 className="rounded-full"
+                priority
               />
             </div>
           </a>

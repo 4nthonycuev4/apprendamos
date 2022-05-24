@@ -1,11 +1,13 @@
 /** @format */
-
+import { useRouter } from "next/router";
 import {
-  CollectionIcon
-} from "@heroicons/react/solid";
-import Link from "next/link";
+  ArrowCircleLeftIcon,
+} from "@heroicons/react/outline";
 
+import Link from "next/link";
+import Image from "next/image";
 export default function Navbar({ title }) {
+  const router = useRouter();
   return (
     <nav
       className="
@@ -18,12 +20,25 @@ export default function Navbar({ title }) {
 				dark:bg-gray-900
 				dark:text-gray-300"
     >
-      <h1 className="text-xl font-bold">{title}</h1>
+      <div className="flex items-center space-x-2">
+        <button onClick={() => router.back()}><ArrowCircleLeftIcon className="h-6 w-6" /></button>
+        <h1 className="text-xl font-bold">{title}</h1>
+      </div>
       <Link href="/">
-        <a className="flex text-center ">
-          <CollectionIcon className="h-6 w-6" />
-          <span className="pl-1 font-bold">app</span>
-          <span className="font-light">rendamos</span>
+        <a>
+          <div className="flex items-center ">
+
+            <div className="relative h-8 w-8">
+              <Image
+                src="/logo.png"
+                alt="logo"
+                layout="fill"
+                objectFit="fill"
+              />
+            </div>
+            <span className="pl-1 font-bold">app</span>
+            <span className="font-light">rendamos</span>
+          </div>
         </a>
       </Link>
     </nav>
