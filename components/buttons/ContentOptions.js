@@ -1,11 +1,12 @@
 import { Menu, Transition } from '@headlessui/react'
-import React, { Fragment, forwardRef, useState } from 'react'
+import { Fragment, forwardRef, useState } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/solid'
 import Link from 'next/link'
 
 import CopyLinkModal from '../modals/CopyLink'
 import DeleteContentModal from '../modals/DeleteContent'
 
+// eslint-disable-next-line react/display-name
 const MyLink = forwardRef((props, ref) => {
     let { href, children, ...rest } = props
     return (
