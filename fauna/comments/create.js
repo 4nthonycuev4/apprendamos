@@ -2,7 +2,7 @@
 
 import { query } from "faunadb";
 
-import { GetViewerRef } from "../user/read";
+import { GetViewerRef } from "../users/read";
 
 const {
   Create,
@@ -19,84 +19,79 @@ const {
   Do,
   Add,
   Now,
-  Paginate,
 } = query;
 
-export function CreateComment(ref, collection, message, coins) {
+export function CreateComment(contentRef, message) {
   return Let(
     {
       viewerRef: GetViewerRef(),
       viewer: Get(Var("viewerRef")),
 
       contentStatsRefMatch: Match(
-        Index(`stats_by_${docType}Ref_and_userRef`),
+        Index('contentstats_by_user'),
         contentRef,
-        Var("viewerRef")
+        Var("viewerRef"),
       ),
 
       content: Get(contentRef),
 
-      authorRef: Select(["data", "authorRef"], Var("content")),
+      authorRef: Select(["data", "author"], Var("content")),
       author: Get(Var("authorRef")),
 
-      viewerAuthorStatsRefMatch: Match(
-        Index("stats_by_authorRef_and_userRef"),
+      authorStatsMatch: Match(
+        Index("authorstats_by_user"),
         Var("authorRef"),
         Var("viewerRef")
       ),
 
+      authorStats: If(Exists(Var("authorStatsMatch")), Get(Var("authorStatsMatch")), false),
+
       comment: Create(
-        Collection(
-          `Comments${docType.charAt(0).toUpperCase() + docType.slice(1)}`
-        ),
+        Collection('comments'),
         {
           data: {
             message,
-            coins,
-            authorRef: Var("viewerRef"),
-            [`${docType}Ref`]: contentRef,
+            author: Var("viewerRef"),
+            parent: contentRef,
             created: Now(),
+            stats: {
+              likeCount: 0,
+              dislikeCount: 0,
+              commentCount: 0
+            },
+            updated: null
           },
         }
       ),
     },
     Do(
       If(
-        Exists(Var("viewerAuthorStatsRefMatch")),
+        Exists(Var("authorStatsMatch")),
         Update(
-          Select(["data", 0], Paginate(Var("viewerAuthorStatsRefMatch"))),
+          Select(["ref"], Var("authorStats")),
           {
             data: {
-              comments: {
-                [docType]: Add(
-                  Select(
-                    ["data", "comments", docType],
-                    Get(Var("viewerAuthorStatsRefMatch"))
-                  ),
+              stats: {
+                commentCount: Add(
+                  Select(["data", "commentCount"], Var("authorStats")),
                   1
                 ),
-              },
+              }
             },
           }
         ),
-        Create(Collection("UserAuthorStats"), {
+        Create(Collection("authorstats"), {
           data: {
-            userRef: Var("viewerRef"),
-            authorRef: Var("authorRef"),
+            user: Var("viewerRef"),
+            author: Var("authorRef"),
             following: false,
-            likes: {
-              memorama: 0,
-              article: 0,
-              question: 0,
-              answer: 0,
-            },
-            saved: {
-              memorama: 0,
-              article: 0,
-              question: 0,
-              answer: 0,
-            },
-            comments,
+            viewCount: 0,
+            readCount: 0,
+            saveCount: 0,
+            likeCount: 0,
+            dislikeCount: 0,
+            commentCount: 1,
+            cheerCount: 0,
             created: Now(),
           },
         })
@@ -104,85 +99,24 @@ export function CreateComment(ref, collection, message, coins) {
       Update(Var("authorRef"), {
         data: {
           stats: {
-            received: {
-              comments: Add(
-                Select(
-                  ["data", "stats", "received", "comments"],
-                  Var("author")
-                ),
-                1
-              ),
-            },
+            commentCount: Add(
+              Select(["data", "stats", "commentCount"], Var("author")),
+              1
+            ),
           },
         },
       }),
-      Update(Var("viewerRef"), {
+      Update(contentRef, {
         data: {
           stats: {
-            given: {
-              likes: Add(
-                Select(["data", "stats", "given", "likes"], Var("viewer")),
-                1
-              ),
-            },
+            commentCount: Add(
+              Select(["data", "stats", "commentCount"], Var("content")),
+              1
+            ),
           },
         },
       }),
-      Let(
-        {
-          statsUpdated: Select(
-            ["data", "stats"],
-            Update(contentRef, {
-              data: {
-                stats: {
-                  comments: Add(
-                    Select(["data", "stats", "comments"], Var("content")),
-                    1
-                  ),
-                },
-              },
-            })
-          ),
-          viewerStats: If(
-            Exists(Var("viewerContentStatsRefMatch")),
-            Update(
-              Select(["data", 0], Paginate(Var("viewerContentStatsRefMatch"))),
-              {
-                data: {
-                  comments: Add(
-                    Select(
-                      ["data", "comments"],
-                      Get(Var("viewerContentStatsRefMatch"))
-                    ),
-                    1
-                  ),
-                },
-              }
-            ),
-            Create(
-              Collection(
-                `User${docType.charAt(0).toUpperCase() + docType.slice(1)}Stats`
-              ),
-              {
-                data: {
-                  userRef: Var("viewerRef"),
-                  [`${docType}Ref`]: contentRef,
-                  like: false,
-                  saved: false,
-                  comments: 1,
-                  created: Now(),
-                },
-              }
-            )
-          ),
-        },
-        {
-          stats: Var("statsUpdated"),
-          viewerStats: Var("viewerStats"),
-          comment: Var("comment"),
-          author: Var("viewer"),
-        }
-      )
+      Exists(Var("contentStatsRefMatch")),
     )
   );
 }

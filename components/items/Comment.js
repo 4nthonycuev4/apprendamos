@@ -1,11 +1,10 @@
 /** @format */
 
-import { DotsHorizontalIcon } from "@heroicons/react/outline";
 import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Comment({ comment, author, minimal, selectComment }) {
+export default function Comment({ message, created, updated, author }) {
   return (
     <div className="flex items-start space-x-4">
       <div>
@@ -28,19 +27,9 @@ export default function Comment({ comment, author, minimal, selectComment }) {
               <span>@{author.username}</span>
             </a>
           </Link>
-          {!minimal && (
-            <button
-              type="button"
-              onClick={() => {
-                selectComment({ comment, author });
-              }}
-            >
-              <DotsHorizontalIcon className="w-5 text-gray-700" />
-            </button>
-          )}
         </div>
-        <p>{comment.message}</p>
-        <h1 className="font-thin text-sm text-right">{moment(comment.created).fromNow()}</h1>
+        <p>{message}</p>
+        <h1 className="font-thin text-sm text-right">{moment(created).fromNow()}</h1>
       </div>
     </div>
   );

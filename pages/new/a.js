@@ -23,7 +23,6 @@ export default function CreateArticlePage() {
           crossOrigin="anonymous"
         />
       </Head>
-      <Navbar title="Crear un article" />
       <ArticleForm />
     </>
   );

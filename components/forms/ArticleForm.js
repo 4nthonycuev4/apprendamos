@@ -61,7 +61,7 @@ export default function ArticleForm({ article, author }) {
       method: "PUT",
       body: JSON.stringify({
         data: { title, bodyMD, body: bodyHTML, tags },
-        ref: article.faunaRef,
+        id: article.id,
       }),
       headers: {
         "Content-Type": "application/json",

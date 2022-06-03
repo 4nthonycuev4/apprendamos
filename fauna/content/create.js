@@ -2,7 +2,7 @@
 
 import { query } from "faunadb";
 
-import { GetViewerRef } from "../user/read";
+import { GetViewerRef } from "../users/read";
 
 const { Create, Update, Collection, Let, Var, Get, Select, Add, Now } = query;
 

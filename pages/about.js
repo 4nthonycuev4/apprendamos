@@ -22,7 +22,6 @@ export default function AboutPage() {
           crossOrigin="anonymous"
         />
       </Head>
-      <Navbar title="Acerca de" />
       <div className="p-4 text-right">
         <p>Desarrollado por Anthony Ivan Cueva Paredes</p>
         <p>Callao, Perú</p>

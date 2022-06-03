@@ -2,7 +2,7 @@
 
 import { query } from "faunadb";
 
-import { GetViewerRef } from "../user/read";
+import { GetViewerRef } from "../users/read";
 
 const { Delete, Ref, Collection, Let, Update, Add, Exists, Select, Var, If, Equals, Abort, Get } = query;
 
@@ -21,7 +21,9 @@ export function DeleteContent(ref) {
         {
           data: {
             stats: {
-              [ref.collection]: Add(Select(["data", "stats", ref.collection], Get(Var("authorRef"))), -1),
+              contentCount: {
+                [ref.collection]: Add(Select(["data", "stats", "contentCount", ref.collection], Get(Var("authorRef"))), -1),
+              }
             }
           }
         },

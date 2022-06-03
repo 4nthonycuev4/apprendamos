@@ -12,6 +12,12 @@ module.exports = {
       sans: ["Inter", "sans-serif"],
       serif: ["Merriweather", "serif"],
     },
+    borderWidth: {
+      DEFAULT: '0.5px'
+    },
+    borderColor: {
+      DEFAULT: '#4b5563'
+    },
     extend: {},
   },
   variants: {},

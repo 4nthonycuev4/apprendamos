@@ -4,7 +4,6 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import Navbar from "../../components/navigation/Navbar";
 
 export default function CreatePage() {
   const router = useRouter();
@@ -14,7 +13,6 @@ export default function CreatePage() {
       <Head>
         <title>Apprendamos</title>
       </Head>
-      <Navbar title="Crear contenido" />
       <div className="mt-2 flex flex-col space-y-2 px-20">
         <Link href="/new/article">
           <a className="flex justify-center rounded-lg border py-2">

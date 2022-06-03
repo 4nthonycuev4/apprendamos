@@ -2,7 +2,7 @@
 
 import { Divide, query } from "faunadb";
 
-import { GetMinimalUser } from "../user/read";
+import { GetMinimalUser } from "../users/read";
 
 const {
   Call,
@@ -37,16 +37,19 @@ function GetComment(ref) {
   return Let(
     {
       comment: Get(ref),
+      author: GetMinimalUser(Select(["data", "author"], Var("comment"))),
     },
-    [
-      Select(["data", "created"], Var("comment")),
-      Select(["data", "message"], Var("comment")),
-      Select(["data", "author"], Var("comment")),
-      Select(["data", "stats", "likes"], Var("comment")),
-      Select(["data", "stats", "comments"], Var("comment")),
-      Select(["ref"], Var("comment")),
-      Select(["ts"], Var("comment")),
-    ]
+    {
+      id: ref,
+      created: Select(["data", "created"], Var("comment")),
+      updated: Select(["data", "updated"], Var("comment"), false),
+      message: Select(["data", "message"], Var("comment")),
+      author: Var("author"),
+      stats: {
+        likeCount: Select(["data", "stats", "likeCount"], Var("comment")),
+        commentCount: Select(["data", "stats", "commentCount"], Var("comment")),
+      }
+    }
   )
 }
 
@@ -57,27 +60,16 @@ export function GetContentComments(parentRef, afterRef) {
       Paginate(
         Join(
           Match(Index('comments_by_parent'), parentRef),
-          Index("comments_sorted_created")
+          Index('comments_sorted_popularity'),
         ),
         {
           size: 20,
           after: afterRef !== null && GetComment(afterRef)
         }
       ),
-      Lambda(["created", "message", "author", "likes", "comments", "ref", "ts"],
-        Let(
-          {
-            author: GetMinimalUser(Var("author"))
-          },
-          {
-            faunaRef: Var("ref"),
-            message: Var("message"),
-            author: Var("author"),
-            created: Var("created"),
-            updated: Divide(Var("ts"), 1000),
-            stats: { likes: Var("likes"), comments: Var("comments") },
-          }
-        ))
+      Lambda(["score", "ref"],
+        GetComment(Var("ref"))
+      )
     )
   )
 }

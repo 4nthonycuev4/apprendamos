@@ -39,36 +39,16 @@ export default function CommentForm({
 
   const handleSubmit = () => {
     setIsSubmitting(true);
-    const htmlId = commentToUpdate
-      ? commentToUpdate.faunaRef.id
-      : `commentInput${contentRef.id}`;
+    const htmlId = `commentInput${contentId}`;
 
-    const rawComment = document.getElementById(htmlId).innerText;
-    if (rawComment.length < 10) {
+    const message = document.getElementById(htmlId).innerText;
+    if (message.length < 10) {
       setError("El comentario debe tener al menos 10 caracteres");
-    } else if (rawComment.length >= 280) {
-      setError("El comentario debe tener menos de 280 caracteres");
+    } else if (message.length > 280) {
+      setError("El comentario no debe tener más de 280 caracteres");
     } else {
-      let coins = 0;
-      let message = "";
-
-      const regex = /(?<=\[)(.*?)(?=\])/;
-      const matches = rawComment.match(regex);
-
-      if (matches) {
-        message = rawComment.replace(`[${matches[0]}]`, "").trim();
-        coins = matches[0].replace(" ", "");
-        coins = parseInt(coins);
-        if (!coins) {
-          coins = 0;
-          message = rawComment;
-        }
-      } else {
-        message = rawComment;
-      }
       document.getElementById(htmlId).innerText = "";
-
-      commentToUpdate ? updateComment(message) : createComment(message, coins);
+      createComment(message, coins);
     }
     setIsSubmitting(false);
   };

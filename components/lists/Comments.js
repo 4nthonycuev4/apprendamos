@@ -39,7 +39,7 @@ export default function CommentList({ contentRef, viewer }) {
       {comments.map((comment) => {
         return (
           <Comment
-            key={comment.faunaRef.id}
+            key={comment.id}
             comment={comment}
             author={comment.author}
             selectComment={setCommentSelected}

@@ -46,7 +46,7 @@ export default function Footer() {
           </button>
         </a>
       </Link>
-      {!error && !isLoading && user?.faunaRef ? (
+      {!error && !isLoading && user?.id ? (
         <Link href={`/${user.username}`}>
           <a className="flex items-center justify-center">
             <div className="relative h-10 w-10">

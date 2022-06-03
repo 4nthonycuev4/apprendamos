@@ -1,21 +1,32 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useState } from 'react'
+import { useRouter } from 'next/router';
+import { useUser } from '@auth0/nextjs-auth0';
 
-export default function DeleteContentModal({ isOpen, setIsOpen, faunaRef }) {
+export default function DeleteContentModal({ isOpen, setIsOpen, contentId }) {
+    const router = useRouter();
+    const { user } = useUser();
+
     const [isDeleting, setIsDeleting] = useState(false)
 
     const handleCancel = () => setIsOpen(false)
     const handleDelete = async () => {
         setIsOpen(false)
         setIsDeleting(true)
-        const deleted = await fetch(`/api/${faunaRef.collection}/${faunaRef.id}`, {
+        const deleted = await fetch(`/api/${contentId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
             }
         }).then(res => res.json()).catch(err => console.log(err))
 
+        if (deleted?.status === "done") {
+            router.push('/' + user.username)
+        }
+
         setIsDeleting(false)
+        setIsOpen(false)
+        console.log('ok')
     }
 
     return (
@@ -54,7 +65,7 @@ export default function DeleteContentModal({ isOpen, setIsOpen, faunaRef }) {
                                     </Dialog.Title>
                                     <div className="mt-2">
                                         <p className="text-sm text-gray-500">
-                                            El enlace fue copiado al portapales y está listo para que lo compartas con quien quieras ;).
+                                            Te recomendamos que guardes tu trabajo antes de eliminarlo.
                                         </p>
                                     </div>
                                 </Dialog.Panel>

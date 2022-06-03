@@ -7,10 +7,12 @@ import { SWRConfig } from "swr";
 
 import "moment/locale/es";
 
-import Footer from "../components/navigation/Footer";
+
 import useDarkMode from "../hooks/useDarkMode";
 
 import "../styles/app.css";
+import Navbar from './../components/navigation/Navbar';
+import Panel from './../components/navigation/Panel';
 
 moment.updateLocale("es", {
   relativeTime: {
@@ -38,21 +40,20 @@ export default function MyApp({ Component, pageProps }) {
       <UserProvider>
         <SWRConfig
           value={{
-            refreshInterval: 300000,
+            revalidateOnFocus: false,
             fetcher: (resource, init) =>
               fetch(resource, init).then((res) => res.json()),
           }}
         >
-          <div className="max-w-screen min-h-screen dark:bg-neutral-900">
-            <div className="
-                mx-auto max-w-xl
-                min-h-screen flex flex-col justify-between
-              dark:bg-gray-900 dark:text-slate-300
-            ">
-              <main className="grow bg-gray-100 text-slate-800 dark:bg-gray-800 dark:text-white">
-                <Component {...pageProps} />
-              </main>
-              <Footer />
+          <div className="w-screen h-screen dark:bg-gray-800 dark:text-white flex justify-center">
+            <div className="w-1/4">
+              <Navbar />
+            </div>
+            <main id="main" className="grow max-w-xl h-screen overflow-y-scroll border-x dark:scrollbar-dark pl-1">
+              <Component {...pageProps} />
+            </main>
+            <div className="w-1/4 h-screen overflow-y-scroll scrollbar-light dark:scrollbar-dark">
+              <Panel />
             </div>
           </div>
         </SWRConfig>

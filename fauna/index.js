@@ -1,23 +1,19 @@
 /** @format */
 import { Client, query } from "faunadb";
 
-import { CreateComment } from "./comments/create";
 import { CreateContent } from "./content/create";
+import { GetMinimalContent, ReadContent, ViewSavedContent, ViewTrendingContent, FollowingContent } from "./content/read";
+import { Like, Dislike, Save } from './content/update';
 import { DeleteContent } from "./content/delete";
-import { GetMinimalContent } from "./content/read";
-import { FollowUser, LikeContent } from "./interactions/create";
+
+import { CreateComment } from "./comments/create";
 import { GetContentComments } from "./comments/read";
-import {
-  GetViewerAuthorStats,
-  GetViewerContentStats,
-  GetFollowingStatus
-} from "./interactions/read";
-import { CreateUser } from "./user/create";
-import { GetUserWithContent, GetViewer } from "./user/read";
-import { UpdateViewer } from "./user/update";
-import { FaunaToJSON, ParseDocType } from "./utils";
-import { GetMinimalUser } from './user/read';
-import { GetContentList } from './content/read';
+
+import { CreateUser } from "./users/create";
+import { GetMinimalUser, GetSuggestedUsers, StalkUser, GetViewer, ViewUserContent, GetFollowers } from './users/read';
+import { UpdateViewer, FollowUser } from "./users/update";
+
+import FaunaToJSON from "./utils/FaunaToJSON";
 
 const {
   Ref,
@@ -37,9 +33,6 @@ const {
   Update,
   Delete,
   Union,
-  GT,
-  Count,
-  Filter,
   NGram,
   Map
 } = query;
@@ -59,6 +52,7 @@ export default class FaunaClient {
     }
   }
 
+  // VIEWER CRUD
   async getViewer() {
     return this.client
       .query(GetViewer())
@@ -69,11 +63,9 @@ export default class FaunaClient {
       });
   }
 
-
-  async getContentComments(ref, afterId) {
-    const afterRef = afterId ? Ref(Collection("comments"), afterId) : null;
+  async updateViewer(data) {
     return this.client
-      .query(GetContentComments(Ref(Collection(ref.collection), ref.id), afterRef))
+      .query(UpdateViewer(data))
       .then((res) => FaunaToJSON(res))
       .catch((error) => {
         console.log("error", error);
@@ -81,6 +73,15 @@ export default class FaunaClient {
       });
   }
 
+  async register(data) {
+    return this.client
+      .query(CreateUser(data))
+      .then((res) => FaunaToJSON(res))
+      .catch((error) => {
+        console.log("error", error);
+        return null;
+      });
+  }
 
   async getViewerAuthorStats(username) {
     return this.client
@@ -92,7 +93,9 @@ export default class FaunaClient {
       });
   }
 
-  async followUser(username) {
+  // INTERACTIONS CRUD
+
+  async follow(username) {
     return this.client
       .query(FollowUser(username))
       .then((res) => FaunaToJSON(res))
@@ -115,10 +118,42 @@ export default class FaunaClient {
       });
   }
 
-  async likeContent(ref) {
-    const docType = ParseDocType(ref);
+  async like(ref) {
     return this.client
-      .query(LikeContent(Ref(Collection(ref.collection), ref.id), docType))
+      .query(Like(Ref(Collection(ref.collection), ref.id)))
+      .then((res) => FaunaToJSON(res))
+      .catch((error) => {
+        console.log("error", error);
+        return null;
+      });
+  }
+
+  async dislike(ref) {
+    return this.client
+      .query(Dislike(Ref(Collection(ref.collection), ref.id)))
+      .then((res) => FaunaToJSON(res))
+      .catch((error) => {
+        console.log("error", error);
+        return null;
+      });
+  }
+
+  async save(ref) {
+    return this.client
+      .query(Save(Ref(Collection(ref.collection), ref.id)))
+      .then((res) => FaunaToJSON(res))
+      .catch((error) => {
+        console.log("error", error);
+        return null;
+      });
+  }
+
+  //COMMENTS CRUD
+
+  async getContentComments(ref, afterId) {
+    const afterRef = afterId ? Ref(Collection("comments"), afterId) : null;
+    return this.client
+      .query(GetContentComments(Ref(Collection(ref.collection), ref.id), afterRef))
       .then((res) => FaunaToJSON(res))
       .catch((error) => {
         console.log("error", error);
@@ -127,14 +162,11 @@ export default class FaunaClient {
   }
 
   async createComment(ref, message, coins) {
-    const docType = ParseDocType(ref);
     return this.client
       .query(
         CreateComment(
           Ref(Collection(ref.collection), ref.id),
-          docType,
-          message,
-          coins
+          message
         )
       )
       .then((res) => FaunaToJSON(res))
@@ -166,16 +198,39 @@ export default class FaunaClient {
       });
   }
 
-  async getUserWithContent(username, afterId, afterCollection) {
-    const afterRef = afterId ? Ref(Collection(afterCollection), afterId) : null;
+  // USERS CRUD
+
+  async getSingleUser(username) {
+    console.log('username', username)
     return this.client
-      .query(GetUserWithContent(username, afterRef))
+      .query(StalkUser(username))
       .then((res) => FaunaToJSON(res))
       .catch((error) => {
         console.log("error", error);
         return null;
       });
   }
+
+  async getSuggestedUsers(afterId) {
+    const afterRef = afterId ? Ref(Collection("users"), afterId) : null;
+    return this.client.query(GetSuggestedUsers(afterRef))
+      .then((res) => FaunaToJSON(res))
+      .catch((error) => {
+        console.log("error", error);
+      });
+  }
+
+  async getFollowers(username, after) {
+    const afterRef = after && Ref(Collection("users"), after);
+    return this.client.query(GetFollowers(username, afterRef))
+      .then((res) => FaunaToJSON(res))
+      .catch((error) => {
+        console.log("error", error);
+      });
+  }
+
+
+  // SEARCH
 
   async search(string) {
     let word = string
@@ -225,19 +280,24 @@ export default class FaunaClient {
 
   }
 
+
+
+  // CONTENT CRUD
+
+  async createContent(data, type) {
+    return this.client
+      .query(CreateContent(data, type))
+      .then((res) => FaunaToJSON(res))
+      .catch((error) => {
+        console.log("error", error);
+        return null;
+      });
+  }
+
   async getSingleContent(ref) {
     return this.client
       .query(
-        Let(
-          {
-            content: Get(Ref(Collection(ref.collection), ref.id)),
-            author: GetMinimalUser(Select(["data", "author"], Var("content"))),
-          },
-          {
-            content: Var("content"),
-            author: Var("author"),
-          }
-        )
+        ReadContent(Ref(Collection(ref.collection), ref.id))
       )
       .then((res) => FaunaToJSON(res))
       .catch((error) => {
@@ -246,20 +306,65 @@ export default class FaunaClient {
       });
   }
 
-  async getFeed(afterId, afterCollection) {
-    const afterRef = afterId ? Ref(Collection(afterCollection), afterId) : null;
-    return this.client
-      .query(GetContentList(afterRef))
+  async getTrendingContent(after) {
+    const afterRef = after && after.id && Ref(Collection(after.collection), after.id);
+
+    return this.client.query(ViewTrendingContent(afterRef))
       .then((res) => FaunaToJSON(res))
       .catch((error) => {
         console.log("error", error);
-        return null;
       });
+
   }
 
-  async createContent(data, type) {
+  async getUserContent(username, after) {
+    const afterRef = after && after.id && Ref(Collection(after.collection), after.id);
+
     return this.client
-      .query(CreateContent(data, type))
+      .query(ViewUserContent(username, afterRef))
+      .then((res) => FaunaToJSON(res))
+  }
+
+  async getFollowingContent(after) {
+    const afterRef = after && after.id && Ref(Collection(after.collection), after.id);
+
+    return this.client.query(FollowingContent(afterRef))
+      .then((res) => FaunaToJSON(res))
+      .catch((error) => {
+        console.log("error", error);
+      });
+
+  }
+
+  async getSavedContent(after) {
+    const afterRef = after && after.id && Ref(Collection(after.collection), after.id);
+    return this.client
+      .query(ViewSavedContent(afterRef))
+      .then((res) => FaunaToJSON(res))
+  }
+
+  async getContentByTag(tag_parsed) {
+    return this.client
+      .query(
+        query.Map(
+          Paginate(Join(Match(Index("content_by_tag"), tag_parsed), Index("content_sorted_popularity"))),
+          Lambda(
+            ["score", "ref", "title", "body", "created", "authorRef"],
+            Let(
+              {
+                author: GetMinimalUser(Var("authorRef")),
+              },
+              {
+                ref: Var("ref"),
+                title: Var("title"),
+                body: Var("body"),
+                created: Var("created"),
+                author: Var("author"),
+              }
+            )
+          )
+        )
+      )
       .then((res) => FaunaToJSON(res))
       .catch((error) => {
         console.log("error", error);
@@ -294,62 +399,5 @@ export default class FaunaClient {
       });
   }
 
-  async getContentByTag(tag_parsed) {
-    return this.client
-      .query(
-        query.Map(
-          Paginate(Join(Match(Index("content_by_tag"), tag_parsed), Index("content_sorted_popularity"))),
-          Lambda(
-            ["score", "ref", "title", "body", "created", "authorRef"],
-            Let(
-              {
-                author: GetMinimalUser(Var("authorRef")),
-              },
-              {
-                ref: Var("ref"),
-                title: Var("title"),
-                body: Var("body"),
-                created: Var("created"),
-                author: Var("author"),
-              }
-            )
-          )
-        )
-      )
-      .then((res) => FaunaToJSON(res))
-      .catch((error) => {
-        console.log("error", error);
-        return null;
-      });
-  }
 
-  async updateViewer(data) {
-    return this.client
-      .query(UpdateViewer(data))
-      .then((res) => FaunaToJSON(res))
-      .catch((error) => {
-        console.log("error", error);
-        return null;
-      });
-  }
-
-  async register(data) {
-    return this.client
-      .query(CreateUser(data))
-      .then((res) => FaunaToJSON(res))
-      .catch((error) => {
-        console.log("error", error);
-        return null;
-      });
-  }
-
-  async getFollowingStatus(username) {
-    return this.client
-      .query(GetFollowingStatus(username))
-      .then((res) => FaunaToJSON(res))
-      .catch((error) => {
-        console.log("error", error);
-        return null;
-      });
-  }
 }

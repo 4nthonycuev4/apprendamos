@@ -22,7 +22,7 @@ export default function CommentOptionsModal({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        commentRef: comment.comment.faunaRef,
+        commentId: comment.comment.id,
       }),
     })
       .then((resx) => resx.json())

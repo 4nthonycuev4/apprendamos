@@ -10,10 +10,12 @@ export default withApiAuthRequired(async function deleteContent(req, res) {
         const { accessToken } = await getAccessToken(req, res);
         const client = new FaunaClient(accessToken);
 
-        let response = "hello world!";
+        let response;
 
         if (req.method === "DELETE") {
             response = await client.deleteContent({ collection, id });
+        } else if (req.method === "GET") {
+            response = await client.getSingleContent({ collection, id });
         }
 
         if (response.error) {

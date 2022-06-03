@@ -16,7 +16,6 @@ export default function MorePage() {
       <Head>
         <title>Apprendamos || Flashcards & articles</title>
       </Head>
-      <Navbar title="Más opciones" />
       <div className="grid grid-cols-1 gap-3">
         <Link href="/api/auth/logout">
           <a>

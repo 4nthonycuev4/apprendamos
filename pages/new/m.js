@@ -12,7 +12,6 @@ export default function Home() {
       <Head>
         <title>Nuevo memorama</title>
       </Head>
-      <Navbar title="Crear un flasquiz" />
       <MemoramaForm />
     </>
   );

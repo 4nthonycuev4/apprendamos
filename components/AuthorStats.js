@@ -26,7 +26,7 @@ export default function AuthorStats({ startStats, username }) {
       setViewerStats(res);
     };
 
-    if (!viewerStats?.faunaRef && user?.faunaRef) {
+    if (!viewerStats?.id && user?.id) {
       getViewerStats();
     }
   }, []);
