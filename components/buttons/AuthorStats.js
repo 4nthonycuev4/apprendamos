@@ -1,6 +1,42 @@
+import { useState, useEffect } from "react";
+import { useUser } from "@auth0/nextjs-auth0";
 import FollowersModal from "../modals/Followers";
 
-export const AuthorStatsButtons = ({ stats, username, updateUser }) => {
+
+const FollowButton = ({ following, follow }) => (
+    <div className="flex justify-center my-2">
+        <div className="flex">
+            {
+                following ? (
+                    <button type="button" onClick={follow} className="h-6 w-32 rounded bg-black font-semibold text-white"
+                    >
+                        Siguiendo
+                    </button>
+                ) : (
+                    <button type="button" onClick={follow} className="h-6 w-32 rounded bg-red-600  font-semibold text-white"
+                    >
+                        Seguir
+                    </button>
+                )
+            }
+        </div>
+    </div>
+)
+
+export const AuthorStatsButtons = ({ originalStats, username }) => {
+    const { user, loading } = useUser();
+    const [stats, setStats] = useState(originalStats)
+
+    useEffect(() => {
+        setStats(originalStats)
+    }, [originalStats])
+
+    const getFollowing = async () => {
+        const following = await fetch(`/api/users/following/${username}`)
+        const followingJson = await following.json()
+        setStats({ ...stats, following: followingJson })
+    }
+
     const follow = async () => {
         const response = await fetch(`/api/users/${username}/follow`, {
             method: "PUT",
@@ -10,7 +46,7 @@ export const AuthorStatsButtons = ({ stats, username, updateUser }) => {
         })
             .then((res) => res.json());
 
-        updateUser(response.stats);
+        setStats(response.stats);
     }
 
     return (
@@ -26,23 +62,7 @@ export const AuthorStatsButtons = ({ stats, username, updateUser }) => {
                     <span>Siguiendo</span>
                 </div>
             </div>
-            <div className="flex justify-center my-2">
-                <div className="flex">
-                    {
-                        stats.following ? (
-                            <button type="button" onClick={follow} className="h-6 w-32 rounded bg-black font-semibold text-white"
-                            >
-                                Siguiendo
-                            </button>
-                        ) : (
-                            <button type="button" onClick={follow} className="h-6 w-32 rounded bg-red-600  font-semibold text-white"
-                            >
-                                Seguir
-                            </button>
-                        )
-                    }
-                </div>
-            </div>
+            {user?.username && <FollowButton following={stats.following} follow={follow} />}
         </div>
     );
 }

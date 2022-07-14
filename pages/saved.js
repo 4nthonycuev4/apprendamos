@@ -5,8 +5,7 @@ import Head from "next/head";
 import useSWRInfinite from 'swr/infinite'
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-import { Content } from "../components/items/Content";
-
+import PublicationPartialView from "../components/items/PublicationPartialView";
 export default function SavedContentPage() {
     const getKey = (pageIndex, previousPageData) => {
         if (previousPageData && !previousPageData.data) return null
@@ -70,7 +69,7 @@ export default function SavedContentPage() {
                 }
             >
                 {
-                    data?.map(page => page.data.map(item => item && <Content key={item.id} {...item} />))
+                    data?.map(page => page.data.map(item => item && <PublicationPartialView key={item.id} {...item} />))
                 }
             </InfiniteScroll>
         </>

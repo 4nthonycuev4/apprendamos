@@ -4,7 +4,7 @@ import { query } from "faunadb";
 
 import { GetViewerRef, GetViewer, GetUserByUsername } from "./read";
 
-const { Update, Not, Get, Let, Select, Var, If, Match, Index, Add } = query;
+const { Update, Not, Get, Let, Select, Var, If, Match, Index, Add, Exists, Create, Now } = query;
 
 export function UpdateViewer(data) {
   return Update(GetViewerRef(), {
@@ -21,19 +21,26 @@ export function FollowUser(username) {
       author: GetUserByUsername(username),
       authorRef: Select("ref", Var("author")),
 
-      authorStats: Get(Match(
-        Index("authorstats_by_user"),
+      authorUserRelMatch: Match(
+        Index("author_user_rel"),
         [Var("authorRef"), Var("viewerRef")]
-      )),
+      ),
+      authorUserRel: If(Exists(Var("authorUserRelMatch")), Get(Var("authorUserRelMatch")), Create("authoruser", {
+        data: {
+          author: Var("authorRef"),
+          user: Var("viewerRef"),
+          createdAt: Now(),
+        },
+      })),
 
-      following: Select(["data", "following"], Var("authorStats"), false),
+      following: Select(["data", "following"], Var("authorUserRel"), false),
       gain: If(
         Var("following"),
         -1,
         1
       ),
 
-      authorStatsUpdated: Update(Select(["ref"], Var("authorStats")), {
+      authorStatsUpdated: Update(Select(["ref"], Var("authorUserRel")), {
         data: {
           following: Not(Var("following")),
         },
@@ -62,12 +69,7 @@ export function FollowUser(username) {
 
     },
     {
-      stats: {
-        followerCount: Select(["data", "stats", "followerCount"], Var("authorUpdated"), 0),
-        followingCount: Select(["data", "stats", "followingCount"], Var("authorUpdated"), 0),
-        likeCount: Select(["data", "stats", "likeCount"], Var("authorUpdated"), 0),
-        following: Not(Var("following")),
-      },
+      following: Not(Var("following")),
     }
   );
 }

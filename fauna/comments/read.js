@@ -2,7 +2,7 @@
 
 import { Divide, query } from "faunadb";
 
-import { GetMinimalUser } from "../users/read";
+import { GetPartialUser } from "../users/read";
 
 const {
   Call,
@@ -37,7 +37,7 @@ function GetComment(ref) {
   return Let(
     {
       comment: Get(ref),
-      author: GetMinimalUser(Select(["data", "author"], Var("comment"))),
+      author: GetPartialUser(Select(["data", "author"], Var("comment"))),
     },
     {
       id: ref,
@@ -54,7 +54,7 @@ function GetComment(ref) {
 }
 
 
-export function GetContentComments(parentRef, afterRef) {
+export function GetPublicationComments(parentRef, afterRef) {
   return (
     Map(
       Paginate(

@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Head from "next/head";
-import {
-    SearchIcon,
-} from "@heroicons/react/outline";
+import { SearchIcon } from "@heroicons/react/outline";
+import { PublicationPartialView } from './../components/items/PublicationPartialView';
+
 export default function SearchPage() {
     const [textInput, setTextInput] = useState("");
 
@@ -13,10 +13,9 @@ export default function SearchPage() {
     const [content, setContent] = useState([]);
 
     const fetchSearch = async () => {
-        const response = await fetch(`/api/search?searchString=${textInput.trim()}`).then((res) => res.json());
-        setContent(response.data);
+        const response = await fetch(`/api/publications/search?str=${textInput.trim()}`).then((res) => res.json());
+        setContent(response);
     };
-
 
     const handleSearch = () => {
         if (textInput.trim() !== searchString) {
@@ -24,7 +23,6 @@ export default function SearchPage() {
             fetchSearch();
         }
     }
-
 
     return (
         <>
@@ -67,6 +65,11 @@ export default function SearchPage() {
                 </div>
             </form>
 
+            <div className="flex flex-col">
+                {content && content.length && content.map((item) => (
+                    <PublicationPartialView key={item.id} {...item} />
+                ))}
+            </div>
         </>
     );
 }

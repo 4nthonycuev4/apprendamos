@@ -1,25 +1,25 @@
 CreateIndex({
-    name: "saved_by_user",
+    name: "publications_saved_by_user",
     source: {
-        collection: [Collection("contentstats")],
+        collection: [Collection("publicationuser")],
     },
     terms: [
         {
             field: ["data", "user"],
         },
         {
-            field: ["data", "save"],
+            field: ["data", "saved"],
             value: true,
         }
     ],
     values: [
         {
-            field: ["data", "saved"],
+            field: ["data", "savedAt"],
             reverse: true,
         },
         {
-            field: ["data", "content"],
+            field: ["data", "publication"],
         }
     ],
     serialized: true,
-});
+}); 

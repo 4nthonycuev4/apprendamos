@@ -19,7 +19,7 @@ export default function CommentList({ contentRef, viewer }) {
       setAfterRef(comments.afterRef);
     };
     getComments();
-  }, []);
+  });
 
   const getNextComments = async () => {
     const nextComments = await fetch(`/api/${contentRef.collection}/${contentRef.id}/comments?afterId=${afterRef.id}`)

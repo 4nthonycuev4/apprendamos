@@ -1,30 +1,33 @@
 export default function FaunaToJSON(obj) {
     if (Array.isArray(obj)) {
+        if (obj.length === 0) {
+            return;
+        }
         return obj.map((e) => FaunaToJSON(e));
     }
     if (typeof obj === "object") {
         if (obj.after || obj.before) {
             if (obj.after && obj.after[0] !== false) {
                 return {
-                    after: FaunaToJSON(obj.after.at(-1)),
+                    afterId: FaunaToJSON(obj.after.at(-1)),
                     data: FaunaToJSON(obj.data),
                 };
             }
             return {
-                after: false,
+                afterId: false,
                 data: FaunaToJSON(obj.data),
             }
         }
 
         if (obj.ref && obj.data) {
             return {
-                id: `${obj.ref.collection.id}/${obj.ref.id}`,
+                id: obj.ref.id,
                 ...FaunaToJSON(obj.data),
             };
         }
 
         if (obj.collection && obj.id) {
-            return `${obj.collection.id}/${obj.id}`;
+            return obj.id;
         }
 
         if (obj.value) {

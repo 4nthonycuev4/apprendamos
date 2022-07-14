@@ -12,13 +12,14 @@ module.exports = {
       sans: ["Inter", "sans-serif"],
       serif: ["Merriweather", "serif"],
     },
-    borderWidth: {
-      DEFAULT: '0.5px'
+    extend: {
+      borderWidth: {
+        DEFAULT: '0.5px'
+      },
+      borderColor: {
+        DEFAULT: '#d1d5db'
+      },
     },
-    borderColor: {
-      DEFAULT: '#4b5563'
-    },
-    extend: {},
   },
   variants: {},
   plugins: [
@@ -26,4 +27,4 @@ module.exports = {
     require("@tailwindcss/line-clamp"),
     require("@tailwindcss/forms"),
   ],
-};
+}

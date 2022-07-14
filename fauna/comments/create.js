@@ -21,21 +21,21 @@ const {
   Now,
 } = query;
 
-export function CreateComment(contentRef, message) {
+export function CreateComment(publicationRef, message) {
   return Let(
     {
       viewerRef: GetViewerRef(),
       viewer: Get(Var("viewerRef")),
 
-      contentStatsRefMatch: Match(
-        Index('contentstats_by_user'),
-        contentRef,
+      publicationStatsRefMatch: Match(
+        Index('publicationstats_by_user'),
+        publicationRef,
         Var("viewerRef"),
       ),
 
-      content: Get(contentRef),
+      publication: Get(publicationRef),
 
-      authorRef: Select(["data", "author"], Var("content")),
+      authorRef: Select(["data", "author"], Var("publication")),
       author: Get(Var("authorRef")),
 
       authorStatsMatch: Match(
@@ -52,7 +52,7 @@ export function CreateComment(contentRef, message) {
           data: {
             message,
             author: Var("viewerRef"),
-            parent: contentRef,
+            parent: publicationRef,
             created: Now(),
             stats: {
               likeCount: 0,
@@ -106,17 +106,17 @@ export function CreateComment(contentRef, message) {
           },
         },
       }),
-      Update(contentRef, {
+      Update(publicationRef, {
         data: {
           stats: {
             commentCount: Add(
-              Select(["data", "stats", "commentCount"], Var("content")),
+              Select(["data", "stats", "commentCount"], Var("publication")),
               1
             ),
           },
         },
       }),
-      Exists(Var("contentStatsRefMatch")),
+      Exists(Var("publicationStatsRefMatch")),
     )
   );
 }

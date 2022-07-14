@@ -3,7 +3,7 @@ import useSWRInfinite from 'swr/infinite'
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import BaseModal from './Base';
-import AuthorCard from '../items/AuthorCard';
+import PartialAuthorCard from '../items/AuthorCard/Partial';
 
 export default function FollowersModal({ username, followerCount }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +12,7 @@ export default function FollowersModal({ username, followerCount }) {
     const getKey = (pageIndex, previousPageData) => {
         if (previousPageData && !previousPageData.data) return null
         if (pageIndex === 0) return `/api/users/${username}/followers`
-        return `/api/users/${username}/followers?after=${previousPageData.afterRef}`
+        return `/api/users/${username}/followers?afterId=${previousPageData.afterId}`
     }
     const { data, size, setSize } = useSWRInfinite(getKey)
 
@@ -21,7 +21,7 @@ export default function FollowersModal({ username, followerCount }) {
     useEffect(() => {
         let n = 0;
         data?.forEach(page => {
-            n += page.data.length
+            n += page?.data?.length
         });
         setContentSize(n)
     }, [data])
@@ -37,7 +37,7 @@ export default function FollowersModal({ username, followerCount }) {
                     scrollableTarget="main"
                     dataLength={contentSize}
                     next={() => setSize(size + 1)}
-                    hasMore={Boolean(data?.at(-1)?.after)}
+                    hasMore={Boolean(data?.at(-1)?.afterId)}
                     loader={<h1>Loading...</h1>}
                     endMessage={
                         <p className="text-center">
@@ -46,7 +46,7 @@ export default function FollowersModal({ username, followerCount }) {
                     }
                 >
                     {
-                        data?.map(page => page.data.map(item => item && <AuthorCard key={item.id} {...item} />))
+                        data?.map(page => page?.data?.map(item => item && <PartialAuthorCard key={item.id} {...item} />))
                     }
                 </InfiniteScroll>
             </BaseModal>

@@ -5,18 +5,19 @@ import { handleAuth, handleCallback } from "@auth0/nextjs-auth0";
 import FaunaClient from "../../../fauna";
 
 const afterCallback = async (req, res, session, state) => {
-  const client = new FaunaClient(session.accessToken, null, session.user.sub);
-  const accountConnection = session.user.sub;
-  const viewer = await client.getViewer();
+  try {
+    const client = new FaunaClient(session.accessToken);
+    const accountConnection = session.user.sub;
+    const viewer = await client.getViewer();
 
-  if (!viewer) {
-    state.returnTo = "/register";
+    session.user = viewer;
+    session.user.accountConnection = accountConnection;
+
+    return session;
+  } catch (error) {
+    state.returnTo = "/signup/step-2";
     return session;
   }
-  session.user = viewer;
-  session.user.accountConnection = accountConnection;
-
-  return session;
 };
 
 export default handleAuth({
@@ -24,7 +25,8 @@ export default handleAuth({
     try {
       await handleCallback(req, res, { afterCallback });
     } catch (error) {
+      console.error("error auth", error);
       res.status(error.status || 500).end(error.message);
     }
-  },
+  }
 });

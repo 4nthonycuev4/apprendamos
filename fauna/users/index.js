@@ -1,3 +1,3 @@
 /** @format */
 
-import { GetMinimalUser, GetViewerRef } from "./read";
+import { GetPartialUser, GetViewerRef } from "./read";

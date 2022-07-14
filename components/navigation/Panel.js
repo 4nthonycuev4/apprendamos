@@ -1,13 +1,14 @@
 /** @format */
 
 import useSWRInfinite from 'swr/infinite'
-import BasicAuthorCard from './../items/BasicAuthorCard';
+import BasicAuthorCard from '../items/AuthorCard/Basic';
+import { useUser } from '@auth0/nextjs-auth0';
 
-export default function Panel() {
+const PanelAuth = () => {
     const getKey = (pageIndex, previousPageData) => {
         if (previousPageData && !previousPageData.data) return null
-        if (pageIndex === 0) return '/api/users'
-        return `/api/users?after=${previousPageData.after}`
+        if (pageIndex === 0) return '/api/users/trending'
+        return `/api/users/trending?after=${previousPageData.afterId}`
     }
     const { data: userPages, size, setSize, error } = useSWRInfinite(getKey)
 
@@ -15,9 +16,7 @@ export default function Panel() {
         <div
             className="
                 flex flex-col
-                w-max mr-auto ml-10
-                justify-right
-				py-2 space-y-6
+				space-y-6
                 font-bold text-xl"
         >
             <h1>Usuarios sugeridos</h1>
@@ -27,12 +26,22 @@ export default function Panel() {
                         {userPages.map((page) => (
                             page.data.map(user => <BasicAuthorCard key={user.username} {...user} />)
                         ))}
-                        <div className="flex justify-center">
-                            <button className="w-32 h-8 bg-cyan-500 rounded text-white disabled:hidden" disabled={!userPages.at(-1)?.after} onClick={() => setSize(size + 1)}>
-                                Mostrar más
-                            </button>
-                        </div></>)
+                    </>)
             }
+
         </div>
     );
 }
+
+const PanelNoAuth = () => (
+    <h1>Panel no auth</h1>
+)
+
+const Panel = () => {
+    const { user } = useUser();
+
+    if (user && user?.username) return <PanelAuth />
+    return <PanelNoAuth />
+}
+
+export default Panel;

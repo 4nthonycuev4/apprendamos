@@ -5,16 +5,15 @@ import Head from "next/head";
 import useSWRInfinite from 'swr/infinite'
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-import { Content } from "../components/items/Content";
+import { PublicationPartialView } from './../components/items/PublicationPartialView';
 
 export default function SavedContentPage() {
     const getKey = (pageIndex, previousPageData) => {
         if (previousPageData && !previousPageData.data) return null
-        if (pageIndex === 0) return '/api/content/trending'
-        return `/api/content/trending?after=${previousPageData.after}`
+        if (pageIndex === 0) return '/api/publications/trending'
+        return `/api/publications/trending?after=${previousPageData.after}`
     }
-    const { data, size, setSize, error } = useSWRInfinite(getKey)
-
+    const { data, size, setSize } = useSWRInfinite(getKey)
     const [contentSize, setContentSize] = useState(0)
 
     useEffect(() => {
@@ -70,7 +69,7 @@ export default function SavedContentPage() {
                 }
             >
                 {
-                    data?.map(page => page.data.map(item => item && <Content key={item.id} {...item} />))
+                    data?.map(page => page.data?.map(item => item && <PublicationPartialView key={item.id} {...item} />))
                 }
             </InfiniteScroll>
         </>

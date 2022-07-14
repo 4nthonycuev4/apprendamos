@@ -1,38 +1,13 @@
-import { useEffect, useState } from "react";
-
+import useSWR from 'swr'
 export default function FollowButton({ username }) {
-  const [following, setFollowing] = useState(false);
-
-  useEffect(() => {
-    const getFollowing = async () => {
-      const followingStatus = await fetch("/api/interactions/user/following", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-        }),
-      }).then((res) => res.json()).catch(console.log);
-      setFollowing(followingStatus);
-    };
-    getFollowing();
-  }, []);
+  const { data, mutate } = useSWR(`/api/users/${username}/following`)
 
   const toggleFollow = async () => {
-    const newFollowingStatus = await fetch("/api/interactions/user/follow", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-      }),
-    }).then((res) => res.json());
-    setFollowing(newFollowingStatus.viewerStats.following);
+    const newData = await fetch(`/api/users/${username}/follow`).then((res) => res.json());
+    mutate(newData, false)
   };
 
-  if (following) {
+  if (data && data.following) {
     return (
       <button
         type="button"
@@ -50,6 +25,6 @@ export default function FollowButton({ username }) {
       onClick={toggleFollow}
     >
       Seguir
-    </button>
+    </button >
   );
 }

@@ -1,14 +1,13 @@
 /** @format */
-import {
-    getAccessToken,
-    withApiAuthRequired,
-} from "@auth0/nextjs-auth0";
+import { getAccessToken, } from "@auth0/nextjs-auth0";
 
 import FaunaClient from "../../../../fauna";
 
-export default withApiAuthRequired(async function createContent(req, res) {
+export default async function createContent(req, res) {
     try {
-        const { accessToken } = await getAccessToken(req, res);
+        const { accessToken } = await getAccessToken(req, res).catch(e => {
+            return {};
+        });
 
         const client = new FaunaClient(accessToken);
 
@@ -31,4 +30,4 @@ export default withApiAuthRequired(async function createContent(req, res) {
             errorMessage: error.message,
         });
     }
-});
+};

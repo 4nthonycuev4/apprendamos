@@ -19,7 +19,7 @@ CreateIndex({
 })
 
 CreateIndex({
-  name: "content_sorted_created",
+  name: "publications_sorted_created",
   source: {
     collection: [Collection("articles"), Collection("memoramas"), Collection("questions")],
   },
@@ -30,7 +30,7 @@ CreateIndex({
   ],
   values: [
     {
-      field: ["data", "created"],
+      field: ["data", "createdAt"],
       reverse: true,
     },
     {
@@ -42,7 +42,7 @@ CreateIndex({
 
 CreateIndex(
   {
-    name: "all_content",
+    name: "all_publications",
     source: {
       collection: [Collection("articles"), Collection("memoramas"), Collection("questions")],
     },

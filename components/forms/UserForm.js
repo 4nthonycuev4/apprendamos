@@ -57,14 +57,14 @@ export default function UserForm({ user }) {
   const createUser = async (data) => {
     const { name, about, username } = data;
     try {
-      await fetch("/api/register", {
+      await fetch("/api/auth/register", {
         method: "POST",
         body: JSON.stringify({ name, about, username, picture }),
         headers: {
           "Content-Type": "application/json",
         },
       });
-      router.push("/api/auth/login");
+      router.push("/signup/step-3");
     } catch (err) {
       console.error(err);
     }

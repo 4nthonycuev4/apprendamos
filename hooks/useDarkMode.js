@@ -30,11 +30,13 @@ const useLocalStorage = (key, initialValue) => {
 
 const useDarkMode = () => {
   const [enabled, setEnabled] = useLocalStorage("dark-theme");
-  const isEnabled = typeof enabledState === "undefined" && enabled;
+  let isEnabled = typeof enabledState === "undefined" && enabled;
 
   useEffect(() => {
+    !isEnabled && (isEnabled = window.matchMedia("(prefers-color-scheme: dark)").matches);
     const className = "dark";
     const bodyClass = window.document.body.classList;
+    window.document.documentElement.style.colorScheme = isEnabled ? "dark" : "light";
 
     const x = () => {
       if (isEnabled) {

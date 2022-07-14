@@ -21,34 +21,25 @@ export function CreateUser(data) {
       user: Create(Collection("users"), {
         data: {
           ...data,
-          joined: Now(),
-          stats: {
-            received: { likes: 0, saved: 0, comments: 0 },
-            given: { likes: 0, saved: 0, comments: 0 },
-            followers: 0,
-            following: 0,
-            articles: 0,
-            memoramas: 0,
-            questions: 0,
-            answers: 0,
-          },
+          joinedAt: Now(),
         },
       }),
-      account: Create(Collection("Accounts"), {
+      rel: Create(Collection("authoruser"), {
+        data: {
+          user: Select(["ref"], Var("user")),
+          author: Select(["ref"], Var("user")),
+          following: true,
+          createdAt: Now(),
+        }
+      }),
+      account: Create(Collection("accounts"), {
         data: {
           connection: CurrentIdentity(),
-          userRef: Select(["ref"], Var("user")),
-        },
-      }),
-      wallet: Create(Collection("Wallets"), {
-        data: {
-          userRef: Select(["ref"], Var("user")),
-          income: 0,
-          expenses: 0,
-          created: Now(),
+          user: Select(["ref"], Var("user")),
+          createdAt: Now(),
         },
       }),
     },
-    { user: Var("user") }
+    true
   );
 }

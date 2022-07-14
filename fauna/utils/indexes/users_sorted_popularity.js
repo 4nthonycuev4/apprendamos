@@ -1,7 +1,7 @@
 CreateIndex({
     name: "users_sorted_popularity",
     source: {
-        collection: [Collection("users")],
+        collection: Collection("users"),
         fields: {
             score: Query(
                 Lambda(
@@ -9,35 +9,44 @@ CreateIndex({
                     Let(
                         {
                             ageFactor: 1,
-                            viewFactor: 2,
-                            readFactor: 3,
-                            likeFactor: 4,
-                            dislikeFactor: -5,
-                            commentFactor: 6,
-                            saveFactor: 7,
-                            followerFactor: 8,
+                            partialViewFactor: 2,
+                            fullViewFactor: 3,
+                            stalkFactor: 4,
+                            likeFactor: 5,
+                            dislikeFactor: -6,
+                            commentFactor: 7,
+                            saveFactor: 8,
+                            followerFactor: 9,
+                            publicationFactor: 10,
+                            answerFactor: 11,
 
-                            joinTime: Select(["data", "joined"], Var("user")),
+                            joinTime: Select(["data", "joinedAt"], Var("user")),
                             referenceTime: Time("2022-01-01T00:00:00+00:00"),
 
-                            age: TimeDiff(Var("referenceTime"), Var("joinTime"), "hours"),
-                            viewCount: Select(["data", "stats", "viewCount"], Var("user")),
-                            readCount: Select(["data", "stats", "readCount"], Var("user")),
-                            likeCount: Select(["data", "stats", "likeCount"], Var("user")),
-                            dislikeCount: Select(["data", "stats", "dislikeCount"], Var("user")),
-                            commentCount: Select(["data", "stats", "commentCount"], Var("user")),
-                            saveCount: Select(["data", "stats", "saveCount"], Var("user")),
-                            followerCount: Select(["data", "stats", "followerCount"], Var("user")),
+                            age: TimeDiff(Var("referenceTime"), Var("joinTime"), "seconds"),
+                            partialViewCount: Select(["data", "stats", "partialViewCount"], Var("user"), 0),
+                            fullViewCount: Select(["data", "stats", "fullViewCount"], Var("user"), 0),
+                            stalkCount: Select(["data", "stats", "stalkCount"], Var("user"), 0),
+                            likeCount: Select(["data", "stats", "likeCount"], Var("user"), 0),
+                            commentCount: Select(["data", "stats", "commentCount"], Var("user"), 0),
+                            dislikeCount: Select(["data", "stats", "dislikeCount"], Var("user"), 0),
+                            saveCount: Select(["data", "stats", "saveCount"], Var("user"), 0),
+                            followerCount: Select(["data", "stats", "followerCount"], Var("user"), 0),
+                            publicationCount: Select(["data", "stats", "publicationCount"], Var("user"), 0),
+                            answerCount: Select(["data", "stats", "answerCount"], Var("user"), 0),
                         },
                         Add(
                             Multiply(Var("ageFactor"), Var("age")),
-                            Multiply(Var("viewFactor"), Var("viewCount")),
-                            Multiply(Var("readFactor"), Var("readCount")),
+                            Multiply(Var("partialViewFactor"), Var("partialViewCount")),
+                            Multiply(Var("fullViewFactor"), Var("fullViewCount")),
+                            Multiply(Var("stalkFactor"), Var("stalkCount")),
                             Multiply(Var("likeFactor"), Var("likeCount")),
                             Multiply(Var("dislikeFactor"), Var("dislikeCount")),
                             Multiply(Var("commentFactor"), Var("commentCount")),
                             Multiply(Var("saveFactor"), Var("saveCount")),
-                            Multiply(Var("followerFactor"), Var("followerCount"))
+                            Multiply(Var("followerFactor"), Var("followerCount")),
+                            Multiply(Var("publicationFactor"), Var("publicationCount")),
+                            Multiply(Var("answerFactor"), Var("answerCount"))
                         )
                     )
                 )

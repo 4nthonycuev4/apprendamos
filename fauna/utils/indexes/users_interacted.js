@@ -42,7 +42,7 @@ CreateIndex({
             reverse: true,
         },
         {
-            field: ["data", "content"],
+            field: ["data", "publication"],
         }
     ],
     serialized: true,
