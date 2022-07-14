@@ -6,7 +6,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import FaunaClient from "../../fauna";
 import User404 from '../../components/errors/User404';
 import { PublicationPartialView } from "../../components/items/PublicationPartialView";
-import { FullAuthorCard } from "../../components/items/AuthorCard/full";
+import { FullAuthorCard } from "../../components/items/AuthorCard/Full";
 
 const Profile = ({ userData }) => {
     const getKey = (pageIndex, previousPageData) => {

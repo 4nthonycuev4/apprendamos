@@ -2,7 +2,7 @@
 import Head from "next/head";
 import { useState } from "react";
 import FaunaClient from '../../../fauna';
-import { MDParsed } from "../../../components/markdown";
+import { MDParsed } from "../../../components/Markdown";
 import Publication404 from '../../../components/errors/Publication404';
 import PartialAuthorCard from "../../../components/items/AuthorCard/Partial";
 import { useUser } from '@auth0/nextjs-auth0';

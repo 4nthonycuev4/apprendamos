@@ -5,7 +5,7 @@ import { InView } from 'react-intersection-observer';
 import BasicAuthorCard from './AuthorCard/Basic';
 import PublicationOptionsButton from "../buttons/PublicationOptions";
 import PublicationStats from '../PublicationStats';
-import { MDParsed } from "../markdown";
+import { MDParsed } from "../Markdown";
 
 
 export const PublicationPartialView = ({ body, publishedAt, author, id, stats }) => {

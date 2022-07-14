@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { PublicationForm } from "../markdown";
+import { PublicationForm } from "../Markdown";
 
 export default function CreatePublicationForm({ user }) {
   const [body, setBody] = useState("# Hello world!");
