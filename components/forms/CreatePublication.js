@@ -1,9 +1,7 @@
 /** @format */
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { XIcon } from "@heroicons/react/outline"
-import MDHelpPopover from "../popovers/MDHelp";
 import { PublicationForm } from "../markdown";
 
 export default function CreatePublicationForm({ user }) {

@@ -40,7 +40,7 @@ const CodeComponent = ({ inline, children = [], className, ...props }) => {
     return <code className={String(className)}>{props.node && props.node.children ? children : 'print("hello world")'}</code>;
 };
 
-const PublicationForm = ({ content, setContent, setSaved }) => <MDEditor
+export const PublicationForm = ({ content, setContent, setSaved }) => <MDEditor
     value={content}
     onChange={(v, e) => {
         setContent(v);
@@ -53,11 +53,6 @@ const PublicationForm = ({ content, setContent, setSaved }) => <MDEditor
     }}
 />
 
-const MDParsed = ({ body }) => <MDPreview disableCopy source={body} components={{
+export const MDParsed = ({ body }) => <MDPreview disableCopy source={body} components={{
     code: CodeComponent,
 }} />
-
-export {
-    PublicationForm,
-    MDParsed,
-};

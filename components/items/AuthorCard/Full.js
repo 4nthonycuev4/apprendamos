@@ -5,7 +5,7 @@ import moment from "moment";
 import Image from "next/image";
 
 import { AuthorStatsButtons } from "../../buttons/AuthorStats";
-const FullAuthorCard = ({ picture, username, name, stats, joinedAt, about }) => (
+export const FullAuthorCard = ({ picture, username, name, stats, joinedAt, about }) => (
     <div className="border-b-2 border-gray-300 py-2 px-4 text-center dark:border-gray-500">
         <Image
             width={100}
@@ -30,5 +30,3 @@ const FullAuthorCard = ({ picture, username, name, stats, joinedAt, about }) => 
         <p className="py-2 italic">{about}</p>
     </div>
 );
-
-export default FullAuthorCard;
