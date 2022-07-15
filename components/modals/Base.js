@@ -32,10 +32,11 @@ export default function BaseModal({ title, children, isOpen, setIsOpen }) {
                         >
                             <Dialog.Panel
                                 className="
+                                bg-white dark:bg-gray-800
                                 flex flex-col
                                 w-full sm:w-3/4 md:w-1/2 xl:w-1/3
                                 h-full sm:h-3/4
-                                transform overflow-hidden rounded-2xl dark:bg-gray-800 dark:text-white p-6 text-left align-middle shadow-xl transition-all">
+                                transform overflow-hidden rounded-2xl dark:text-white p-6 text-left align-middle shadow-xl transition-all">
                                 <div className='h-12 flex items-start'>
                                     <Dialog.Title
                                         as="h1"

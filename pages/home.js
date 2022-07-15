@@ -1,12 +1,13 @@
 /** @format */
 
-import { useState, useEffect } from "react";
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import Head from "next/head";
 import useSWRInfinite from 'swr/infinite'
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import { PublicationPartialView } from './../components/items/PublicationPartialView';
+import Title from "../components/navigation/Title";
+
 
 const HomePage = () => {
   const getKey = (pageIndex, previousPageData) => {
@@ -39,9 +40,7 @@ const HomePage = () => {
         />
         <meta property="og:image" content="https://res.cloudinary.com/apprendamos/image/upload/v1652936748/app_src/ioo_swpsqz.jpg" />
       </Head>
-
-      <h1 className='text-2xl font-extrabold hover:text-blue-700 cursor-default'>Inicio</h1>
-
+      <Title>Inicio</Title>
       <InfiniteScroll
         scrollableTarget="main"
         dataLength={contentSize}

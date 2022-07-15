@@ -8,13 +8,12 @@ export default function BasicAuthorCard({ username, picture, name }) {
         <div className="flex items-center space-x-2">
             <Link href={`/@${username}`}>
                 <a>
-                    <div className="relative h-10 w-10">
+                    <div className="relative h-10 w-10 rounded-full overflow-hidden border">
                         <Image
                             src={picture}
                             alt="Picture of the author"
                             layout="fill"
                             objectFit="fill"
-                            className="rounded-full"
                         />
                     </div>
                 </a>

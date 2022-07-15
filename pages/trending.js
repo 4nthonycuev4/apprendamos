@@ -6,6 +6,7 @@ import useSWRInfinite from 'swr/infinite'
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import { PublicationPartialView } from './../components/items/PublicationPartialView';
+import Title from './../components/navigation/Title';
 
 export default function SavedContentPage() {
     const getKey = (pageIndex, previousPageData) => {
@@ -55,7 +56,7 @@ export default function SavedContentPage() {
                 />
                 <meta property="og:image" content="https://res.cloudinary.com/apprendamos/image/upload/v1652936748/app_src/ioo_swpsqz.jpg" />
             </Head>
-
+            <Title>Tendencias</Title>
             <InfiniteScroll
                 scrollableTarget="main"
                 dataLength={contentSize}

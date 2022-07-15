@@ -28,7 +28,7 @@ const PublicationPage = ({ publicationOldData }) => {
     return (
         <>
             <Head>
-                <title>{`${publicationOldData.author.username}'s content`}</title>
+                <title>{`@${publicationOldData.author.username}: ${publicationOldData.body.slice(2, 20)}...`}</title>
                 <meta property="og:url" content="apprendamos.com" />
                 <meta property="og:type" content="website" />
                 <meta property="fb:app_id" content="328834189100104" />
@@ -39,7 +39,7 @@ const PublicationPage = ({ publicationOldData }) => {
                 <meta name="twitter:card" content="summary" />
                 <meta
                     property="og:description"
-                    content={`${publicationOldData.body}... Apprendamos te permite compartir publicaciones y flashcards con los demás usuarios de la red. Regístrate y empieza a crear y compartir tu propia red de conocimiento.`}
+                    content={`${publicationOldData.body}... Apprendamos te permite compartir publicaciones con los demás usuarios de la red. Regístrate y empieza a crear y compartir tu propia red de conocimiento.`}
                 />
                 <meta property="og:image" content={publicationOldData.author.picture} />
             </Head>

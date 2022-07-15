@@ -68,7 +68,7 @@ export default function CreatePublicationForm({ user }) {
       }).then(res => res.json());
       setSaved(true);
       setSaving(false);
-      router.push("/publications/[id]", `/publications/${draftId}`);
+      router.push("/p/[id]", `/p/${draftId}`);
     } catch (error) {
       console.log(error);
     }
@@ -85,7 +85,7 @@ export default function CreatePublicationForm({ user }) {
 
   return (
     <>
-      <div className="flex w-full justify-between items-center">
+      <div className="flex w-full justify-between items-center mt-2">
         <div className="flex space-x-4 items-center">
           <div className="relative h-8 w-8">
             <Image

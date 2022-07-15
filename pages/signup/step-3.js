@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import useSWRInfinite from 'swr/infinite'
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { withPageAuthRequired } from "@auth0/nextjs-auth0";
-
-import PartialAuthorCard from './../../components/items/AuthorCard/Partial';
 import Link from 'next/link';
+import useSWRInfinite from 'swr/infinite'
+import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import InfiniteScroll from 'react-infinite-scroll-component';
+
+import PartialAuthorCard from '../../components/items/AuthorCard/Partial';
+import Title from "../../components/navigation/Title";
 
 const FollowSomeonePage = ({ user }) => {
     const getKey = (pageIndex, previousPageData) => {
@@ -31,10 +32,10 @@ const FollowSomeonePage = ({ user }) => {
                 <title>Registro Paso 3 || Apprendamos</title>
             </Head>
 
-            <h1 className='text-2xl font-extrabold hover:text-blue-700'>Sigue a alguien</h1>
-            <p className='pb-2'>
-                ¡Sigue a nuestros usuarios más populares para ver sus posts!
-            </p>
+            <Title>
+                Ahora sigamos a alguien...
+            </Title>
+            <p className="pb-2">¡Sigue a nuestros usuarios más populares para ver sus posts!</p>
 
             <InfiniteScroll
                 scrollableTarget="main"

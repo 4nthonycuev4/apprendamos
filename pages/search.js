@@ -4,6 +4,7 @@ import { useState } from "react";
 import Head from "next/head";
 import { SearchIcon } from "@heroicons/react/outline";
 import { PublicationPartialView } from './../components/items/PublicationPartialView';
+import Title from "../components/navigation/Title";
 
 export default function SearchPage() {
     const [textInput, setTextInput] = useState("");
@@ -54,21 +55,22 @@ export default function SearchPage() {
                 />
                 <meta property="og:image" content="https://res.cloudinary.com/apprendamos/image/upload/v1652936748/app_src/ioo_swpsqz.jpg" />
             </Head>
+            <Title>Buscar</Title>
             <form onSubmit={(e) => {
                 e.preventDefault();
                 handleSearch;
             }}>
                 <div className="flex items-center justify-between px-6 py-2">
                     <input className="dark:bg-gray-700 rounded" type="text" placeholder="Busca a alguien o algo" onChange={(e) => { setTextInput(e.target.value) }} />
-                    <button type="submit" className="dark:bg-gray-700 rounded-full w-8 h-8 flex items-center justify-center" onClick={handleSearch}><SearchIcon className="h-4 w-4" />
+                    <button type="submit" className="dark:bg-gray-700 bg-blue-700 text-gray-200 rounded-full w-8 h-8 flex items-center justify-center" onClick={handleSearch}><SearchIcon className="h-4 w-4" />
                     </button>
                 </div>
             </form>
 
             <div className="flex flex-col">
-                {content && content.length && content.map((item) => (
+                {content && content.length ? content.map((item) => (
                     <PublicationPartialView key={item.id} {...item} />
-                ))}
+                )) : <div className="text-center">Busca posts</div>}
             </div>
         </>
     );

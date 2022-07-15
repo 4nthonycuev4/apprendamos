@@ -11,7 +11,7 @@ export default function CreateQuestionPage({ user }) {
       <Head>
         <title>Crear Pregunta</title>
       </Head>
-      <h1 className='text-2xl font-extrabold hover:text-blue-700 cursor-default'>Crear publicación</h1>
+      <Title>Crear publicación</Title>
       <CreatePublicationForm user={user} />
     </>
   );

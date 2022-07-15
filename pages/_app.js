@@ -70,14 +70,14 @@ const ComponentHandler = ({ Component, pageProps }) => {
   if (route === "/about" || route === "/contact" || route === "/terms" || route === "/privacy" || route === "/cookies" || route === "/faq" || route === "/help" || route === "/") {
     return (
       <>
-        <main id="main" className="grow max-w-5xl min-h-[150vh]">
+        <main id="main" className="grow max-w-6xl min-h-[150vh]">
           <GeneralNavbar />
           <Component {...pageProps} />
         </main>
       </>
     );
   }
-  if (route === "/signup/step-2" || route === "/signup/step-3") {
+  if (route === "/signup/step-2" || route === "/signup/step-3" || route === "/settings/profile") {
     return (
       <>
         <main id="main" className="grow max-w-2xl">
@@ -109,7 +109,7 @@ export default function MyApp({ Component, pageProps }) {
           }}
         >
           <div className="dark:bg-black text-gray-800 dark:text-white dark:[color-scheme:dark]">
-            <div className="min-h-screen mx-auto py-2 flex justify-center dark:[color-scheme:dark]">
+            <div className="min-h-screen mx-auto flex justify-center dark:[color-scheme:dark]">
               <ComponentHandler Component={Component} pageProps={pageProps} />
             </div>
           </div>

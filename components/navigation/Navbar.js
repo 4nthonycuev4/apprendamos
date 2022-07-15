@@ -12,7 +12,6 @@ import {
   MailIcon,
   CogIcon
 } from "@heroicons/react/outline";
-import Image from "next/image";
 import Link from "next/link";
 import BasicAuthorCard from "../items/AuthorCard/Basic";
 
@@ -25,8 +24,8 @@ const NavbarAuth = ({ user }) => (
   >
     <Link href="/">
       <a>
-        <div className="flex items-center ">
-          <span className="font-bold">app</span>
+        <div className="flex items-center">
+          <span className="font-bold hover:text-blue-700">app</span>
           <span className="font-light">rendamos</span>
         </div>
       </a>
@@ -88,7 +87,7 @@ const NavbarAuth = ({ user }) => (
         </div>
       </a>
     </Link>
-    <Link href="/settings">
+    <Link href="/settings/profile">
       <a>
         <div className="flex items-center">
           <CogIcon className="h-6 w-6 mr-4" />
@@ -129,14 +128,6 @@ const NavbarNoAuth = () => (
         <div className="flex items-center">
           <TrendingUpIcon className="h-6 w-6 mr-4" />
           <span>Tendencias</span>
-        </div>
-      </a>
-    </Link>
-    <Link href="/settings">
-      <a>
-        <div className="flex items-center">
-          <CogIcon className="h-6 w-6 mr-4" />
-          <span>Configuraciones</span>
         </div>
       </a>
     </Link>
