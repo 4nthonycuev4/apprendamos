@@ -27,14 +27,22 @@ const LandingPage = () => {
                         priority
                     />
                 </div>
-                <div className="flex space-x-8 justify-center">
-                    <Link href={startUrl}>
-                        <a>
-                            <button className="px-4 h-10 rounded bg-blue-700 text-gray-100 border border-blue-700">
-                                <span className="font-bold">¡Comencemos!</span>
-                            </button>
-                        </a>
-                    </Link>
+                <div className="justify-center">
+                    {!loading && user ?
+                        <Link href={startUrl}>
+                            <a>
+                                <button className="px-4 h-10 rounded bg-blue-700 text-gray-100 border-2 border-blue-700">
+                                    <span className="font-bold">¡Comencemos!</span>
+                                </button>
+                            </a>
+                        </Link> :
+                        <Link href={startUrl}>
+                            <a>
+                                <button className="px-4 h-10 rounded text-blue-700 border-2 border-blue-700">
+                                    <span className="font-bold">Inicia sesión</span>
+                                </button>
+                            </a>
+                        </Link>}
                 </div>
             </div>
         </>

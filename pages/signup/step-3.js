@@ -24,7 +24,7 @@ const FollowSomeonePage = ({ user }) => {
             n += page.data?.length
         });
         setContentSize(n)
-    }, [size])
+    }, [size, data])
 
     return (
         <>
