@@ -96,16 +96,17 @@ export default function CreatePublicationForm({ user }) {
               className="rounded-full"
             />
           </div>
-          <span className="text-gray-200">Borrador de {user.username}</span>
+          <span className="dark:text-gray-200">Borrador de {user.username}</span>
           <span className="text-gray-400">{saved ? "Guardado" : saving ? "Guardando..." : ""}</span>
         </div>
         <div className="flex space-x-4 items-center">
-          <button type="button" className="bg-red-400 text-gray-100 font-bold px-1 rounded">Descartar</button>
+          <button type="button" className='border-2 border-blue-700 text-blue-700 hover:border-red-500 hover:text-red-500 rounded px-2 py-1 mr-1 font-semibold'>Descartar</button>
           {
             saved ?
-              <button type="button" className="w-40 bg-green-400 text-gray-100 font-bold px-1 rounded" onClick={publish}>Publicar</button>
+              <button type="button" className='border-2 border-blue-700 bg-blue-700 rounded px-2 py-1 text-gray-100 font-semibold' onClick={publish}>Publicar</button>
               :
-              <button type="submit" className="w-40 bg-green-400 text-gray-100 font-bold px-1 rounded" onClick={handleSubmit}>Guardar borrador</button>
+              <button type="submit" className='border-2 border-blue-700 bg-blue-700 rounded px-2 py-1 text-gray-100 font-semibold'
+                onClick={handleSubmit}>Guardar borrador</button>
           }
         </div>
       </div>

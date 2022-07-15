@@ -10,17 +10,17 @@ const GeneralNavbar = () => <div className="flex justify-between items-center te
     <div className="flex cursor-default space-x-6 font-semibold text-sm">
         <Link href="/about">
             <a>
-                <span>Acerca de</span>
+                <span className="hover:text-blue-700">Acerca de</span>
             </a>
         </Link>
         <Link href="/privacy">
             <a>
-                <span>Privacidad</span>
+                <span className="hover:text-blue-700">Privacidad</span>
             </a>
         </Link>
         <Link href="/contact">
             <a>
-                <span>Contacto</span>
+                <span className="hover:text-blue-700">Contacto</span>
             </a>
         </Link>
     </div>

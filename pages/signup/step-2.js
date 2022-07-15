@@ -17,16 +17,16 @@ export default function RegisterPage({ user }) {
   }, [user, router]);
 
   return (
-    <div>
+    <>
       <Head>
-        <title>Regístrate</title>
+        <title>Registro Paso 2 || Apprendamos</title>
       </Head>
-
-
-      <h1 className="mb-4 text-2xl">Regístrate</h1>
+      <h1 className='text-2xl font-extrabold hover:text-blue-700 cursor-default'>Tu perfil</h1>
+      <p className='pb-2'>
+        ¡Completa tu perfil para poder iteractuar con los demás! Estos datos son importantes para que otros usuarios te conozcan.
+      </p>
       <UserForm user={user} />
-
-    </div>
+    </>
   );
 }
 export const getServerSideProps = withPageAuthRequired();

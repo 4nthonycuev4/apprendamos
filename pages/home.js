@@ -40,6 +40,8 @@ const HomePage = () => {
         <meta property="og:image" content="https://res.cloudinary.com/apprendamos/image/upload/v1652936748/app_src/ioo_swpsqz.jpg" />
       </Head>
 
+      <h1 className='text-2xl font-extrabold hover:text-blue-700 cursor-default'>Inicio</h1>
+
       <InfiniteScroll
         scrollableTarget="main"
         dataLength={contentSize}

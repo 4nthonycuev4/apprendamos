@@ -43,35 +43,44 @@ const ComponentHandler = ({ Component, pageProps }) => {
   if (route === "/home" || route === "/p/[id]" || route === "/[rawUsername]" || route === "/trending" || route === "/search") {
     return (
       <>
-        <div className="w-60 pr-2 py-2 border-r sticky h-screen top-0 overflow-auto">
+        <div className="w-60 pr-4 border-r sticky h-screen top-0 overflow-auto">
           <Navbar />
         </div>
-        <main id="main" className="grow max-w-2xl px-2 py-2 border-r min-h-[150vh]">
+        <main id="main" className="grow max-w-2xl px-4 border-r min-h-[150vh]">
           <Component {...pageProps} />
         </main>
-        <div className="w-60 pl-2 py-2 sticky h-screen top-0 overflow-auto">
+        <div className="w-60 pl-4 sticky h-screen top-0 overflow-auto">
           <Panel />
         </div>
       </>
     );
   }
-  if (route === "/500", route === "/404", route === "/400", route === "/more", route === "/saved") {
+  if (route === "/500", route === "/404", route === "/400", route === "/more", route === "/saved", route === "/draft") {
     return (
       <>
-        <div className="w-60 pr-8 py-2 sticky h-screen top-0 overflow-auto">
+        <div className="w-60 pr-4 sticky h-screen top-0 border-r overflow-auto">
           <Navbar />
         </div>
-        <main id="main" className="grow max-w-[57rem] px-8 py-2 min-h-[150vh]">
+        <main id="main" className="grow max-w-[57rem] pl-4 min-h-[150vh]">
           <Component {...pageProps} />
         </main>
       </>
     );
   }
-  if (route === "/about" || route === "/contact" || route === "/terms" || route === "/privacy" || route === "/cookies" || route === "/faq" || route === "/help" || route === "/" || route === "/signup/step-2" || route === "/signup/step-3") {
+  if (route === "/about" || route === "/contact" || route === "/terms" || route === "/privacy" || route === "/cookies" || route === "/faq" || route === "/help" || route === "/") {
     return (
       <>
-        <main id="main" className="grow max-w-5xl px-8 py-2 min-h-[150vh]">
+        <main id="main" className="grow max-w-5xl min-h-[150vh]">
           <GeneralNavbar />
+          <Component {...pageProps} />
+        </main>
+      </>
+    );
+  }
+  if (route === "/signup/step-2" || route === "/signup/step-3") {
+    return (
+      <>
+        <main id="main" className="grow max-w-2xl">
           <Component {...pageProps} />
         </main>
       </>
@@ -79,7 +88,7 @@ const ComponentHandler = ({ Component, pageProps }) => {
   }
   return (
     <>
-      <main id="main" className="grow max-w-5xl px-8 py-2 min-h-[150vh]">
+      <main id="main" className="grow max-w-5xl min-h-[150vh]">
         <Component {...pageProps} />
       </main>
     </>
@@ -100,7 +109,7 @@ export default function MyApp({ Component, pageProps }) {
           }}
         >
           <div className="dark:bg-black text-gray-800 dark:text-white dark:[color-scheme:dark]">
-            <div className="min-h-screen mx-auto flex justify-center dark:[color-scheme:dark]">
+            <div className="min-h-screen mx-auto py-2 flex justify-center dark:[color-scheme:dark]">
               <ComponentHandler Component={Component} pageProps={pageProps} />
             </div>
           </div>

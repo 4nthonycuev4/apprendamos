@@ -5,40 +5,8 @@ import { useForm } from "react-hook-form";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 export default function UserForm({ user }) {
-  const hiddenFileInput = useRef(null);
-  const [picture, setPicture] = useState(
-    user?.faunaRef ? user.picture : `/ru${getRandomInt(1, 8)}.jpg`
-  );
-
-  const handleUploadButtonClick = (event) => {
-    hiddenFileInput.current.click();
-  };
-
-  const handleImageUpload = async (x) => {
-    const { files } = x.target;
-    const file = files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", "uploads");
-
-      const data = await fetch(
-        "https://api.cloudinary.com/v1_1/apprendamos/image/upload",
-        {
-          method: "POST",
-          body: formData,
-        }
-      ).then((res) => res.json());
-      setPicture(data.secure_url);
-    }
-  };
+  const [selectedPictureId, setSelectedPictureId] = useState(0);
 
   const {
     register,
@@ -53,7 +21,7 @@ export default function UserForm({ user }) {
   });
 
   const router = useRouter();
-
+  const picture = `/ru${selectedPictureId}.jpg`;
   const createUser = async (data) => {
     const { name, about, username } = data;
     try {
@@ -92,58 +60,35 @@ export default function UserForm({ user }) {
   return (
     <form
       onSubmit={handleSubmit(user?.faunaRef ? updateUser : createUser)}
-      className="w-full px-4 py-2"
+      className="max-w-xl justify-center"
     >
-      <div className="flex w-full">
-        <div className="w-full">
-          <label className="mb-1 block text-sm font-bold" htmlFor="picture">
-            Foto de perfil
-          </label>
-          <div className="flex w-full items-center justify-between">
+      <div className="">
+        <label className="mb-1 block text-sm font-bold" htmlFor="picture">
+          Foto de perfil
+        </label>
+        <div className="flex w-full items-center justify-between">
+          <div className="relative rounded-full border w-32 h-32 overflow-hidden">
             <Image
-              src={picture}
+              src={`/ru${selectedPictureId}.jpg`}
               alt="User picture"
-              width={150}
-              height={150}
-              className="rounded-full"
+              layout="fill"
+              objectFit="fill"
+              quality={30}
             />
-            <div className="space-y-2">
-              <button
-                type="button"
-                className="block w-40 rounded-full bg-sky-50 px-4 py-2 text-sm font-semibold text-sky-800 hover:bg-sky-100"
-                onClick={() => setPicture(`/ru${getRandomInt(1, 8)}.jpg`)}
-              >
-                Avatar aleatorio
-              </button>
-              <button
-                type="button"
-                className="block w-40 rounded-full bg-green-50 px-4 py-2 text-sm font-semibold text-green-800 hover:bg-green-100"
-                onClick={() =>
-                  setPicture(
-                    user?.faunaRef ? user.picture : `/ru${getRandomInt(1, 8)}.jpg`
-                  )
-                }
-              >
-                Imagen actual
-              </button>
-              <button
-                onClick={handleUploadButtonClick}
-                type="button"
-                className="block w-40 rounded-full bg-violet-50 px-4 py-2 text-sm font-semibold text-violet-800 hover:bg-violet-100"
-              >
-                Subir foto
-              </button>
-            </div>
           </div>
-          <label className="block">
-            <input
-              onChange={(e) => handleImageUpload(e)}
-              type="file"
-              ref={hiddenFileInput}
-              name="picture"
-              className="hidden"
-            />
-          </label>
+          <div className="grid grid-cols-4 gap-2">
+            {
+              [...Array(8).keys()].map((i) => (<div key={i} onClick={() => setSelectedPictureId(i)} className={"cursor-pointer relative rounded-full w-20 h-20 overflow-hidden border-2 " + (selectedPictureId === i && "border-blue-700")}>
+                <Image
+                  src={`/ru${i}.jpg`}
+                  alt="User picture"
+                  layout="fill"
+                  objectFit="fill"
+                  quality={25}
+                />
+              </div>))
+            }
+          </div>
         </div>
       </div>
       <div className="mb-4">
@@ -169,7 +114,7 @@ export default function UserForm({ user }) {
           {...register("about", { required: true })}
           id="about"
           rows="4"
-          className="w-full resize-none rounded-lg border px-3 py-2 text-gray-700 focus:outline-none"
+          className="w-full resize-none rounded-lg border px-3 py-2 text-gray-700 "
           placeholder="Cuéntanos sobre ti"
         />
         {errors.bio && (
@@ -197,20 +142,18 @@ export default function UserForm({ user }) {
         )}
       </div>
 
-      <div className="flex">
+      <div className='text-right'>
         <button
-          onClick={() => router.back()}
-          className="focus:shadow-outline mr-2 rounded bg-slate-500 py-2 px-4 font-bold text-white hover:bg-slate-700 focus:outline-none"
           type="button"
-        >
+          onClick={() => router.back()}
+          className='border-2 border-blue-700 text-blue-700 rounded px-2 py-1 mr-4 font-semibold'>
           Atrás
         </button>
         <button
-          disabled={isSubmitting}
-          className="focus:shadow-outline mr-2 rounded bg-red-800 py-2 px-4 font-bold text-white hover:bg-red-900 focus:outline-none"
           type="submit"
-        >
-          {user?.faunaRef ? "Actualizar" : "Crear"}
+          disabled={isSubmitting}
+          className='border-2 border-blue-700 bg-blue-700 rounded px-2 py-1 text-gray-100 font-semibold'>
+          {user?.faunaRef ? "Actualizar" : "Continuar"}
         </button>
       </div>
     </form>

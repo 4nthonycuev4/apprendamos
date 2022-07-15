@@ -5,8 +5,9 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 
 import PartialAuthorCard from './../../components/items/AuthorCard/Partial';
+import Link from 'next/link';
 
-const FollowSomeonePage = ({ }) => {
+const FollowSomeonePage = ({ user }) => {
     const getKey = (pageIndex, previousPageData) => {
         if (previousPageData && !previousPageData.data) return null
         if (pageIndex === 0) return '/api/users/trending'
@@ -27,31 +28,46 @@ const FollowSomeonePage = ({ }) => {
     return (
         <>
             <Head>
-                <title>Sigue a alguien para continuar || Apprendamos</title>
+                <title>Registro Paso 3 || Apprendamos</title>
             </Head>
-            <div>
-                <h1>Follow Someone</h1>
-                <p>
-                    Follow someone to see their posts.
-                </p>
-                <InfiniteScroll
-                    scrollableTarget="main"
-                    dataLength={contentSize}
-                    next={() => setSize(size + 1)}
-                    hasMore={Boolean(data?.at(-1)?.after)}
-                    loader={<h1>Loading...</h1>}
-                    endMessage={
-                        <p className="text-center">
-                            <b>Yay! You have seen it all :D</b>
-                        </p>
-                    }
-                >
-                    {
-                        data?.map(page => page.data?.map(item => item && <PartialAuthorCard key={item.id} {...item} />))
-                    }
-                </InfiniteScroll>
-            </div></>
 
+            <h1 className='text-2xl font-extrabold hover:text-blue-700'>Sigue a alguien</h1>
+            <p className='pb-2'>
+                ¡Sigue a nuestros usuarios más populares para ver sus posts!
+            </p>
+
+            <InfiniteScroll
+                scrollableTarget="main"
+                dataLength={contentSize}
+                next={() => setSize(size + 1)}
+                hasMore={Boolean(data?.at(-1)?.after)}
+                loader={<h1>Loading...</h1>}
+                endMessage={
+                    <p className="text-center text-gray-600">
+                        <b>Yay! You have seen it all :D</b>
+                    </p>
+                }
+            >
+                <div className='grid grid-cols-2 gap-2'>
+                    {
+                        data?.map(page => page.data?.map(item => item &&
+                            <div className="border p-2 hover:bg-gray-50 rounded">
+                                <PartialAuthorCard key={item.id} {...item} isViewer={item.username === user.username} />
+                            </div>))
+                    }
+                </div>
+            </InfiniteScroll>
+            <div className='text-right'>
+                <button className='border-2 border-blue-700 text-blue-700 rounded px-2 py-1 mr-4 font-semibold'>
+                    Cargar más
+                </button>
+                <Link href="/api/auth/login">
+                    <button className='border-2 border-blue-700 bg-blue-700 rounded px-2 py-1 text-gray-100 font-semibold'>
+                        Finalizar
+                    </button>
+                </Link>
+            </div>
+        </>
     );
 }
 export default withPageAuthRequired(FollowSomeonePage);
