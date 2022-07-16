@@ -73,7 +73,7 @@ export default function UserForm({ user }) {
               alt="User picture"
               layout="fill"
               objectFit="fill"
-              quality={30}
+              quality={20}
             />
           </div>
           <div className="grid grid-cols-4 gap-2">
@@ -84,7 +84,7 @@ export default function UserForm({ user }) {
                   alt="User picture"
                   layout="fill"
                   objectFit="fill"
-                  quality={25}
+                  quality={10}
                 />
               </div>))
             }

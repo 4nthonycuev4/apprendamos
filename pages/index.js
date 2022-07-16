@@ -6,7 +6,6 @@ import Head from 'next/head';
 
 const LandingPage = () => {
     const { user, loading } = useUser();
-    const startUrl = !loading && user ? "/home" : "/api/auth/login";
     return (
         <>
             <Head>
@@ -23,26 +22,36 @@ const LandingPage = () => {
                         alt="oops..."
                         layout='fill'
                         objectFit='contain'
-                        quality={100}
+                        quality={80}
                         priority
                     />
                 </div>
                 <div className="justify-center">
                     {!loading && user ?
-                        <Link href={startUrl}>
+                        <Link href="/home">
                             <a>
                                 <button className="px-4 h-10 rounded bg-blue-700 text-gray-100 border-2 border-blue-700">
                                     <span className="font-bold">¡Comencemos!</span>
                                 </button>
                             </a>
-                        </Link> :
-                        <Link href={startUrl}>
-                            <a>
-                                <button className="px-4 h-10 rounded text-blue-700 border-2 border-blue-700">
-                                    <span className="font-bold">Inicia sesión</span>
-                                </button>
-                            </a>
-                        </Link>}
+                        </Link>
+                        :
+                        <>
+                            <Link href="/api/auth/login">
+                                <a>
+                                    <button className="mr-4 px-4 h-10 rounded text-blue-700 border-2 border-blue-700">
+                                        <span className="font-bold">Inicia sesión</span>
+                                    </button>
+                                </a>
+                            </Link>
+                            <Link href="/trending">
+                                <a>
+                                    <button className="px-4 h-10 rounded bg-blue-700 text-gray-100 border-2 border-blue-700">
+                                        <span className="font-bold">¡Comencemos!</span>
+                                    </button>
+                                </a>
+                            </Link>
+                        </>}
                 </div>
             </div>
         </>

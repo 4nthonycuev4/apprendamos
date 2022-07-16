@@ -15,6 +15,7 @@ import "../styles/app.css";
 import Navbar from './../components/navigation/Navbar';
 import GeneralNavbar from "../components/navigation/GeneralNavbar";
 import Panel from './../components/navigation/Panel';
+import MobileNavbar from './../components/navigation/MobileNavbar';
 
 
 moment.updateLocale("es", {
@@ -43,26 +44,28 @@ const ComponentHandler = ({ Component, pageProps }) => {
   if (route === "/home" || route === "/p/[id]" || route === "/[rawUsername]" || route === "/trending" || route === "/search") {
     return (
       <>
-        <div className="w-60 pr-4 border-r sticky h-screen top-0 overflow-auto">
+        <div className="hidden sm:block xl:grow xl:max-w-xs px-2 xl:px-4 sticky h-screen top-0 xl:overflow-auto">
           <Navbar />
         </div>
-        <main id="main" className="grow max-w-2xl px-4 border-r min-h-[150vh]">
+        <main id="main" className="w-full flex flex-col md:grow md:max-w-xl border-x px-2 min-h-[150vh]">
           <Component {...pageProps} />
+          <MobileNavbar />
         </main>
-        <div className="w-60 pl-4 sticky h-screen top-0 overflow-auto">
+        <div className="hidden lg:block grow max-w-xs px-4 sticky h-screen top-0 overflow-auto">
           <Panel />
         </div>
       </>
     );
   }
-  if (route === "/500", route === "/404", route === "/400", route === "/more", route === "/saved", route === "/draft") {
+  if (route === "/more", route === "/saved", route === "/draft") {
     return (
       <>
-        <div className="w-60 pr-4 sticky h-screen top-0 border-r overflow-auto">
+        <div className="hidden sm:block xl:grow xl:max-w-xs px-2 xl:px-4 sticky h-screen top-0 xl:overflow-auto">
           <Navbar />
         </div>
-        <main id="main" className="grow max-w-[57rem] pl-4 min-h-[150vh]">
+        <main id="main" className="flex flex-col md:grow md:max-w-4xl border-x px-2 min-h-[150vh]">
           <Component {...pageProps} />
+          <MobileNavbar />
         </main>
       </>
     );
@@ -70,7 +73,7 @@ const ComponentHandler = ({ Component, pageProps }) => {
   if (route === "/about" || route === "/contact" || route === "/terms" || route === "/privacy" || route === "/cookies" || route === "/faq" || route === "/help" || route === "/") {
     return (
       <>
-        <main id="main" className="grow max-w-6xl min-h-[150vh]">
+        <main id="main" className="flex flex-col grow max-w-6xl min-h-[150vh]">
           <GeneralNavbar />
           <Component {...pageProps} />
         </main>
@@ -109,7 +112,7 @@ export default function MyApp({ Component, pageProps }) {
           }}
         >
           <div className="dark:bg-black text-gray-800 dark:text-white dark:[color-scheme:dark]">
-            <div className="min-h-screen mx-auto flex justify-center dark:[color-scheme:dark]">
+            <div className="min-h-screen mx-auto flex justify-center dark:[color-scheme:dark] px-2">
               <ComponentHandler Component={Component} pageProps={pageProps} />
             </div>
           </div>

@@ -37,7 +37,7 @@ export const PublicationPartialView = ({ body, publishedAt, author, id, stats })
   }
 
   return (
-    <div className="py-2 border-b">
+    <div className="p-2 border-b hover:bg-gray-50">
       <div className="flex justify-between items-center">
         <BasicAuthorCard {...author} />
         <div className="flex items-center">

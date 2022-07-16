@@ -87,13 +87,14 @@ export default function CreatePublicationForm({ user }) {
     <>
       <div className="flex w-full justify-between items-center mt-2">
         <div className="flex space-x-4 items-center">
-          <div className="relative h-8 w-8">
+          <div className="relative h-8 w-8 rounded-full border">
             <Image
               src={user.picture}
               alt="Picture of the author"
               layout="fill"
               objectFit="fill"
-              className="rounded-full"
+              priority
+              quality={10}
             />
           </div>
           <span className="dark:text-gray-200">Borrador de {user.username}</span>

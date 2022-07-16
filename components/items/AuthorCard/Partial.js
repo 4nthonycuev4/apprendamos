@@ -14,6 +14,8 @@ const PartialAuthorCard = ({ username, name, picture, about, isViewer }) => {
                     alt="Picture of the author"
                     layout="fill"
                     objectFit="fill"
+                    quality={10}
+                    priority
                 />
             </div>
             <div className="w-60">

@@ -53,6 +53,6 @@ export const PublicationForm = ({ content, setContent, setSaved }) => <MDEditor
     }}
 />
 
-export const MDParsed = ({ body }) => <MDPreview disableCopy source={body} components={{
+export const MDParsed = ({ body }) => <MDPreview style={{ "backgroundColor": "transparent" }} source={body} components={{
     code: CodeComponent,
 }} />

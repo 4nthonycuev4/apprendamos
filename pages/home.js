@@ -42,6 +42,7 @@ const HomePage = () => {
       </Head>
       <Title>Inicio</Title>
       <InfiniteScroll
+        className='-mx-2'
         scrollableTarget="main"
         dataLength={contentSize}
         next={() => setSize(size + 1)}

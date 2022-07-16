@@ -8,13 +8,16 @@ import { AuthorStatsButtons } from "../../buttons/AuthorStats";
 
 export const FullAuthorCard = ({ picture, username, name, stats, joinedAt, about }) => (
     <div className="border-b-2 border-gray-300 py-2 px-4 text-center dark:border-gray-500">
-        <Image
-            width={100}
-            height={100}
-            src={picture}
-            alt="Picture of the user"
-            className="rounded-full"
-        />
+        <div className="flex relative h-20 w-20 rounded-full overflow-hidden border mx-auto">
+            <Image
+                src={picture}
+                alt="Picture of the author"
+                layout="fill"
+                objectFit="fill"
+                quality={20}
+                priority
+            />
+        </div>
         <div className="text-center">
             <h1 className="text-xl font-bold">{name}</h1>
             <h1 className="text-md mb-2 font-normal">@{username}</h1>
