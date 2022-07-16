@@ -112,17 +112,21 @@ const MobileNavbarAuth = ({ user }) => (
 const MobileNavbarNoAuth = () => (
     <nav
         className="
-        flex flex-col
-				space-y-6
-        font-bold text-xl"
+        flex
+        sm:hidden items-center justify-center
+		space-x-6 py-2 -mx-2
+        font-bold text-xl
+        bottom-0 sticky bg-gray-50 border-t"
     >
-        <Link href="/">
-            <a>
-                <div className="flex items-center">
-                    <span className="font-bold hover:text-blue-700">app</span>
-                </div>
-            </a>
-        </Link>
+        <div className="hidden xl:block">
+            <Link href="/">
+                <a>
+                    <div className="flex items-center">
+                        <span className="font-bold hover:text-blue-700">app</span>
+                    </div>
+                </a>
+            </Link>
+        </div>
 
         <Link href="/search">
             <a>
@@ -135,15 +139,7 @@ const MobileNavbarNoAuth = () => (
             <a>
                 <div className="flex items-center">
                     <TrendingUpIcon className="h-6 w-6" />
-                    <span>Tendencias</span>
                 </div>
-            </a>
-        </Link>
-        <Link href="/api/auth/login">
-            <a>
-                <button className="mr-4 px-4 h-10 rounded text-blue-700 border-2 border-blue-700">
-                    <span className="font-bold text-base">Inicia sesión</span>
-                </button>
             </a>
         </Link>
 

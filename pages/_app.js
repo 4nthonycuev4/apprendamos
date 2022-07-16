@@ -49,6 +49,7 @@ const ComponentHandler = ({ Component, pageProps }) => {
         </div>
         <main id="main" className="w-full flex flex-col md:grow md:max-w-xl border-x px-2 min-h-[150vh]">
           <Component {...pageProps} />
+          <div className="grow" />
           <MobileNavbar />
         </main>
         <div className="hidden lg:block grow max-w-xs px-4 sticky h-screen top-0 overflow-auto">
@@ -65,6 +66,7 @@ const ComponentHandler = ({ Component, pageProps }) => {
         </div>
         <main id="main" className="flex flex-col md:grow md:max-w-4xl border-x px-2 min-h-[150vh]">
           <Component {...pageProps} />
+          <div className="grow" />
           <MobileNavbar />
         </main>
       </>

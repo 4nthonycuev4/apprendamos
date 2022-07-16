@@ -87,7 +87,7 @@ export default function CreatePublicationForm({ user }) {
     <>
       <div className="flex w-full justify-between items-center mt-2">
         <div className="flex space-x-4 items-center">
-          <div className="relative h-8 w-8 rounded-full border">
+          <div className="relative h-8 w-8 rounded-full border overflow-hidden">
             <Image
               src={user.picture}
               alt="Picture of the author"
@@ -100,20 +100,19 @@ export default function CreatePublicationForm({ user }) {
           <span className="dark:text-gray-200">Borrador de {user.username}</span>
           <span className="text-gray-400">{saved ? "Guardado" : saving ? "Guardando..." : ""}</span>
         </div>
-        <div className="flex space-x-4 items-center">
-          <button type="button" className='border-2 border-blue-700 text-blue-700 hover:border-red-500 hover:text-red-500 rounded px-2 py-1 mr-1 font-semibold'>Descartar</button>
-          {
-            saved ?
-              <button type="button" className='border-2 border-blue-700 bg-blue-700 rounded px-2 py-1 text-gray-100 font-semibold' onClick={publish}>Publicar</button>
-              :
-              <button type="submit" className='border-2 border-blue-700 bg-blue-700 rounded px-2 py-1 text-gray-100 font-semibold'
-                onClick={handleSubmit}>Guardar borrador</button>
-          }
-        </div>
       </div>
-      <br></br>
-      <div className="w-full">
+      <div className="w-full pt-2">
         <PublicationForm content={body} setContent={setBody} setSaved={setSaved} />
+      </div>
+      <div className="flex space-x-4 justify-end pt-2">
+        <button type="button" className='border-2 border-blue-700 text-blue-700 hover:border-red-500 hover:text-red-500 rounded px-2 py-1 mr-1 font-semibold'>Descartar</button>
+        {
+          saved ?
+            <button type="button" className='border-2 border-blue-700 bg-blue-700 rounded px-2 py-1 text-gray-100 font-semibold' onClick={publish}>Publicar</button>
+            :
+            <button type="submit" className='border-2 border-blue-700 bg-blue-700 rounded px-2 py-1 text-gray-100 font-semibold'
+              onClick={handleSubmit}>Guardar borrador</button>
+        }
       </div>
     </>
   );

@@ -33,10 +33,9 @@ const useDarkMode = () => {
   let isEnabled = typeof enabledState === "undefined" && enabled;
 
   useEffect(() => {
-    !isEnabled && (isEnabled = window.matchMedia("(prefers-color-scheme: dark)").matches);
-    const className = "dark";
+    const className = "light";
     const bodyClass = window.document.body.classList;
-    window.document.documentElement.style.colorScheme = isEnabled ? "dark" : "light";
+    document.documentElement.setAttribute('data-color-mode', 'light');
 
     const x = () => {
       if (isEnabled) {
