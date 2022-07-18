@@ -12,7 +12,7 @@ const NotificationCard = ({ body, ts, statusId, statusCollection, user, type }) 
                         alt="Picture of the author"
                         layout="fill"
                         objectFit="fill"
-                        quality={20}
+                        quality={10}
                     />
                 </div>
             </a>

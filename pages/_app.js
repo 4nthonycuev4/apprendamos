@@ -47,9 +47,8 @@ const ComponentHandler = ({ Component, pageProps }) => {
         <div className="hidden sm:block xl:grow xl:max-w-xs px-2 sticky h-screen top-0 xl:overflow-auto">
           <Navbar />
         </div>
-        <main id="main" className="w-full flex flex-col md:grow md:max-w-xl border-x min-h-[150vh]">
+        <main id="main" className="w-full flex flex-col md:grow md:max-w-xl sm:border-x min-h-[150vh]">
           <Component {...pageProps} />
-          <div className="grow" />
           <MobileNavbar />
         </main>
         <div className="hidden lg:block grow max-w-xs px-4 sticky h-screen top-0 overflow-auto">
@@ -114,7 +113,7 @@ export default function MyApp({ Component, pageProps }) {
           }}
         >
           <div className="dark:bg-black text-gray-800 dark:text-white dark:[color-scheme:dark]">
-            <div className="min-h-screen mx-auto flex justify-center dark:[color-scheme:dark] px-2">
+            <div className="min-h-screen mx-auto flex justify-center dark:[color-scheme:dark] sm:px-2">
               <ComponentHandler Component={Component} pageProps={pageProps} />
             </div>
           </div>

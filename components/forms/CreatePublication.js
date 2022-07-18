@@ -93,7 +93,6 @@ export default function CreatePublicationForm({ user }) {
               alt="Picture of the author"
               layout="fill"
               objectFit="fill"
-              priority
               quality={10}
             />
           </div>

@@ -54,7 +54,7 @@ export const PublicationPartialView = ({ body, publishedAt, author, id, stats })
           setStart(false);
         }
       }}>
-        <MDParsed body={body} />
+        <MDParsed body={body + "..."} />
       </InView>
       <PublicationStats {...stats} publicationId={id} />
     </div>)

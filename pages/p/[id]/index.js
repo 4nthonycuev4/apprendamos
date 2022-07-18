@@ -16,7 +16,7 @@ const PublicationPage = ({ publication }) => {
     return (
         <>
             <Head>
-                <title>{`@${publication.author.username}: ${publication.body.slice(2, 20)}...`}</title>
+                <title>{`@${publication.author.username}: ${publication.body.slice(2, 20)}... || Apprendamos`}</title>
                 <meta property="og:url" content="apprendamos.com" />
                 <meta property="og:type" content="website" />
                 <meta property="fb:app_id" content="328834189100104" />

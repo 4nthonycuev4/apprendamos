@@ -20,20 +20,24 @@ const MobileNavbarAuth = ({ user }) => (
         className="
         flex
         sm:hidden items-center justify-center
-		space-x-6 py-2 -mx-2
+		space-x-6 py-2
         font-bold text-xl
         bottom-0 sticky bg-gray-50 border-t"
     >
-        <div className="hidden xl:block">
-            <Link href="/">
-                <a>
-                    <div className="flex items-center">
-                        <span className="font-bold hover:text-blue-700">app</span>
-                    </div>
-                </a>
-            </Link>
-        </div>
-
+        <Link href="/">
+            <a>
+                <div className="relative h-5 w-5">
+                    <Image
+                        src="/logo.svg"
+                        alt="Picture of the author"
+                        layout="fill"
+                        objectFit="fill"
+                        quality={10}
+                        priority
+                    />
+                </div>
+            </a>
+        </Link>
         <Link href="/home">
             <a>
                 <div className="flex items-center">
@@ -73,7 +77,6 @@ const MobileNavbarAuth = ({ user }) => (
             <a>
                 <div className="flex items-center">
                     <BellIcon className="h-6 w-6" />
-                    <span>Notificaciones</span>
                 </div>
             </a>
         </Link>
@@ -95,14 +98,13 @@ const MobileNavbarAuth = ({ user }) => (
         </Link>
         <Link href={`/@${user.username}`}>
             <a>
-                <div className="xl:hidden relative h-10 w-10 rounded-full overflow-hidden border cursor-pointer">
+                <div className="xl:hidden relative h-6 w-6 rounded-full overflow-hidden border cursor-pointer">
                     <Image
                         src={user.picture}
                         alt="Picture of the author"
                         layout="fill"
                         objectFit="fill"
                         quality={10}
-                        priority
                     />
                 </div>
             </a>
@@ -115,7 +117,7 @@ const MobileNavbarNoAuth = () => (
         className="
         flex
         sm:hidden items-center justify-center
-		space-x-6 py-2 -mx-2
+		space-x-6 py-2
         font-bold text-xl
         bottom-0 sticky bg-gray-50 border-t"
     >

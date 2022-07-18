@@ -1,9 +1,20 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const GeneralNavbar = () => <div className="flex justify-between items-center text-gray-800">
     <Link href="/">
-        <a>
-            <h1 className="text-xl">
+        <a className="flex items-center pt-1">
+            <div className="relative h-5 w-5">
+                <Image
+                    src="/logo.svg"
+                    alt="Picture of the author"
+                    layout="fill"
+                    objectFit="fill"
+                    quality={20}
+                    priority
+                />
+            </div>
+            <h1 className="pl-2 text-xl">
                 <span className="font-bold hover:text-blue-700">app</span>
                 <span className="font-light">rendamos</span>
             </h1>

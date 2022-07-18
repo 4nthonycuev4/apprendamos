@@ -24,16 +24,23 @@ const NavbarAuth = ({ user }) => (
         font-bold text-xl
         "
   >
-    <div className="hidden xl:block">
-      <Link href="/">
-        <a>
-          <div className="flex items-center justify-center xl:justify-start">
-            <span className="font-bold hover:text-blue-700">app</span>
-            <span className="font-light">rendamos</span>
-          </div>
-        </a>
-      </Link>
-    </div>
+    <Link href="/">
+      <a className="flex items-center justify-center xl:justify-start pt-1">
+        <div className="relative h-5 w-5">
+          <Image
+            src="/logo.svg"
+            alt="Picture of the author"
+            layout="fill"
+            objectFit="fill"
+            quality={10}
+          />
+        </div>
+        <h1 className="pl-2 text-xl hidden xl:block">
+          <span className="font-bold hover:text-blue-700">app</span>
+          <span className="font-light">rendamos</span>
+        </h1>
+      </a>
+    </Link>
 
     <Link href="/home">
       <a>
@@ -79,7 +86,7 @@ const NavbarAuth = ({ user }) => (
       <a>
         <div className="flex items-center justify-center xl:justify-start">
           <BellIcon className="h-6 w-6 xl:mr-4" />
-          <span>Notificaciones</span>
+          <span className="hidden xl:block">Notificaciones</span>
         </div>
       </a>
     </Link>
@@ -112,7 +119,7 @@ const NavbarAuth = ({ user }) => (
             layout="fill"
             objectFit="fill"
             quality={10}
-            priority
+            
           />
         </div>
       </a>

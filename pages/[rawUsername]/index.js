@@ -23,12 +23,12 @@ const Profile = ({ userData }) => {
 
     return <>
         <Head>
-            <title>{`${userData.name} (@${userData.username}) | Apprendamos`}</title>
+            <title>{`${userData.name} (@${userData.username}) || Apprendamos`}</title>
 
             <meta property="og:image" content={userData.picture} />
             <meta
                 property="og:title"
-                content={`${userData.name} (@${userData.username}) | Apprendamos`}
+                content={`${userData.name} (@${userData.username}) || Apprendamos`}
             />
             <meta
                 property="og:description"
