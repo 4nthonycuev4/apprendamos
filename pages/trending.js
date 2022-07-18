@@ -7,7 +7,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { PublicationPartialView } from './../components/items/PublicationPartialView';
 import Title from './../components/navigation/Title';
 
-export default function SavedContentPage() {
+export default function TrendingContentPage() {
     const getKey = (pageIndex, previousPageData) => {
         if (previousPageData && !previousPageData.data) return null
         if (pageIndex === 0) return '/api/publications/trending'
@@ -15,10 +15,7 @@ export default function SavedContentPage() {
     }
     const { data, size, setSize } = useSWRInfinite(getKey)
 
-    let contentSize = 0;
-    data?.forEach(page => {
-        contentSize += page?.data?.length
-    });
+    const publications = data ? [].concat(...data?.map(page => [].concat(...page.data))) : [];
 
     return (
         <>
@@ -40,7 +37,7 @@ export default function SavedContentPage() {
             </Head>
             <Title>Tendencias</Title>
             <InfiniteScroll
-                dataLength={contentSize}
+                dataLength={publications.length}
                 next={() => setSize(size + 1)}
                 hasMore={Boolean(data?.at(-1)?.afterId)}
                 loader={<h1>Loading...</h1>}
@@ -51,7 +48,7 @@ export default function SavedContentPage() {
                 }
             >
                 {
-                    data?.map(page => page.data?.map(item => item && <PublicationPartialView key={item.id} {...item} />))
+                    publications.map(item => item && <PublicationPartialView key={item.id} {...item} />)
                 }
             </InfiniteScroll>
         </>
