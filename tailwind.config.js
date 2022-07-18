@@ -17,7 +17,7 @@ module.exports = {
         DEFAULT: '0.5px'
       },
       borderColor: {
-        DEFAULT: '#d1d5db'
+        DEFAULT: '#e5e7eb'
       },
     },
   },

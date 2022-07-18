@@ -21,7 +21,7 @@ export default function FollowButton({ username }) {
   return (
     <button
       type="button"
-      className="h-6 w-20 rounded bg-red-600 text-xs font-semibold text-white"
+      className="h-6 w-20 rounded bg-blue-700 text-xs font-semibold text-white"
       onClick={toggleFollow}
     >
       Seguir

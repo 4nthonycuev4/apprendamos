@@ -78,7 +78,7 @@ const GetPublicationViewerStatsRead = (publicationRef, authorRef) => Let(
   }
 );
 
-export const GetFullPublication = (ref) => Let(
+export const GetSinglePublication = (ref) => Let(
   {
     publication: Update(ref, {
       data: {
@@ -101,16 +101,23 @@ export const GetFullPublication = (ref) => Let(
       username: Select(["data", "username"], Var("author")),
       name: Select(["data", "name"], Var("author")),
       picture: Select(["data", "picture"], Var("author")),
+      followerCount: Select(["data", "stats", "followerCount"], Var("author")),
     },
     id: ref,
     body: Select(["data", "body"], Var("publication")),
-    created: Select(["data", "createdAt"], Var("publication")),
-    updated: Select(["data", "updatedAt"], Var("publication"), false),
-    stats: {
-      likeCount: Select(["data", "stats", "likeCount"], Var("publication"), 0),
-      cheerCount: Select(["data", "stats", "cheerCount"], Var("publication"), 0),
-      commentCount: Select(["data", "stats", "commentCount"], Var("publication"), 0),
-    },
+    publishedAt: Select(["data", "publishedAt"], Var("publication")),
+    updatedAt: Select(["data", "updatedAt"], Var("publication"), false),
+  }
+)
+
+export const GetPublicationStats = (ref) => Let(
+  {
+    publication: Get(ref),
+  },
+  {
+    likeCount: Select(["data", "stats", "likeCount"], Var("publication"), null),
+    cheerCount: Select(["data", "stats", "cheerCount"], Var("publication"), null),
+    commentCount: Select(["data", "stats", "commentCount"], Var("publication"), null),
   }
 )
 

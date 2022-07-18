@@ -2,7 +2,7 @@
 import { Client, query } from "faunadb";
 
 import { CreatePublication } from "./publications/create";
-import { GetPartialPublication, ViewSavedPublications, GetTrendingPublications, GetPublications, GetUserPublications, GetFullPublication } from "./publications/read";
+import { GetPartialPublication, GetPublicationStats, GetTrendingPublications, GetPublications, GetUserPublications, GetSinglePublication } from "./publications/read";
 import { Like, Dislike, Save, View } from './publications/update';
 import { DeletePublication } from "./publications/delete";
 
@@ -12,6 +12,9 @@ import { GetPublicationComments } from "./comments/read";
 import { CreateUser } from "./users/create";
 import { GetPartialUser, GetSuggestedUsers, GetTrendingUsers, GetViewer, GetSingleUser, GetFollowers, GetFollowingStatus } from './users/read';
 import { UpdateViewer, FollowUser } from "./users/update";
+
+import { GetPublicationInteractions } from "./interactions/read";
+import { LikePublication } from "./interactions/likePublication";
 
 import FaunaToJSON from "./utils/FaunaToJSON";
 
@@ -107,14 +110,10 @@ export default class FaunaClient {
       });
   }
 
-  async like(ref) {
+  async likePublication(id) {
     return this.client
-      .query(Like(Ref(Collection(ref.collection), ref.id)))
+      .query(LikePublication(Ref(Collection("publications"), id)))
       .then((res) => FaunaToJSON(res))
-      .catch((error) => {
-        console.log("error", error);
-        return null;
-      });
   }
 
   async dislike(ref) {
@@ -283,9 +282,21 @@ export default class FaunaClient {
       });
   }
 
-  async getPublication(id) {
+  async getSinglePublication(id) {
     return this.client
-      .query(GetFullPublication(Ref(Collection("publications"), id)))
+      .query(GetSinglePublication(Ref(Collection("publications"), id)))
+      .then((res) => FaunaToJSON(res))
+  }
+
+  async getPublicationStats(id) {
+    return this.client
+      .query(GetPublicationStats(Ref(Collection("publications"), id)))
+      .then((res) => FaunaToJSON(res))
+  }
+
+  async getPublicationInteractions(id) {
+    return this.client
+      .query(GetPublicationInteractions(Ref(Collection("publications"), id)))
       .then((res) => FaunaToJSON(res))
   }
 
@@ -365,18 +376,6 @@ export default class FaunaClient {
         )
       )
       .then((res) => FaunaToJSON(res))
-  }
-
-  async viewPublication(ref) {
-    return this.client
-      .query(
-        View(Ref(Collection(ref.collection), ref.id))
-      )
-      .then((res) => FaunaToJSON(res))
-      .catch((error) => {
-        console.log("error", error);
-        return null;
-      });
   }
 
   async deletePublication(ref) {

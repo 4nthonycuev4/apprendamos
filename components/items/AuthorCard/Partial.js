@@ -5,36 +5,32 @@ import Link from "next/link";
 
 import FollowButton from "../../buttons/Follow";
 
-const PartialAuthorCard = ({ username, name, picture, about, isViewer }) => {
+const PartialAuthorCard = ({ username, name, picture, about = "Marco Antonio Muñiz Rivera, más conocido cómo Marc Anthony, es un cantautor y actor puertorriqueño-estadounidense, cuyos temas van desde la salsa, pasando por el bolero, la balada y el pop.", isViewer }) => {
     return (
-        <div className="flex">
-            <div className="relative h-16 w-16 rounded-full overflow-hidden border mr-2">
-                <Image
-                    src={picture}
-                    alt="Picture of the author"
-                    layout="fill"
-                    objectFit="fill"
-                    quality={10}
-                    priority
-                />
-            </div>
-            <div className="w-60">
-                <h1 className="space-x-2 font-semibold">{name}</h1>
-                <h1 className="space-x-2 text-gray-800">{`@${username}`}</h1>
-                {!isViewer ? <FollowButton username={username} /> : (
+        <div>
+            <div className="flex items-center">
+                <Link href={`/@${username}`}>
+                    <a>
+                        <div className="relative h-10 w-10 rounded-full overflow-hidden border mr-2.5">
+                            <Image
+                                src={picture}
+                                alt="Picture of the author"
+                                layout="fill"
+                                objectFit="fill"
+                            />
+                        </div>
+                    </a>
+                </Link>
+                <div>
                     <Link href={`/@${username}`}>
                         <a>
-                            <button
-                                type="button"
-                                className="h-6 w-20 rounded bg-green-500 text-xs font-semibold text-white"
-                            >
-                                Ir al perfil
-                            </button>
+                            <h1 className="font-semibold text-sm -mb-1">{name}</h1>
+                            <h1 className="font-normal text-sm dark:text-gray-300">{`@${username}`}</h1>
                         </a>
-                    </Link>)}
-                <p className="italic text-gray-700 text-sm font-extralight">&quot;{about}&quot;</p>
-
+                    </Link>
+                </div>
             </div>
+            <p>{about}</p>
         </div>
     )
 };

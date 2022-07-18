@@ -44,7 +44,7 @@ export const PublicationPartialView = ({ body, publishedAt, author, id, stats })
           <PublicationOptionsButton publicationId={id} publishedAt={publishedAt} />
         </div>
       </div>
-      <InView as="div" className="px-12 pb-2" threshold={0.25} onChange={(inView, entry) => {
+      <InView as="div" threshold={0.25} onChange={(inView, entry) => {
         if (timer.current >= 10 && !handled.current) {
           handled.current = true;
           handleView();

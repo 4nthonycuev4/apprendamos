@@ -37,7 +37,7 @@ export default function PublicationOptionsButton({ publicationId, publishedAt })
         <>
             <DeleteContentModal isOpen={deleteModalOpen} setIsOpen={setDeleteModalOpen} publicationId={publicationId} />
             <CopyLinkModal isOpen={copyLinkModalOpen} setIsOpen={setCopyLinkModalOpen} />
-            <div className="w-56 text-right">
+            <div className="w-16 text-right">
                 <Menu as="div" className="relative inline-block text-left">
                     <div>
                         <Menu.Button className="inline-flex w-full justify-center rounded-md py-2 text-sm font-medium hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">

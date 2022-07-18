@@ -1,3 +1,5 @@
+import useSWR from 'swr';
+
 import {
     BookmarkIcon as BookmarkIconOutline,
     HeartIcon as HeartIconOutline,
@@ -10,64 +12,47 @@ import {
     ThumbDownIcon as ThumbDownIconSolid,
     ThumbUpIcon as ThumbUpIconSolid,
 } from "@heroicons/react/solid";
-import CommentsModal from "../modals/Comments";
+import CommentsModal from "./modals/Comments";
 
-export const PublicationStatsButtons = ({ stats, setStats, viewerStats = { comment: false, like: false, save: false }, setViewerStats, publicationId }) => {
+export const PublicationInteractions = ({ id }) => {
     const { user, error } = useUser();
-
     const isAuthenticated = !error && user?.id;
 
-    const like = async () => {
-        const response = await fetch(`/api/${publicationId}/like`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        })
-            .then((res) => res.json());
+    const { data: stats, error: statsError } = useSWR(`/api/publications/${id}/stats`, { revalidateOnFocus: true, refreshInterval: 1000 });
+    const { data: interactions, error: interactionsError } = useSWR(isAuthenticated && `/api/publications/${id}/interactions`, { revalidateOnFocus: true, refreshInterval: 1000 });
 
-        setStats(response.stats);
-        setViewerStats(response.viewerStats);
-    }
+    const like = () => fetch(`/api/publications/${id}/interactions/like`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    })
 
-    const dislike = async () => {
-        const response = await fetch(`/api/${publicationId}/dislike`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        })
-            .then((res) => res.json());
+    const dislike = () => fetch(`/api/publications/${id}/interactions/dislike`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    })
 
-        setStats(response.stats);
-        setViewerStats(response.viewerStats);
-    }
-
-    const save = async () => {
-        const response = await fetch(`/api/${publicationId}/save`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        })
-            .then((res) => res.json());
-
-        setStats(response.stats);
-        setViewerStats(response.viewerStats);
-    }
+    const save = () => fetch(`/api/publications/${id}/interactions/save`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    })
 
     return (
         <div className="flex justify-center space-x-8 ">
-            <CommentsModal publicationId={publicationId} viewerComment={viewerStats.comment} commentCount={stats.commentCount} />
             <div className="flex ">
                 <button type="button" disabled={!isAuthenticated} onClick={like}>
-                    {viewerStats?.like ? (
+                    {isAuthenticated && interactions && interactions.like ? (
                         <ThumbUpIconSolid className="w-5" />
                     ) : (
                         <ThumbUpIconOutline strokeWidth={1.5} className="w-5" />
                     )}
                 </button>
-                <span>{stats.likeCount}</span>
+                <span>{stats && stats.likeCount || 0}</span>
             </div>
 
             <div className="flex text-red-400">
@@ -75,17 +60,18 @@ export const PublicationStatsButtons = ({ stats, setStats, viewerStats = { comme
                     type="button"
                     disabled={!isAuthenticated}
                 >
-                    {viewerStats?.cheer ? (
+                    {isAuthenticated && interactions && interactions.cheer ? (
                         <HeartIconSolid className="w-5" />
                     ) : (
                         <HeartIconOutline strokeWidth={1.5} className="w-5" />
                     )}
                 </button>
-                <span>{stats.cheerCount}</span>
+                <span>{stats && stats.cheerCount || 0}</span>
             </div>
+
             <div className="flex ">
                 <button type="button" disabled={!isAuthenticated} onClick={dislike}>
-                    {viewerStats?.dislike ? (
+                    {isAuthenticated && interactions && interactions.dislike ? (
                         <ThumbDownIconSolid className="w-5" />
                     ) : (
                         <ThumbDownIconOutline strokeWidth={1.5} className="w-5" />
@@ -94,13 +80,12 @@ export const PublicationStatsButtons = ({ stats, setStats, viewerStats = { comme
             </div>
             <div className="flex">
                 <button type="button" disabled={!isAuthenticated} onClick={save}>
-                    {viewerStats?.save ? (
+                    {isAuthenticated && interactions && interactions.save ? (
                         <BookmarkIconSolid className="w-5" />
                     ) : (
                         <BookmarkIconOutline strokeWidth={1.5} className="w-5" />
                     )}
                 </button>
-                <span>{stats.saveCount}</span>
             </div>
         </div>
     )

@@ -5,10 +5,10 @@ import Link from "next/link";
 
 export default function BasicAuthorCard({ username, picture, name }) {
     return (
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center">
             <Link href={`/@${username}`}>
                 <a>
-                    <div className="relative h-10 w-10 rounded-full overflow-hidden border">
+                    <div className="relative h-10 w-10 rounded-full overflow-hidden border-2 border-gray-300 mr-2.5">
                         <Image
                             src={picture}
                             alt="Picture of the author"
