@@ -25,7 +25,7 @@ const HomePage = () => {
   return (
     <>
       <Head>
-        <title>Apprendamos || Flashcards & articles</title>
+        <title>Inicio || Apprendamos</title>
         <meta property="og:url" content="apprendamos.com" />
         <meta property="og:type" content="website" />
         <meta property="fb:app_id" content="328834189100104" />
@@ -42,8 +42,6 @@ const HomePage = () => {
       </Head>
       <Title>Inicio</Title>
       <InfiniteScroll
-        className='-mx-2'
-        scrollableTarget="main"
         dataLength={contentSize}
         next={() => setSize(size + 1)}
         hasMore={Boolean(data?.at(-1)?.afterId)}

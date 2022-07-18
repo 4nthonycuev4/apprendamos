@@ -157,8 +157,6 @@ export const GetPartialUser = (userRef) => Let(
     username: Select(["data", "username"], Var("user")),
     name: Select(["data", "name"], Var("user")),
     picture: Select(["data", "picture"], Var("user")),
-    followerCount: Select(["data", "stats", "followerCount"], Var("user"), null),
-    about: Select(["data", "about"], Var("user")),
   }
 );
 

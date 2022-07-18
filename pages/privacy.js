@@ -4,7 +4,7 @@ const PrivacyPage = () => {
     return (
         <>
             <Head>
-                <title>Contacto || Apprendamos</title>
+                <title>Privacidad || Apprendamos</title>
             </Head>
             <div className='prose dark:prose-invert mx-auto'>
                 <h1 id="política-de-privacidad-de-datos">Política de privacidad de datos</h1>

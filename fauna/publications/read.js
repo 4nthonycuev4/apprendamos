@@ -124,39 +124,38 @@ export const GetPublicationStats = (ref) => Let(
 const GetPublicationPopularityCursor = (ref) => Let(
   {
     publication: Get(ref),
-    viewFactor: 1,
-    ageFactor: 2,
+    ageFactor: 1,
+    partialViewFactor: 2,
     likeFactor: 3,
-    readFactor: 4,
+    fullViewFactor: 4,
     saveFactor: 5,
     dislikeFactor: -6,
     commentFactor: 7,
     cheerFactor: 8,
 
-    creationTime: Select(["data", "created"], Var("publication")),
+    publicationTime: Select(["data", "publishedAt"], Var("publication")),
     referenceTime: Time("2022-01-01T00:00:00+00:00"),
 
-    viewCount: Select(["data", "stats", "viewCount"], Var("publication")),
-    age: TimeDiff(Var("referenceTime"), Var("creationTime"), "hours"),
-    likeCount: Select(["data", "stats", "likeCount"], Var("publication")),
-    readCount: Select(["data", "stats", "readCount"], Var("publication")),
-    saveCount: Select(["data", "stats", "saveCount"], Var("publication")),
-    dislikeCount: Select(["data", "stats", "dislikeCount"], Var("publication")),
-    commentCount: Select(["data", "stats", "commentCount"], Var("publication")),
-    cheerCount: Select(["data", "stats", "cheerCount"], Var("publication")),
-
+    age: TimeDiff(Var("referenceTime"), Var("publicationTime"), "seconds"),
+    partialViewCount: Select(["data", "stats", "partialViewCount"], Var("publication"), 0),
+    likeCount: Select(["data", "stats", "likeCount"], Var("publication"), 0),
+    fullViewCount: Select(["data", "stats", "fullViewCount"], Var("publication"), 0),
+    saveCount: Select(["data", "stats", "saveCount"], Var("publication"), 0),
+    dislikeCount: Select(["data", "stats", "dislikeCount"], Var("publication"), 0),
+    commentCount: Select(["data", "stats", "commentCount"], Var("publication"), 0),
+    cheerCount: Select(["data", "stats", "cheerCount"], Var("publication"), 0),
   },
-  [Add(
-    Multiply(Var("viewFactor"), Var("viewCount")),
+  Add(
+    Multiply(Var("partialViewFactor"), Var("partialViewCount")),
     Multiply(Var("ageFactor"), Var("age")),
     Multiply(Var("likeFactor"), Var("likeCount")),
-    Multiply(Var("readFactor"), Var("readCount")),
+    Multiply(Var("fullViewFactor"), Var("fullViewCount")),
     Multiply(Var("saveFactor"), Var("saveCount")),
     Multiply(Var("dislikeFactor"), Var("dislikeCount")),
     Multiply(Var("commentFactor"), Var("commentCount")),
     Multiply(Var("cheerFactor"), Var("cheerCount"))
-  ), ref]
-)
+  )
+);
 
 export const GetPartialPublication = (publicationRef, withAuthor = true) => Let(
   {
@@ -202,22 +201,17 @@ export const GetPublications = (afterRef) => Let(
   ),
 );
 
-export const GetTrendingPublications = (afterRef) => Let(
-  {
-    viewerRef: GetViewerRef(),
-  },
-  Map(
-    Paginate(
-      Join(Documents(Collection("publications")), Index("publications_sorted_popularity")),
-      {
-        size: 10,
-        after: afterRef != null && GetPublicationPopularityCursor(afterRef),
-      }
-    ),
-    Lambda(
-      ["score", "ref"],
-      GetPartialPublication(Var("ref"), true, Var("viewerRef"))
-    )
+export const GetTrendingPublications = (afterRef) => Map(
+  Paginate(
+    Join(Documents(Collection("publications")), Index("publications_sorted_popularity")),
+    {
+      size: 5,
+      after: afterRef != null && GetPublicationPopularityCursor(afterRef),
+    }
+  ),
+  Lambda(
+    ["score", "ref"],
+    GetPartialPublication(Var("ref"), true)
   )
 );
 

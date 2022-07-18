@@ -74,7 +74,7 @@ const NavbarAuth = ({ user }) => (
           <span className="hidden xl:block">Guardados</span>
         </div>
       </a>
-    </Link>{/* 
+    </Link>
     <Link href="/notifications">
       <a>
         <div className="flex items-center justify-center xl:justify-start">
@@ -83,6 +83,7 @@ const NavbarAuth = ({ user }) => (
         </div>
       </a>
     </Link>
+    {/* 
     <Link href="/messages">
       <a>
         <div className="flex items-center justify-center xl:justify-start">

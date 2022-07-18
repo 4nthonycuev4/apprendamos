@@ -4,7 +4,7 @@ import { GetViewerRef } from "../users/read";
 
 const { Let, Select, Index, Get, If, Var, Exists, Match, Add, Collection, Time, Update, Now, Create, SubString, Not, Do, Delete, And, Equals, } = query;
 
-export const LikePublication = (ref) => Let(
+export const SavePublication = (ref) => Let(
     {
         publication: Get(ref),
         author: Get(Select(["data", "author"], Var("publication"))),
@@ -15,50 +15,46 @@ export const LikePublication = (ref) => Let(
         Let(
             {
                 interactions: Get(Var("interactionsMatch")),
-                newLikeStatus: Not(Select(["data", "like"], Var("interactions"), false)),
-                newDislikeStatus: If(And(Var("newLikeStatus"), Select(["data", "dislike"], Var("interactions"), false)), false, null)
+                newSaveStatus: Not(Select(["data", "save"], Var("interactions"), false)),
             },
             Do(
                 Update(Select(["ref"], Var("interactions")), {
                     data: {
-                        like: Var("newLikeStatus"),
-                        dislike: Var("newDislikeStatus"),
+                        save: Var("newSaveStatus"),
                     }
                 }),
                 Update(ref, {
                     data: {
                         stats: {
-                            likeCount: Add(Select(["data", "stats", "likeCount"], Var("publication"), 0), If(Var("newLikeStatus"), 1, -1)),
-                            dislikeCount: If(Equals(Var("newDislikeStatus"), false), Add(Select(["data", "stats", "dislikeCount"], Var("publication"), 1), -1), Select(["data", "stats", "dislikeCount"], Var("publication"), null))
+                            saveCount: Add(Select(["data", "stats", "saveCount"], Var("publication"), 0), If(Var("newSaveStatus"), 1, -1)),
                         }
                     }
                 }),
                 Update(Select(["ref"], Var("author")), {
                     data: {
                         stats: {
-                            likeCount: Add(Select(["data", "stats", "likeCount"], Var("author"), 0), If(Var("newLikeStatus"), 1, -1)),
-                            dislikeCount: If(Equals(Var("newDislikeStatus"), false), Add(Select(["data", "stats", "dislikeCount"], Var("author"), 1), -1), Select(["data", "stats", "dislikeCount"], Var("author"), null))
+                            saveCount: Add(Select(["data", "stats", "saveCount"], Var("author"), 0), If(Var("newSaveStatus"), 1, -1)),
                         }
                     }
                 }),
-                If(Var("newLikeStatus"),
+                If(Var("newSaveStatus"),
                     Create(Collection("notifications"), {
                         data: {
-                            type: "like",
+                            type: "save",
                             status: ref,
                             body: SubString(Select(["data", "body"], Var("publication")), 0, 100),
                             author: Select(["data", "author"], Var("publication")),
                             user: GetViewerRef(),
                         }
                     }),
-                    Delete(Select(["ref"], Get(Match(Index("notification"), [ref, GetViewerRef(), "like"]))))
+                    Delete(Select(["ref"], Get(Match(Index("notification"), [ref, GetViewerRef(), "save"]))))
                 )
             )
         ),
         Do(
             Create(Collection("publicationinteractions"), {
                 data: {
-                    like: true,
+                    save: true,
                     publication: ref,
                     user: GetViewerRef(),
                     createdAt: Now(),
@@ -67,26 +63,28 @@ export const LikePublication = (ref) => Let(
             Update(ref, {
                 data: {
                     stats: {
-                        likeCount: Add(Select(["data", "stats", "likeCount"], Var("publication"), 0), 1),
+                        saveCount: Add(Select(["data", "stats", "saveCount"], Var("publication"), 0), 1),
                     }
                 }
             }),
             Update(Select(["ref"], Var("author")), {
                 data: {
                     stats: {
-                        likeCount: Add(Select(["data", "stats", "likeCount"], Var("author"), 0), 1),
+                        saveCount: Add(Select(["data", "stats", "saveCount"], Var("author"), 0), 1),
                     }
                 }
             }),
             Create(Collection("notifications"), {
                 data: {
-                    type: "like",
+                    type: "save",
                     status: ref,
                     body: SubString(Select(["data", "body"], Var("publication")), 0, 100),
-                    user: GetViewerRef(),
                     author: Select(["data", "author"], Var("publication")),
+                    user: GetViewerRef(),
                 }
-            })
+            }
+            )
         )
     )
-)
+);
+

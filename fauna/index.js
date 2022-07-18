@@ -17,6 +17,9 @@ import { GetPublicationInteractions } from "./interactions/read";
 
 import { LikePublication } from "./interactions/likePublication";
 import { DislikePublication } from './interactions/dislikePublication';
+import { SavePublication } from './interactions/savePublication';
+
+import { GetNotifications } from "./notifications/read";
 
 import FaunaToJSON from "./utils/FaunaToJSON";
 
@@ -124,14 +127,19 @@ export default class FaunaClient {
       .then((res) => FaunaToJSON(res))
   }
 
-  async save(ref) {
+  async savePublication(id) {
     return this.client
-      .query(Save(Ref(Collection(ref.collection), ref.id)))
+      .query(SavePublication(Ref(Collection("publications"), id)))
       .then((res) => FaunaToJSON(res))
-      .catch((error) => {
-        console.log("error", error);
-        return null;
-      });
+  }
+
+
+  // NOTIFICATIONS CRUD
+  async getNotifications(afterId) {
+    const afterRef = afterId && Ref(Collection("publications"), afterId);
+    return this.client
+      .query(GetNotifications(afterRef))
+      .then((res) => FaunaToJSON(res))
   }
 
   //COMMENTS CRUD
@@ -274,10 +282,6 @@ export default class FaunaClient {
     return this.client
       .query(CreatePublication(body))
       .then((res) => FaunaToJSON(res))
-      .catch((error) => {
-        console.log("error", error);
-        return null;
-      });
   }
 
   async getSinglePublication(id) {

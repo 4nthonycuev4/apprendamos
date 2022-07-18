@@ -68,15 +68,16 @@ const MobileNavbarAuth = ({ user }) => (
                     <BookmarkIcon className="h-6 w-6" />
                 </div>
             </a>
-        </Link>{/* 
-    <Link href="/notifications">
-      <a>
-        <div className="flex items-center">
-          <BellIcon className="h-6 w-6" />
-          <span>Notificaciones</span>
-        </div>
-      </a>
-    </Link>
+        </Link>
+        <Link href="/notifications">
+            <a>
+                <div className="flex items-center">
+                    <BellIcon className="h-6 w-6" />
+                    <span>Notificaciones</span>
+                </div>
+            </a>
+        </Link>
+        {/* 
     <Link href="/messages">
       <a>
         <div className="flex items-center">

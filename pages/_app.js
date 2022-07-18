@@ -41,7 +41,7 @@ const ComponentHandler = ({ Component, pageProps }) => {
   const router = useRouter();
   const { route } = router;
 
-  if (route === "/home" || route === "/p/[id]" || route === "/[rawUsername]" || route === "/trending" || route === "/search") {
+  if (route === "/home" || route === "/p/[id]" || route === "/[rawUsername]" || route === "/trending" || route === "/search" || route === "/notifications") {
     return (
       <>
         <div className="hidden sm:block xl:grow xl:max-w-xs px-2 sticky h-screen top-0 xl:overflow-auto">
