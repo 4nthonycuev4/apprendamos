@@ -7,7 +7,7 @@ export default function FaunaToJSON(obj) {
     }
     if (typeof obj === "object") {
         if (obj.after || obj.before) {
-            if (obj.after && obj.after[0] !== false) {
+            if (obj.after && obj.after.length && obj.after[0] !== false) {
                 return {
                     afterId: FaunaToJSON(obj.after.at(-1)),
                     data: FaunaToJSON(obj.data),
