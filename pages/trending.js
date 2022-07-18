@@ -15,7 +15,7 @@ export default function TrendingContentPage() {
     }
     const { data, size, setSize } = useSWRInfinite(getKey)
 
-    const publications = data ? [].concat(...data?.map(page => [].concat(...page.data))) : [];
+    const publications = data ? [].concat(...data?.map(page => [].concat(...page?.data))) : [];
 
     return (
         <>
@@ -37,7 +37,7 @@ export default function TrendingContentPage() {
             </Head>
             <Title>Tendencias</Title>
             <InfiniteScroll
-                dataLength={publications.length}
+                dataLength={publications?.length}
                 next={() => setSize(size + 1)}
                 hasMore={Boolean(data?.at(-1)?.afterId)}
                 loader={<h1>Loading...</h1>}
@@ -48,7 +48,7 @@ export default function TrendingContentPage() {
                 }
             >
                 {
-                    publications.map(item => item && <PublicationPartialView key={item.id} {...item} />)
+                    publications?.map(item => item && <PublicationPartialView key={item.id} {...item} />)
                 }
             </InfiniteScroll>
         </>

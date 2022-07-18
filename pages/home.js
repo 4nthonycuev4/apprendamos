@@ -17,10 +17,7 @@ const HomePage = () => {
   }
   const { data, size, setSize } = useSWRInfinite(getKey)
 
-  let contentSize = 0;
-  data?.forEach(page => {
-    contentSize += page?.data?.length
-  });
+  const publications = data ? [].concat(...data?.map(page => [].concat(...page?.data))) : [];
 
   return (
     <>
@@ -42,7 +39,7 @@ const HomePage = () => {
       </Head>
       <Title>Inicio</Title>
       <InfiniteScroll
-        dataLength={contentSize}
+        dataLength={publications.length}
         next={() => setSize(size + 1)}
         hasMore={Boolean(data?.at(-1)?.afterId)}
         loader={<h1>Loading...</h1>}
@@ -53,7 +50,7 @@ const HomePage = () => {
         }
       >
         {
-          data?.map(page => page.data?.map(item => item && <PublicationPartialView key={item.id} {...item} />))
+          publications?.map(item => item && <PublicationPartialView key={item.id} {...item} />)
         }
       </InfiniteScroll>
     </>
