@@ -1,14 +1,8 @@
 import { query } from "faunadb";
 
-import { GetPartialUser, GetUserByUsername, GetUserRefByUsername, GetViewer, GetViewerRef } from "../users/read";
+import { GetViewerRef } from "../users/read";
 
-const { Let, Select, Index, Get, If, Var, Exists, Match, Paginate, Map, Multiply, TimeDiff, Add, Join, Collection, Time, Lambda, Update, Now, Create, SubString, Take, Count, Documents, Not, Do, Delete } = query;
-
-/* 
-1. Verify that the interactions exists
-2. If it does, get the interactions
-3. If it doesn't, create the interactions
-*/
+const { Let, Select, Index, Get, If, Var, Exists, Match, Add, Collection, Time, Update, Now, Create, SubString, Not, Do, Delete, And, Equals, } = query;
 
 export const LikePublication = (ref) => Let(
     {
@@ -22,17 +16,20 @@ export const LikePublication = (ref) => Let(
             {
                 interactions: Get(Var("interactionsMatch")),
                 newLikeStatus: Not(Select(["data", "like"], Var("interactions"), false)),
+                newDislikeStatus: If(And(Var("newLikeStatus"), Select(["data", "dislike"], Var("interactions"), false)), false, null)
             },
             Do(
                 Update(Select(["ref"], Var("interactions")), {
                     data: {
                         like: Var("newLikeStatus"),
+                        dislike: Var("newDislikeStatus"),
                     }
                 }),
                 Update(ref, {
                     data: {
                         stats: {
                             likeCount: Add(Select(["data", "stats", "likeCount"], Var("publication"), 0), If(Var("newLikeStatus"), 1, -1)),
+                            dislikeCount: If(Equals(Var("newDislikeStatus"), false), Add(Select(["data", "stats", "dislikeCount"], Var("publication"), 1), -1), Select(["data", "stats", "dislikeCount"], Var("publication"), null))
                         }
                     }
                 }),
@@ -40,6 +37,7 @@ export const LikePublication = (ref) => Let(
                     data: {
                         stats: {
                             likeCount: Add(Select(["data", "stats", "likeCount"], Var("author"), 0), If(Var("newLikeStatus"), 1, -1)),
+                            dislikeCount: If(Equals(Var("newDislikeStatus"), false), Add(Select(["data", "stats", "dislikeCount"], Var("author"), 1), -1), Select(["data", "stats", "dislikeCount"], Var("author"), null))
                         }
                     }
                 }),

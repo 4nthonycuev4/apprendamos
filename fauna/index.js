@@ -14,7 +14,9 @@ import { GetPartialUser, GetSuggestedUsers, GetTrendingUsers, GetViewer, GetSing
 import { UpdateViewer, FollowUser } from "./users/update";
 
 import { GetPublicationInteractions } from "./interactions/read";
+
 import { LikePublication } from "./interactions/likePublication";
+import { DislikePublication } from './interactions/dislikePublication';
 
 import FaunaToJSON from "./utils/FaunaToJSON";
 
@@ -116,14 +118,10 @@ export default class FaunaClient {
       .then((res) => FaunaToJSON(res))
   }
 
-  async dislike(ref) {
+  async dislikePublication(id) {
     return this.client
-      .query(Dislike(Ref(Collection(ref.collection), ref.id)))
+      .query(DislikePublication(Ref(Collection("publications"), id)))
       .then((res) => FaunaToJSON(res))
-      .catch((error) => {
-        console.log("error", error);
-        return null;
-      });
   }
 
   async save(ref) {
