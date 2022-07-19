@@ -16,7 +16,7 @@ const Profile = ({ userData }) => {
     }
     const { data, size, setSize } = useSWRInfinite(getKey)
 
-    const publications = data ? [].concat(...data?.map(page => [].concat(...page?.data))) : [];
+    const publications = data && data[0].data ? [].concat(...data.map(page => [].concat(...page?.data))) : [];
 
     return <>
         <Head>

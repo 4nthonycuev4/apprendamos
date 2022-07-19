@@ -18,10 +18,7 @@ const NotificationsPage = () => {
     }
     const { data, size, setSize } = useSWRInfinite(getKey)
 
-    let contentSize = 0;
-    data?.forEach(page => {
-        contentSize += page?.data?.length
-    });
+    const notifications = data && data[0].data ? [].concat(...data?.map(page => [].concat(...page?.data))) : [];
 
     return (
         <>
@@ -43,9 +40,9 @@ const NotificationsPage = () => {
             </Head>
             <Title>Notificaciones</Title>
             <InfiniteScroll
-                dataLength={contentSize}
+                dataLength={notifications.length}
                 next={() => setSize(size + 1)}
-                hasMore={Boolean(data?.at(-1)?.afterId)}
+                hasMore={data && Boolean(data[data.length - 1].afterId)}
                 loader={<h1>Loading...</h1>}
                 endMessage={
                     <p className="text-center">

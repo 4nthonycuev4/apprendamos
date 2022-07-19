@@ -1,20 +1,12 @@
 /** @format */
-import {
-    getAccessToken,
-} from "@auth0/nextjs-auth0";
 
 import FaunaClient from "../../../../fauna";
 
-export default async function getUserPublications(req, res) {
+const UserPublicationsAPIPage = async (req, res) => {
     try {
-        const { accessToken } = await getAccessToken(req, res).catch(e => {
-            return {};
-        });
-
-        const client = new FaunaClient(accessToken);
+        const client = new FaunaClient();
 
         let { username } = req.query
-
         const afterId = req.query && req.query.afterId;
 
         const content = await client.getUserPublications(username, afterId);
@@ -28,3 +20,5 @@ export default async function getUserPublications(req, res) {
         });
     }
 };
+
+export default UserPublicationsAPIPage;

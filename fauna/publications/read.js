@@ -217,7 +217,6 @@ export const GetTrendingPublications = (afterRef) => Map(
 
 export const GetUserPublications = (username, afterRef) => Let(
   {
-    viewerRef: GetViewerRef(),
     user: GetUserByUsername(username),
     userRef: Select(["ref"], Var("user")),
   },
@@ -234,7 +233,7 @@ export const GetUserPublications = (username, afterRef) => Let(
     ),
     Lambda(
       ["publishedAt", "ref"],
-      GetPartialPublication(Var("ref"), false, Var("viewerRef"))
+      GetPartialPublication(Var("ref"), false)
     )
   ),
 );
