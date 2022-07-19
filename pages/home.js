@@ -41,7 +41,7 @@ const HomePage = () => {
       <InfiniteScroll
         dataLength={publications.length}
         next={() => setSize(size + 1)}
-        hasMore={Boolean(data?.at(-1)?.afterId)}
+        hasMore={data && Boolean(data[data.length - 1].afterId)}
         loader={<h1>Loading...</h1>}
         endMessage={
           <p className="text-center">

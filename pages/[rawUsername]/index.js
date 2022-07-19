@@ -16,10 +16,7 @@ const Profile = ({ userData }) => {
     }
     const { data, size, setSize } = useSWRInfinite(getKey)
 
-    let contentSize = 0;
-    data?.forEach(page => {
-        contentSize += page?.data?.length
-    });
+    const publications = data ? [].concat(...data?.map(page => [].concat(...page?.data))) : [];
 
     return <>
         <Head>
@@ -40,11 +37,10 @@ const Profile = ({ userData }) => {
             <meta name="twitter:card" content="summary" />
         </Head>
         <FullAuthorCard {...userData} />
-        {data && data.length && <InfiniteScroll
-            scrollableTarget="main"
-            dataLength={data?.length ? contentSize : 0}
-            next={() => console.log('next')}
-            hasMore={false}
+        <InfiniteScroll
+            dataLength={publications.length}
+            next={() => setSize(size + 1)}
+            hasMore={data && Boolean(data[data.length - 1].afterId)}
             loader={<h1>Loading...</h1>}
             endMessage={
                 <p className="text-center">
@@ -53,9 +49,9 @@ const Profile = ({ userData }) => {
             }
         >
             {
-                data?.map(page => page?.data?.map(item => item && <PublicationPartialView key={item.id} {...item} author={userData} />))
+                publications.map(item => item && <PublicationPartialView key={item.id} {...item} author={userData} />)
             }
-        </InfiniteScroll>}
+        </InfiniteScroll>
     </>
 };
 

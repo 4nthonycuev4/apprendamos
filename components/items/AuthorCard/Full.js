@@ -7,7 +7,7 @@ import Image from "next/image";
 import { AuthorStatsButtons } from "../../buttons/AuthorStats";
 
 export const FullAuthorCard = ({ picture, username, name, stats, joinedAt, about }) => (
-    <div className="border-b-2 border-gray-300 py-2 px-4 text-center dark:border-gray-500">
+    <div className="border-b border-gray-300 py-2 px-4 text-center dark:border-gray-500">
         <div className="flex relative h-20 w-20 rounded-full overflow-hidden border mx-auto">
             <Image
                 src={picture}

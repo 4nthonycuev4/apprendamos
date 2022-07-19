@@ -190,7 +190,7 @@ export const GetPublications = (afterRef) => Let(
         Index("publications_sorted_popularity")
       ),
       {
-        size: 10,
+        size: 5,
         after: afterRef != null && GetPublicationPopularityCursor(afterRef),
       }
     ),
@@ -228,7 +228,7 @@ export const GetUserPublications = (username, afterRef) => Let(
         Index("publications_sorted_publishedAt")
       ),
       {
-        size: 10,
+        size: 5,
         after: afterRef != null && GetPublicationPublishedAtCursor(afterRef),
       }
     ),
@@ -247,7 +247,7 @@ export const GetSavedPublications = (afterRef) => Let(
     Paginate(
       Match(Index("saved_by_user"), [Var("viewerRef"), true]),
       {
-        size: 10,
+        size: 5,
         after: afterRef != null && GetPublicationPopularityAfterCursor(afterRef),
       }
     ),

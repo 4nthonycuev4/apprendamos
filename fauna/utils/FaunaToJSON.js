@@ -14,7 +14,6 @@ export default function FaunaToJSON(obj) {
                 };
             }
             return {
-                afterId: false,
                 data: FaunaToJSON(obj.data),
             }
         }
