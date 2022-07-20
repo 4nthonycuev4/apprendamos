@@ -81,3 +81,6 @@ const FollowSomeonePage = ({ user }) => {
         </>
     );
 };
+
+export const getServerSideProps = withPageAuthRequired();
+export default FollowSomeonePage;
