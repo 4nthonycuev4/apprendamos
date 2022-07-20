@@ -17,15 +17,12 @@ CreateIndex({
                             commentFactor: 7,
                             cheerFactor: 8,
                             followingFactor: 9,
-
                         },
-                        {
-
-                        }
+                        {}
                     )
                 )
-            )
-        }
+            ),
+        },
     },
     terms: [
         {
@@ -34,7 +31,7 @@ CreateIndex({
         {
             field: ["data", "save"],
             value: true,
-        }
+        },
     ],
     values: [
         {
@@ -43,7 +40,7 @@ CreateIndex({
         },
         {
             field: ["data", "publication"],
-        }
+        },
     ],
     serialized: true,
 });

@@ -6,13 +6,13 @@ import FaunaClient from "../../../../fauna";
 
 export default async function users(req, res) {
     try {
-        const { accessToken } = await getAccessToken(req, res).catch(e => {
+        const { accessToken } = await getAccessToken(req, res).catch((e) => {
             return {};
         });
 
         const client = new FaunaClient(accessToken);
 
-        const { username } = req.query
+        const { username } = req.query;
 
         const user = await client.getSingleUser(username);
 
@@ -20,4 +20,4 @@ export default async function users(req, res) {
     } catch (error) {
         res.status(error.responseResult.statusCode || 500).json(error);
     }
-};
+}

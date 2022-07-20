@@ -4,7 +4,10 @@ import { getAccessToken, withApiAuthRequired } from "@auth0/nextjs-auth0";
 
 import FaunaClient from "../../../../fauna";
 
-export default withApiAuthRequired(async function handleSingleContentRequest(req, res) {
+export default withApiAuthRequired(async function handleSingleContentRequest(
+    req,
+    res
+) {
     try {
         const { id } = req.query;
         const { accessToken } = await getAccessToken(req, res);
@@ -15,7 +18,12 @@ export default withApiAuthRequired(async function handleSingleContentRequest(req
             return res.status(200).json(response);
         } else if (req.method === "PUT") {
             const { body, isDraft, isQuestion } = req.body;
-            const updated = await client.updatePublication(id, body, isDraft, isQuestion);
+            const updated = await client.updatePublication(
+                id,
+                body,
+                isDraft,
+                isQuestion
+            );
             return res.status(200).json(updated);
         }
 

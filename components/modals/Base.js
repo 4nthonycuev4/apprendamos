@@ -1,8 +1,8 @@
-import { Fragment, useState } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
+import { Fragment, useState } from "react";
+import { Dialog, Transition } from "@headlessui/react";
 
 export default function BaseModal({ title, children, isOpen, setIsOpen }) {
-    const handleClose = () => setIsOpen(false)
+    const handleClose = () => setIsOpen(false);
 
     return (
         <Transition appear show={isOpen} as={Fragment}>
@@ -36,8 +36,9 @@ export default function BaseModal({ title, children, isOpen, setIsOpen }) {
                                 flex flex-col
                                 w-full sm:w-3/4 md:w-1/2 xl:w-1/3
                                 h-full sm:h-3/4
-                                transform overflow-hidden rounded-2xl dark:text-white p-6 text-left align-middle shadow-xl transition-all">
-                                <div className='h-12 flex items-start'>
+                                transform overflow-hidden rounded-2xl dark:text-white p-6 text-left align-middle shadow-xl transition-all"
+                            >
+                                <div className="h-12 flex items-start">
                                     <Dialog.Title
                                         as="h1"
                                         className="text-xl font-bold"
@@ -45,7 +46,7 @@ export default function BaseModal({ title, children, isOpen, setIsOpen }) {
                                         {title}
                                     </Dialog.Title>
                                 </div>
-                                <div className='flex flex-col h-14 grow overflow-y-scroll scrollbar-dark'>
+                                <div className="flex flex-col h-14 grow overflow-y-scroll scrollbar-dark">
                                     {children}
                                 </div>
 
@@ -64,5 +65,5 @@ export default function BaseModal({ title, children, isOpen, setIsOpen }) {
                 </div>
             </Dialog>
         </Transition>
-    )
+    );
 }

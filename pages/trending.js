@@ -1,21 +1,24 @@
 /** @format */
 
 import Head from "next/head";
-import useSWRInfinite from 'swr/infinite'
-import InfiniteScroll from 'react-infinite-scroll-component';
+import useSWRInfinite from "swr/infinite";
+import InfiniteScroll from "react-infinite-scroll-component";
 
-import { PublicationPartialView } from './../components/items/PublicationPartialView';
-import Title from './../components/navigation/Title';
+import { PublicationPartialView } from "./../components/items/PublicationPartialView";
+import Title from "../components/navigation/Title";
 
 export default function TrendingContentPage() {
     const getKey = (pageIndex, previousPageData) => {
-        if (previousPageData && !previousPageData.data) return null
-        if (pageIndex === 0) return '/api/publications/trending'
-        return `/api/publications/trending?afterId=${previousPageData.afterId}`
-    }
-    const { data, size, setSize } = useSWRInfinite(getKey)
+        if (previousPageData && !previousPageData.data) return null;
+        if (pageIndex === 0) return "/api/publications/trending";
+        return `/api/publications/trending?afterId=${previousPageData.afterId}`;
+    };
+    const { data, size, setSize } = useSWRInfinite(getKey);
 
-    const publications = data && data[0].data ? [].concat(...data?.map(page => [].concat(...page?.data))) : [];
+    const publications =
+        data && data[0].data
+            ? [].concat(...data?.map((page) => [].concat(...page?.data)))
+            : [];
 
     return (
         <>
@@ -33,7 +36,10 @@ export default function TrendingContentPage() {
                     property="og:description"
                     content="Apprendamos te permite compartir publicaciones y flashcards con los demás usuarios de la red. Regístrate y empieza a crear y compartir tu propia red de conocimiento."
                 />
-                <meta property="og:image" content="https://res.cloudinary.com/apprendamos/image/upload/v1652936748/app_src/ioo_swpsqz.jpg" />
+                <meta
+                    property="og:image"
+                    content="https://res.cloudinary.com/apprendamos/image/upload/v1652936748/app_src/ioo_swpsqz.jpg"
+                />
             </Head>
             <Title>Tendencias</Title>
             <InfiniteScroll
@@ -47,9 +53,12 @@ export default function TrendingContentPage() {
                     </p>
                 }
             >
-                {
-                    publications?.map(item => item && <PublicationPartialView key={item.id} {...item} />)
-                }
+                {publications?.map(
+                    (item) =>
+                        item && (
+                            <PublicationPartialView key={item.id} {...item} />
+                        )
+                )}
             </InfiniteScroll>
         </>
     );

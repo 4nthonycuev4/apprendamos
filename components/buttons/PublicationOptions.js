@@ -1,43 +1,54 @@
-import { Menu, Transition } from '@headlessui/react'
-import { Fragment, forwardRef, useState } from 'react'
-import { ChevronDownIcon } from '@heroicons/react/solid'
-import Link from 'next/link'
+import { Menu, Transition } from "@headlessui/react";
+import { Fragment, forwardRef, useState } from "react";
+import { ChevronDownIcon } from "@heroicons/react/solid";
+import Link from "next/link";
 import moment from "moment";
 
-import CopyLinkModal from '../modals/CopyLink'
-import DeleteContentModal from '../modals/DeleteContent'
+import CopyLinkModal from "../modals/CopyLink";
+import DeleteContentModal from "../modals/DeleteContent";
 
 // eslint-disable-next-line react/display-name
 const MyLink = forwardRef((props, ref) => {
-    let { href, children, ...rest } = props
+    let { href, children, ...rest } = props;
     return (
         <Link href={href}>
             <a ref={ref} {...rest}>
                 {children}
             </a>
         </Link>
-    )
-})
+    );
+});
 
-
-export default function PublicationOptionsButton({ publicationId, publishedAt }) {
-    const [copyLinkModalOpen, setCopyLinkModalOpen] = useState(false)
-    const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+export default function PublicationOptionsButton({
+    publicationId,
+    publishedAt,
+}) {
+    const [copyLinkModalOpen, setCopyLinkModalOpen] = useState(false);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
     const handleCopyLink = () => {
-        navigator.clipboard.writeText(`https://apprendamos.com/p/${publicationId}`)
-        setCopyLinkModalOpen(true)
-    }
+        navigator.clipboard.writeText(
+            `https://apprendamos.com/p/${publicationId}`
+        );
+        setCopyLinkModalOpen(true);
+    };
 
     const handleDelete = () => {
-        setDeleteModalOpen(true)
-    }
+        setDeleteModalOpen(true);
+    };
 
     return (
         <>
-            <DeleteContentModal isOpen={deleteModalOpen} setIsOpen={setDeleteModalOpen} publicationId={publicationId} />
-            <CopyLinkModal isOpen={copyLinkModalOpen} setIsOpen={setCopyLinkModalOpen} />
-            <div className="w-16 text-right">
+            <DeleteContentModal
+                isOpen={deleteModalOpen}
+                setIsOpen={setDeleteModalOpen}
+                publicationId={publicationId}
+            />
+            <CopyLinkModal
+                isOpen={copyLinkModalOpen}
+                setIsOpen={setCopyLinkModalOpen}
+            />
+            <div className="w-32 text-right">
                 <Menu as="div" className="relative inline-block text-left">
                     <div>
                         <Menu.Button className="inline-flex w-full justify-center rounded-md py-2 text-sm font-medium hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
@@ -65,8 +76,11 @@ export default function PublicationOptionsButton({ publicationId, publishedAt })
                                     {({ active }) => (
                                         <MyLink href={`/p/${publicationId}`}>
                                             <button
-                                                className={`${active ? 'bg-blue-200 text-blue-500' : 'text-gray-900'
-                                                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                                className={`${
+                                                    active
+                                                        ? "bg-blue-200 text-blue-500"
+                                                        : "text-gray-900"
+                                                } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                             >
                                                 {active ? (
                                                     <EditActiveIcon
@@ -90,8 +104,11 @@ export default function PublicationOptionsButton({ publicationId, publishedAt })
                                     {({ active }) => (
                                         <button
                                             onClick={handleCopyLink}
-                                            className={`${active ? 'bg-blue-200 text-blue-500' : 'text-gray-900'
-                                                } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                            className={`${
+                                                active
+                                                    ? "bg-blue-200 text-blue-500"
+                                                    : "text-gray-900"
+                                            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                         >
                                             {active ? (
                                                 <ArchiveActiveIcon
@@ -112,11 +129,15 @@ export default function PublicationOptionsButton({ publicationId, publishedAt })
                             <div className="px-1 py-1">
                                 <Menu.Item>
                                     {({ active }) => (
-                                        <MyLink href={`/p/${publicationId}/update`}>
-
+                                        <MyLink
+                                            href={`/p/${publicationId}/update`}
+                                        >
                                             <button
-                                                className={`${active ? 'bg-blue-200 text-blue-500' : 'text-gray-900'
-                                                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                                className={`${
+                                                    active
+                                                        ? "bg-blue-200 text-blue-500"
+                                                        : "text-gray-900"
+                                                } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                             >
                                                 {active ? (
                                                     <EditActiveIcon
@@ -138,8 +159,11 @@ export default function PublicationOptionsButton({ publicationId, publishedAt })
                                     {({ active }) => (
                                         <button
                                             onClick={handleDelete}
-                                            className={`${active ? 'bg-red-300 text-red-500' : 'text-red-500'
-                                                } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                            className={`${
+                                                active
+                                                    ? "bg-red-300 text-red-500"
+                                                    : "text-red-500"
+                                            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                         >
                                             {active ? (
                                                 <DeleteActiveIcon
@@ -162,7 +186,7 @@ export default function PublicationOptionsButton({ publicationId, publishedAt })
                 </Menu>
             </div>
         </>
-    )
+    );
 }
 
 function EditInactiveIcon(props) {
@@ -179,7 +203,7 @@ function EditInactiveIcon(props) {
                 strokeWidth="2"
             />
         </svg>
-    )
+    );
 }
 
 function EditActiveIcon(props) {
@@ -197,7 +221,7 @@ function EditActiveIcon(props) {
                 strokeWidth="2"
             />
         </svg>
-    )
+    );
 }
 
 function ArchiveInactiveIcon(props) {
@@ -226,7 +250,7 @@ function ArchiveInactiveIcon(props) {
             />
             <path d="M8 12H12" stroke="#3B82F6" strokeWidth="2" />
         </svg>
-    )
+    );
 }
 
 function ArchiveActiveIcon(props) {
@@ -257,7 +281,7 @@ function ArchiveActiveIcon(props) {
             />
             <path d="M8 12H12" stroke="#3B82F6" strokeWidth="2" />
         </svg>
-    )
+    );
 }
 
 function DeleteInactiveIcon(props) {
@@ -279,7 +303,7 @@ function DeleteInactiveIcon(props) {
             <path d="M3 6H17" stroke="#f87171" strokeWidth="2" />
             <path d="M8 6V4H12V6" stroke="#f87171" strokeWidth="2" />
         </svg>
-    )
+    );
 }
 
 function DeleteActiveIcon(props) {
@@ -302,5 +326,5 @@ function DeleteActiveIcon(props) {
             <path d="M3 6H17" stroke="#f87171" strokeWidth="2" />
             <path d="M8 6V4H12V6" stroke="#f87171" strokeWidth="2" />
         </svg>
-    )
+    );
 }

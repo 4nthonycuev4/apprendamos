@@ -1,38 +1,44 @@
-import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useState } from 'react'
-import { useRouter } from 'next/router';
-import { useUser } from '@auth0/nextjs-auth0';
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment, useState } from "react";
+import { useRouter } from "next/router";
+import { useUser } from "@auth0/nextjs-auth0";
 
 export default function DeleteContentModal({ isOpen, setIsOpen, contentId }) {
     const router = useRouter();
     const { user } = useUser();
 
-    const [isDeleting, setIsDeleting] = useState(false)
+    const [isDeleting, setIsDeleting] = useState(false);
 
-    const handleCancel = () => setIsOpen(false)
+    const handleCancel = () => setIsOpen(false);
     const handleDelete = async () => {
-        setIsOpen(false)
-        setIsDeleting(true)
+        setIsOpen(false);
+        setIsDeleting(true);
         const deleted = await fetch(`/api/${contentId}`, {
-            method: 'DELETE',
+            method: "DELETE",
             headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(res => res.json()).catch(err => console.log(err))
+                "Content-Type": "application/json",
+            },
+        })
+            .then((res) => res.json())
+            .catch((err) => console.log(err));
 
         if (deleted?.status === "done") {
-            router.push('/' + user.username)
+            router.push("/" + user.username);
         }
 
-        setIsDeleting(false)
-        setIsOpen(false)
-        console.log('ok')
-    }
+        setIsDeleting(false);
+        setIsOpen(false);
+        console.log("ok");
+    };
 
     return (
         <>
             <Transition appear show={isDeleting} as={Fragment}>
-                <Dialog as="div" className="relative z-10" onClose={() => setIsDeleting(false)}>
+                <Dialog
+                    as="div"
+                    className="relative z-10"
+                    onClose={() => setIsDeleting(false)}
+                >
                     <Transition.Child
                         as={Fragment}
                         enter="ease-out duration-300"
@@ -65,7 +71,8 @@ export default function DeleteContentModal({ isOpen, setIsOpen, contentId }) {
                                     </Dialog.Title>
                                     <div className="mt-2">
                                         <p className="text-sm text-gray-500">
-                                            Te recomendamos que guardes tu trabajo antes de eliminarlo.
+                                            Te recomendamos que guardes tu
+                                            trabajo antes de eliminarlo.
                                         </p>
                                     </div>
                                 </Dialog.Panel>
@@ -76,7 +83,11 @@ export default function DeleteContentModal({ isOpen, setIsOpen, contentId }) {
             </Transition>
 
             <Transition appear show={isOpen} as={Fragment}>
-                <Dialog as="div" className="relative z-10" onClose={handleCancel}>
+                <Dialog
+                    as="div"
+                    className="relative z-10"
+                    onClose={handleCancel}
+                >
                     <Transition.Child
                         as={Fragment}
                         enter="ease-out duration-300"
@@ -101,16 +112,18 @@ export default function DeleteContentModal({ isOpen, setIsOpen, contentId }) {
                                 leaveTo="opacity-0 scale-95"
                             >
                                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all">
-                                    <div className='p-6 pb-0'>
+                                    <div className="p-6 pb-0">
                                         <Dialog.Title
                                             as="h3"
                                             className="text-lg font-medium leading-6 text-gray-900"
                                         >
-                                            ¿Estás seguro de que deseas eliminar este contenido?
+                                            ¿Estás seguro de que deseas eliminar
+                                            este contenido?
                                         </Dialog.Title>
                                         <div className="mt-2">
                                             <p className="text-sm text-gray-500">
-                                                Una vez eliminado, no podrás recuperarlo.
+                                                Una vez eliminado, no podrás
+                                                recuperarlo.
                                             </p>
                                         </div>
                                     </div>
@@ -142,5 +155,5 @@ export default function DeleteContentModal({ isOpen, setIsOpen, contentId }) {
                 </Dialog>
             </Transition>
         </>
-    )
+    );
 }

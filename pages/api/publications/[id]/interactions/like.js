@@ -1,7 +1,6 @@
 import { getAccessToken, withApiAuthRequired } from "@auth0/nextjs-auth0";
 import FaunaClient from "../../../../../fauna";
 
-
 const LikePublicationAPIPage = async (req, res) => {
     try {
         const { accessToken } = await getAccessToken(req, res);
@@ -16,6 +15,6 @@ const LikePublicationAPIPage = async (req, res) => {
         console.log(error);
         res.status(500).json({ error });
     }
-}
+};
 
 export default withApiAuthRequired(LikePublicationAPIPage);

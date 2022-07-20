@@ -3,9 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import FollowButton from "../../buttons/Follow";
-
-const PartialAuthorCard = ({ username, name, picture, about = "Marco Antonio Muñiz Rivera, más conocido cómo Marc Anthony, es un cantautor y actor puertorriqueño-estadounidense, cuyos temas van desde la salsa, pasando por el bolero, la balada y el pop.", isViewer }) => {
+const PartialAuthorCard = ({
+    username,
+    name,
+    picture,
+    about = "Marco Antonio Muñiz Rivera, más conocido cómo Marc Anthony, es un cantautor y actor puertorriqueño-estadounidense, cuyos temas van desde la salsa, pasando por el bolero, la balada y el pop.",
+    isViewer,
+}) => {
     return (
         <div>
             <div className="flex items-center">
@@ -24,7 +28,9 @@ const PartialAuthorCard = ({ username, name, picture, about = "Marco Antonio Mu�
                 <div>
                     <Link href={`/@${username}`}>
                         <a>
-                            <h1 className="font-semibold text-sm -mb-1">{name}</h1>
+                            <h1 className="font-semibold text-sm -mb-1">
+                                {name}
+                            </h1>
                             <h1 className="font-normal text-sm dark:text-gray-300">{`@${username}`}</h1>
                         </a>
                     </Link>
@@ -32,7 +38,7 @@ const PartialAuthorCard = ({ username, name, picture, about = "Marco Antonio Mu�
             </div>
             <p>{about}</p>
         </div>
-    )
+    );
 };
 
 export default PartialAuthorCard;

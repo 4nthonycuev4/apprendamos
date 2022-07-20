@@ -15,7 +15,7 @@ export default function FaunaToJSON(obj) {
             }
             return {
                 data: FaunaToJSON(obj.data),
-            }
+            };
         }
 
         if (obj.ref && obj.data) {
@@ -35,13 +35,12 @@ export default function FaunaToJSON(obj) {
 
         Object.keys(obj).forEach((k) => {
             if (k === "data") {
-                const d = obj[k]
-                delete obj.data
+                const d = obj[k];
+                delete obj.data;
 
-                Object.keys(d).forEach(dataKey => {
-                    obj[dataKey] = FaunaToJSON(d[dataKey])
-                })
-
+                Object.keys(d).forEach((dataKey) => {
+                    obj[dataKey] = FaunaToJSON(d[dataKey]);
+                });
             } else if (obj[k] === null || obj[k] === undefined) {
                 delete obj[k];
             } else {

@@ -1,51 +1,57 @@
 CreateIndex({
-  name: "comments_sorted_created",
-  source: Collection("comments"),
-  terms: [
-    {
-      field: ["ref"],
-    },
-  ],
-  values: [
-    {
-      field: ["data", "created"],
-      reverse: true,
-    },
-    {
-      field: ["ref"],
-    },
-  ],
-  serialized: true
-})
+    name: "comments_sorted_created",
+    source: Collection("comments"),
+    terms: [
+        {
+            field: ["ref"],
+        },
+    ],
+    values: [
+        {
+            field: ["data", "created"],
+            reverse: true,
+        },
+        {
+            field: ["ref"],
+        },
+    ],
+    serialized: true,
+});
 
 CreateIndex({
-  name: "publications_sorted_created",
-  source: {
-    collection: [Collection("articles"), Collection("memoramas"), Collection("questions")],
-  },
-  terms: [
-    {
-      field: ["ref"],
+    name: "publications_sorted_created",
+    source: {
+        collection: [
+            Collection("articles"),
+            Collection("memoramas"),
+            Collection("questions"),
+        ],
     },
-  ],
-  values: [
-    {
-      field: ["data", "createdAt"],
-      reverse: true,
-    },
-    {
-      field: ["ref"],
-    },
-  ],
-  serialized: true
-})
+    terms: [
+        {
+            field: ["ref"],
+        },
+    ],
+    values: [
+        {
+            field: ["data", "createdAt"],
+            reverse: true,
+        },
+        {
+            field: ["ref"],
+        },
+    ],
+    serialized: true,
+});
 
-CreateIndex(
-  {
+CreateIndex({
     name: "all_publications",
     source: {
-      collection: [Collection("articles"), Collection("memoramas"), Collection("questions")],
+        collection: [
+            Collection("articles"),
+            Collection("memoramas"),
+            Collection("questions"),
+        ],
     },
     serialized: true,
-  }
-)
+});

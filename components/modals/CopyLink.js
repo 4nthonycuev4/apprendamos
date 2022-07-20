@@ -1,12 +1,16 @@
-import { Dialog, Transition } from '@headlessui/react'
-import { Fragment } from 'react'
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment } from "react";
 
 export default function CopyLinkModal({ isOpen, setIsOpen }) {
-    const handleClose = () => setIsOpen(false)
+    const handleClose = () => setIsOpen(false);
     return (
         <>
             <Transition appear show={isOpen} as={Fragment}>
-                <Dialog as="div" className="relative z-10" onClose={handleClose}>
+                <Dialog
+                    as="div"
+                    className="relative z-10"
+                    onClose={handleClose}
+                >
                     <Transition.Child
                         as={Fragment}
                         enter="ease-out duration-300"
@@ -39,7 +43,9 @@ export default function CopyLinkModal({ isOpen, setIsOpen }) {
                                     </Dialog.Title>
                                     <div className="mt-2">
                                         <p className="text-sm text-gray-500">
-                                            El enlace fue copiado al portapales y está listo para que lo compartas con quien quieras ;).
+                                            El enlace fue copiado al portapales
+                                            y está listo para que lo compartas
+                                            con quien quieras ;).
                                         </p>
                                     </div>
 
@@ -59,5 +65,5 @@ export default function CopyLinkModal({ isOpen, setIsOpen }) {
                 </Dialog>
             </Transition>
         </>
-    )
+    );
 }

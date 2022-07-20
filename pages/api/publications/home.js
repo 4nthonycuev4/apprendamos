@@ -1,12 +1,8 @@
 /** @format */
 
-import {
-    getAccessToken,
-    withApiAuthRequired,
-} from "@auth0/nextjs-auth0";
+import { getAccessToken, withApiAuthRequired } from "@auth0/nextjs-auth0";
 
 import FaunaClient from "../../../fauna";
-
 
 export default withApiAuthRequired(async function handlePublications(req, res) {
     try {
@@ -24,11 +20,11 @@ export default withApiAuthRequired(async function handlePublications(req, res) {
             res.status(200).json(createdPublicationId);
             return;
         } else if (req.method === "GET") {
-            const afterId = req.query && req.query.afterId
-            const publications = await client.getPublications(afterId);
+            const afterId = req.query && req.query.afterId;
+            const publications = await client.getHomePublications(afterId);
             res.status(200).json(publications);
             return;
-        };
+        }
     } catch (error) {
         console.log("error", error);
         res.status(error.status || 500).json(error);

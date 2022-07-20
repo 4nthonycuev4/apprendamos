@@ -12,6 +12,6 @@ const TrendingPublications = async (req, res) => {
         console.log("error", error);
         res.status(error.status || 500).json({ error });
     }
-}
+};
 
 export default TrendingPublications;

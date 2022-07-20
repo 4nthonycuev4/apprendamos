@@ -1,8 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0";
-import Head from 'next/head';
-
+import Head from "next/head";
 
 const LandingPage = () => {
     const { user, loading } = useUser();
@@ -20,38 +19,45 @@ const LandingPage = () => {
                     <Image
                         src="/b-01.svg"
                         alt="oops..."
-                        layout='fill'
-                        objectFit='contain'
+                        layout="fill"
+                        objectFit="contain"
                         quality={80}
                         priority
                     />
                 </div>
                 <div className="justify-center">
-                    {!loading && user ?
+                    {!loading && user ? (
                         <Link href="/home">
                             <a>
                                 <button className="px-4 h-10 rounded bg-blue-700 text-gray-100 border-2 border-blue-700">
-                                    <span className="font-bold">¡Comencemos!</span>
+                                    <span className="font-bold">
+                                        ¡Comencemos!
+                                    </span>
                                 </button>
                             </a>
                         </Link>
-                        :
+                    ) : (
                         <>
                             <Link href="/api/auth/login">
                                 <a>
                                     <button className="mr-4 px-4 h-10 rounded text-blue-700 border-2 border-blue-700">
-                                        <span className="font-bold">Inicia sesión</span>
+                                        <span className="font-bold">
+                                            Inicia sesión
+                                        </span>
                                     </button>
                                 </a>
                             </Link>
                             <Link href="/trending">
                                 <a>
                                     <button className="px-4 h-10 rounded bg-blue-700 text-gray-100 border-2 border-blue-700">
-                                        <span className="font-bold">¡Comencemos!</span>
+                                        <span className="font-bold">
+                                            ¡Comencemos!
+                                        </span>
                                     </button>
                                 </a>
                             </Link>
-                        </>}
+                        </>
+                    )}
                 </div>
             </div>
         </>

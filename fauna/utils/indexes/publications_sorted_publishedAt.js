@@ -15,5 +15,5 @@ CreateIndex({
             field: ["ref"],
         },
     ],
-    serialized: true
-})
+    serialized: true,
+});

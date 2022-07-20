@@ -1,8 +1,7 @@
-/** @format */
-import { useRouter } from "next/router";
+import Link from "next/link";
+import Image from "next/image";
 import { useUser } from "@auth0/nextjs-auth0";
 import {
-    LoginIcon,
     BookmarkIcon,
     SearchIcon,
     TrendingUpIcon,
@@ -10,10 +9,8 @@ import {
     HomeIcon,
     BellIcon,
     MailIcon,
-    CogIcon
+    CogIcon,
 } from "@heroicons/react/outline";
-import Link from "next/link";
-import Image from "next/image";
 
 const MobileNavbarAuth = ({ user }) => (
     <nav
@@ -80,15 +77,6 @@ const MobileNavbarAuth = ({ user }) => (
                 </div>
             </a>
         </Link>
-        {/* 
-    <Link href="/messages">
-      <a>
-        <div className="flex items-center">
-          <MailIcon className="h-6 w-6" />
-          <span>Mensajes</span>
-        </div>
-      </a>
-    </Link> */}
         <Link href="/settings/profile">
             <a>
                 <div className="flex items-center">
@@ -125,7 +113,9 @@ const MobileNavbarNoAuth = () => (
             <Link href="/">
                 <a>
                     <div className="flex items-center">
-                        <span className="font-bold hover:text-blue-700">app</span>
+                        <span className="font-bold hover:text-blue-700">
+                            app
+                        </span>
                     </div>
                 </a>
             </Link>
@@ -145,7 +135,6 @@ const MobileNavbarNoAuth = () => (
                 </div>
             </a>
         </Link>
-
     </nav>
 );
 

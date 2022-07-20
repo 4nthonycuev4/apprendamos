@@ -1,7 +1,7 @@
-import { Popover, Transition } from '@headlessui/react'
-import { InformationCircleIcon } from "@heroicons/react/outline"
-import Link from 'next/link'
-import { Fragment } from 'react'
+import { Popover, Transition } from "@headlessui/react";
+import { InformationCircleIcon } from "@heroicons/react/outline";
+import Link from "next/link";
+import { Fragment } from "react";
 
 export default function MDHelpPopover() {
     return (
@@ -24,45 +24,57 @@ export default function MDHelpPopover() {
                             <Popover.Panel className="absolute z-10 mt-3 w-screen max-w-sm -translate-x-2/3 transform px-4 sm:px-0 lg:max-w-xl">
                                 <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
                                     <div className="relative grid gap-4 bg-gray-700 text-gray-100 p-4 lg:grid-cols-2">
-                                        <div className='grid grid-cols-1 gap-3'>
-                                            <div className='border rounded py-1 px-4 hover:bg-gray-800'>
-                                                <h1 className='font-bold'>Cursiva</h1>
+                                        <div className="grid grid-cols-1 gap-3">
+                                            <div className="border rounded py-1 px-4 hover:bg-gray-800">
+                                                <h1 className="font-bold">
+                                                    Cursiva
+                                                </h1>
                                                 <p>*texto*</p>
                                             </div>
-                                            <div className='border rounded py-1 px-4 hover:bg-gray-800'>
-                                                <h1 className='font-bold'>Negritas</h1>
+                                            <div className="border rounded py-1 px-4 hover:bg-gray-800">
+                                                <h1 className="font-bold">
+                                                    Negritas
+                                                </h1>
                                                 <p>**texto**</p>
                                             </div>
-                                            <div className='border rounded py-1 px-4 hover:bg-gray-800'>
-                                                <h1 className='font-bold'>Títulos</h1>
+                                            <div className="border rounded py-1 px-4 hover:bg-gray-800">
+                                                <h1 className="font-bold">
+                                                    Títulos
+                                                </h1>
                                                 <p className="whitespace-pre">{`# Título muy grande\n## Título un poco más pequeño`}</p>
                                             </div>
                                         </div>
-                                        <div className='grid grid-cols-1 gap-2'>
-                                            <div className='border rounded py-1 px-4 hover:bg-gray-800'>
-                                                <h1 className='font-bold'>Ecuaciones</h1>
+                                        <div className="grid grid-cols-1 gap-2">
+                                            <div className="border rounded py-1 px-4 hover:bg-gray-800">
+                                                <h1 className="font-bold">
+                                                    Ecuaciones
+                                                </h1>
                                                 <p className="whitespace-pre">
                                                     {`$$\nx^2 -3x + 5 = y\n$$`}
                                                 </p>
                                             </div>
-                                            <div className='border rounded py-1 px-4 hover:bg-gray-800'>
-                                                <h1 className='font-bold'>Scripts</h1>
-                                                <p className='whitespace-pre'>
+                                            <div className="border rounded py-1 px-4 hover:bg-gray-800">
+                                                <h1 className="font-bold">
+                                                    Scripts
+                                                </h1>
+                                                <p className="whitespace-pre">
                                                     {`~~~py\nprint("Hello world!")\n~~~`}
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="bg-gray-600 p-4">
-                                        <Link href='/docs/markdown'>
+                                        <Link href="/docs/markdown">
                                             <a>
                                                 <span className="flex items-center">
                                                     <span className="font-bold text-gray-100">
-                                                        Seguir aprendiendo la sintaxis markdown
+                                                        Seguir aprendiendo la
+                                                        sintaxis markdown
                                                     </span>
                                                 </span>
                                                 <span className="block text-sm text-gray-100">
-                                                    Tablas, links, imágenes y más...
+                                                    Tablas, links, imágenes y
+                                                    más...
                                                 </span>
                                             </a>
                                         </Link>
@@ -74,5 +86,5 @@ export default function MDHelpPopover() {
                 )}
             </Popover>
         </div>
-    )
+    );
 }

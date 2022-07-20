@@ -4,9 +4,15 @@ import { CalendarIcon } from "@heroicons/react/solid";
 import moment from "moment";
 import Image from "next/image";
 
-import { AuthorStatsButtons } from "../../buttons/AuthorStats";
+import AuthorInteractions from "./../../AuthorInteractions";
 
-export const FullAuthorCard = ({ picture, username, name, stats, joinedAt, about }) => (
+export const FullAuthorCard = ({
+    picture,
+    username,
+    name,
+    joinedAt,
+    about,
+}) => (
     <div className="border-b border-gray-300 py-2 px-4 text-center dark:border-gray-500">
         <div className="flex relative h-20 w-20 rounded-full overflow-hidden border mx-auto">
             <Image
@@ -22,7 +28,7 @@ export const FullAuthorCard = ({ picture, username, name, stats, joinedAt, about
             <h1 className="text-xl font-bold">{name}</h1>
             <h1 className="text-md mb-2 font-normal">@{username}</h1>
         </div>
-        <AuthorStatsButtons originalStats={stats} username={username} />
+        <AuthorInteractions username={username} />
         <div className="itmes-center flex h-6 justify-center ">
             <div className="pt-[2px] pr-1">
                 <CalendarIcon className="h-5 w-5" />

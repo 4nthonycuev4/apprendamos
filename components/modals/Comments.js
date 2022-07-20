@@ -1,28 +1,38 @@
-import { useState, useEffect } from 'react'
-import Image from 'next/image';
-import useSWRInfinite from 'swr/infinite'
-import { useUser } from '@auth0/nextjs-auth0';
-import { PaperAirplaneIcon as PaperAirplaneIconOutline, AnnotationIcon as AnnotationIconOutline } from "@heroicons/react/outline";
-import { PaperAirplaneIcon as PaperAirplaneIconSolid, AnnotationIcon as AnnotationIconSolid } from "@heroicons/react/solid";
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import useSWRInfinite from "swr/infinite";
+import { useUser } from "@auth0/nextjs-auth0";
+import {
+    PaperAirplaneIcon as PaperAirplaneIconOutline,
+    AnnotationIcon as AnnotationIconOutline,
+} from "@heroicons/react/outline";
+import {
+    PaperAirplaneIcon as PaperAirplaneIconSolid,
+    AnnotationIcon as AnnotationIconSolid,
+} from "@heroicons/react/solid";
 
 import Comment from "../items/Comment";
-import BaseModal from './Base';
+import BaseModal from "./Base";
 
-
-export default function CommentsModal({ contentId, viewerComment, commentCount }) {
-    const [commentCountUpdated, setCommentCountUpdated] = useState(commentCount);
+export default function CommentsModal({
+    contentId,
+    viewerComment,
+    commentCount,
+}) {
+    const [commentCountUpdated, setCommentCountUpdated] =
+        useState(commentCount);
     const { user } = useUser();
     const htmlId = `commentInput${contentId}`;
 
     const [isOpen, setIsOpen] = useState(false);
-    const handleOpen = () => setIsOpen(true)
+    const handleOpen = () => setIsOpen(true);
 
     const getKey = (pageIndex, previousPageData) => {
-        if (previousPageData && !previousPageData.data) return null
-        if (pageIndex === 0) return `/api/${contentId}/comments`
-        return `/api/${contentId}/comments?afterId=${previousPageData.afterRef.id}`
-    }
-    const { data, size, setSize, error, mutate } = useSWRInfinite(getKey)
+        if (previousPageData && !previousPageData.data) return null;
+        if (pageIndex === 0) return `/api/${contentId}/comments`;
+        return `/api/${contentId}/comments?afterId=${previousPageData.afterRef.id}`;
+    };
+    const { data, size, setSize, error, mutate } = useSWRInfinite(getKey);
 
     const [isCreatingComment, setIsCreatingComment] = useState(false);
     const [createCommentError, setCreateCommentError] = useState(null);
@@ -41,9 +51,13 @@ export default function CommentsModal({ contentId, viewerComment, commentCount }
         const message = document.getElementById(htmlId).innerText;
 
         if (message.length < 5) {
-            setCreateCommentError("El comentario debe tener al menos 5 caracteres");
+            setCreateCommentError(
+                "El comentario debe tener al menos 5 caracteres"
+            );
         } else if (message.length > 280) {
-            setCreateCommentError("El comentario no debe tener más de 280 caracteres");
+            setCreateCommentError(
+                "El comentario no debe tener más de 280 caracteres"
+            );
         } else {
             document.getElementById(htmlId).innerText = "";
             createComment(message);
@@ -62,7 +76,7 @@ export default function CommentsModal({ contentId, viewerComment, commentCount }
                 message,
             }),
         }).then((res) => res.json());
-        mutate()
+        mutate();
         setCommentCountUpdated(commentCount + 1);
     };
 
@@ -73,18 +87,25 @@ export default function CommentsModal({ contentId, viewerComment, commentCount }
                     {viewerComment ? (
                         <AnnotationIconSolid className="w-5" />
                     ) : (
-                        <AnnotationIconOutline strokeWidth={1.5} className="w-5" />
+                        <AnnotationIconOutline
+                            strokeWidth={1.5}
+                            className="w-5"
+                        />
                     )}
                 </button>
                 <span>{commentCountUpdated}</span>
             </div>
 
-            <BaseModal isOpen={isOpen} setIsOpen={setIsOpen} title="Comentarios">
+            <BaseModal
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+                title="Comentarios"
+            >
                 <div className="flex w-full items-start mb-4">
                     <div className="flex-none w-max mr-4">
                         <div className="relative h-10 w-10">
                             <Image
-                                src={user?.picture || '/ru1.png'}
+                                src={user?.picture || "/ru1.png"}
                                 alt="Picture of the author"
                                 layout="fill"
                                 objectFit="fill"
@@ -131,21 +152,36 @@ export default function CommentsModal({ contentId, viewerComment, commentCount }
                     </div>
                 </div>
                 {createCommentError && (
-                    <div className="text-red-500 text-sm">{createCommentError}</div>
+                    <div className="text-red-500 text-sm">
+                        {createCommentError}
+                    </div>
                 )}
-                {
-                    error ? <div className="mx-6">Hubo un error :(</div> :
-                        !data ? <div className="mx-6">Cargando ...</div> : data[0].data.length < 1 ? <h1>Sin comentarios</h1> : (<>
-                            {data.map((page) => (
-                                page.data.map(item => <Comment key={item.id} {...item} />
-                                )))}
-                            {data.at(-1)?.afterRef && <div className="flex justify-center">
-                                <button className="w-32 h-8 bg-cyan-500 rounded text-white disabled:hidden" onClick={() => setSize(size + 1)}>
+                {error ? (
+                    <div className="mx-6">Hubo un error :(</div>
+                ) : !data ? (
+                    <div className="mx-6">Cargando ...</div>
+                ) : data[0].data.length < 1 ? (
+                    <h1>Sin comentarios</h1>
+                ) : (
+                    <>
+                        {data.map((page) =>
+                            page.data.map((item) => (
+                                <Comment key={item.id} {...item} />
+                            ))
+                        )}
+                        {data.at(-1)?.afterRef && (
+                            <div className="flex justify-center">
+                                <button
+                                    className="w-32 h-8 bg-cyan-500 rounded text-white disabled:hidden"
+                                    onClick={() => setSize(size + 1)}
+                                >
                                     Mostrar más
                                 </button>
-                            </div>}</>)
-                }
+                            </div>
+                        )}
+                    </>
+                )}
             </BaseModal>
         </>
-    )
+    );
 }

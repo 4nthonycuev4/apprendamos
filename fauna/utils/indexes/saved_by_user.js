@@ -10,7 +10,7 @@ CreateIndex({
         {
             field: ["data", "saved"],
             value: true,
-        }
+        },
     ],
     values: [
         {
@@ -19,7 +19,7 @@ CreateIndex({
         },
         {
             field: ["data", "publication"],
-        }
+        },
     ],
     serialized: true,
-}); 
+});

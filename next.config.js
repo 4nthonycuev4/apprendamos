@@ -1,8 +1,8 @@
 /** @format */
-const removeImports = require('next-remove-imports')();
+const removeImports = require("next-remove-imports")();
 
 module.exports = removeImports({
-  images: {
-    domains: ["res.cloudinary.com"],
-  },
+    images: {
+        domains: ["res.cloudinary.com"],
+    },
 });

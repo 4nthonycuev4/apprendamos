@@ -1,4 +1,4 @@
-import { query as q } from "faunadb"
+import { query as q } from "faunadb";
 const {
     Collection,
     CreateIndex,
@@ -10,28 +10,32 @@ const {
     NGram,
     LowerCase,
     Union,
-    ReplaceStrRegex, Casefold
+    ReplaceStrRegex,
+    Casefold,
 } = q;
 
 export function CreateSearchIndex() {
     return CreateIndex({
-        name: 'publications_by_trigram',
+        name: "publications_by_trigram",
         source: [
             {
-                collection: Collection('publications'),
+                collection: Collection("publications"),
                 fields: {
                     trigrams: Query(
                         Lambda(
-                            'publication',
+                            "publication",
                             Distinct(
                                 NGram(
                                     LowerCase(
                                         ReplaceStrRegex(
                                             Casefold(
-                                                Select(['data', 'body'], Var('publication')),
+                                                Select(
+                                                    ["data", "body"],
+                                                    Var("publication")
+                                                ),
                                                 "NFD"
                                             ),
-                                            '[\u0300-\u036f]',
+                                            "[\u0300-\u036f]",
                                             ""
                                         )
                                     ),
@@ -40,18 +44,16 @@ export function CreateSearchIndex() {
                                 )
                             )
                         )
-                    )
-                }
-            }
+                    ),
+                },
+            },
         ],
         terms: [
             {
-                binding: 'trigrams'
-            }
+                binding: "trigrams",
+            },
         ],
-        values: [
-            { field: ['ref'] }
-        ],
-        serialized: false
-    })
+        values: [{ field: ["ref"] }],
+        serialized: false,
+    });
 }
