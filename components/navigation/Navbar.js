@@ -58,11 +58,11 @@ const NavbarAuth = ({ user }) => (
                 </div>
             </a>
         </Link>
-        <Link href="/draft">
+        <Link href="/drafts">
             <a>
                 <div className="flex items-center justify-center xl:justify-start">
                     <PencilAltIcon className="h-6 w-6 xl:mr-4" />
-                    <span className="hidden xl:block">Crear</span>
+                    <span className="hidden xl:block">Drafts</span>
                 </div>
             </a>
         </Link>

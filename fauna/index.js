@@ -16,12 +16,10 @@ import { GetPublicationComments } from "./comments/read";
 
 import { CreateUser } from "./users/create";
 import {
-    GetPartialUser,
     GetSuggestedUsers,
     GetTrendingUsers,
     GetViewer,
     GetSingleUser,
-    GetFollowers,
     GetFollowingStatus,
 } from "./users/read";
 import { UpdateViewer } from "./users/update";
@@ -38,6 +36,16 @@ import GetPublicationStats from "./stats/publications";
 import GetAuthorStats from "./stats/authors";
 
 import GetNotifications from "./notifications/read";
+
+import {
+    GetViewerPublicationDrafts,
+    GetSinglePublicationDraft,
+    CreatePublicationDraft,
+    UpdatePublicationDraft,
+    PublishPublicationDraft,
+} from "./drafts";
+
+import { GetAuthorFollowers, GetAuthorFollowing } from "./authors";
 
 import FaunaToJSON from "./utils/FaunaToJSON";
 
@@ -232,16 +240,20 @@ export default class FaunaClient {
         const afterRef = afterId ? Ref(Collection("users"), afterId) : null;
         return this.client
             .query(GetSuggestedUsers(afterRef))
-            .then((res) => FaunaToJSON(res))
-            .catch((error) => {
-                console.log("error", error);
-            });
+            .then((res) => FaunaToJSON(res));
     }
 
-    async getFollowers(username, after) {
-        const afterRef = after && Ref(Collection("users"), after);
+    async getAuthorFollowers(username, afterId) {
+        const afterRef = afterId && Ref(Collection("users"), afterId);
         return this.client
-            .query(GetFollowers(username, afterRef))
+            .query(GetAuthorFollowers(username, afterRef))
+            .then((res) => FaunaToJSON(res));
+    }
+
+    async getAuthorFollowing(username, afterId) {
+        const afterRef = afterId && Ref(Collection("users"), afterId);
+        return this.client
+            .query(GetAuthorFollowing(username, afterRef))
             .then((res) => FaunaToJSON(res));
     }
 
@@ -326,17 +338,58 @@ export default class FaunaClient {
             .then((res) => FaunaToJSON(res));
     }
 
-    // PUBLICATIONS CRUD
-
-    async createPublication(body) {
+    // PUBLICATION DRAFTS CRUD
+    async createPublicationDraft(body) {
         return this.client
-            .query(CreatePublication(body))
+            .query(CreatePublicationDraft(body))
             .then((res) => FaunaToJSON(res));
     }
+
+    async updatePublicationDraft(id, body) {
+        return this.client
+            .query(
+                UpdatePublicationDraft(
+                    Ref(Collection("publications"), id),
+                    body
+                )
+            )
+            .then((res) => FaunaToJSON(res));
+    }
+
+    async getSinglePublicationDraft(id) {
+        return this.client
+            .query(
+                GetSinglePublicationDraft(Ref(Collection("publications"), id))
+            )
+            .then((res) => FaunaToJSON(res));
+    }
+
+    async getViewerPublicationDrafts(afterId) {
+        const afterRef = afterId && Ref(Collection("publications"), afterId);
+        return this.client
+            .query(GetViewerPublicationDrafts(afterRef))
+            .then((res) => FaunaToJSON(res));
+    }
+
+    async publishPublicationDraft(id) {
+        return this.client
+            .query(PublishPublicationDraft(Ref(Collection("publications"), id)))
+            .then((res) => FaunaToJSON(res));
+    }
+
+    // PUBLICATIONS CRUD
 
     async getSinglePublication(id) {
         return this.client
             .query(GetSinglePublication(Ref(Collection("publications"), id)))
+            .then((res) => FaunaToJSON(res));
+    }
+
+    async getSinglePublicationDraft(id) {
+        return this.client
+            .query(
+                GetSinglePublicationDraft(Ref(Collection("publications"), id))
+            )
             .then((res) => FaunaToJSON(res));
     }
 
@@ -367,47 +420,6 @@ export default class FaunaClient {
         return this.client
             .query(GetSavedPublications(afterRef))
             .then((res) => FaunaToJSON(res));
-    }
-
-    async getPublicationByTag(tag_parsed) {
-        return this.client
-            .query(
-                query.Map(
-                    Paginate(
-                        Join(
-                            Match(Index("publication_by_tag"), tag_parsed),
-                            Index("publication_sorted_popularity")
-                        )
-                    ),
-                    Lambda(
-                        [
-                            "score",
-                            "ref",
-                            "title",
-                            "body",
-                            "created",
-                            "authorRef",
-                        ],
-                        Let(
-                            {
-                                author: GetPartialUser(Var("authorRef")),
-                            },
-                            {
-                                ref: Var("ref"),
-                                title: Var("title"),
-                                body: Var("body"),
-                                created: Var("created"),
-                                author: Var("author"),
-                            }
-                        )
-                    )
-                )
-            )
-            .then((res) => FaunaToJSON(res))
-            .catch((error) => {
-                console.log("error", error);
-                return null;
-            });
     }
 
     async updatePublication(id, body, isDraft, isQuestion) {

@@ -5,18 +5,18 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import BaseModal from "./Base";
 import BasicAuthorCard from "./../items/AuthorCard/Basic";
 
-export default function FollowersModal({ username, followerCount }) {
+export default function FollowingModal({ username, followingCount }) {
     const [isOpen, setIsOpen] = useState(false);
     const handleOpen = () => setIsOpen(true);
 
     const getKey = (pageIndex, previousPageData) => {
         if (previousPageData && !previousPageData.data) return null;
-        if (pageIndex === 0) return `/api/authors/${username}/followers`;
-        return `/api/authors/${username}/followers?afterId=${previousPageData.afterId}`;
+        if (pageIndex === 0) return `/api/authors/${username}/following`;
+        return `/api/authors/${username}/following?afterId=${previousPageData.afterId}`;
     };
     const { data, size, setSize } = useSWRInfinite(getKey);
 
-    const followers =
+    const following =
         data && data[0].data
             ? [].concat(...data?.map((page) => [].concat(...page?.data)))
             : [];
@@ -28,7 +28,7 @@ export default function FollowersModal({ username, followerCount }) {
                 onClick={handleOpen}
                 className="flex space-x-1"
             >
-                <span className="font-black">{followerCount}</span>
+                <span className="font-black">{followingCount}</span>
                 <span>Seguidores</span>
             </button>
             <BaseModal
@@ -37,7 +37,7 @@ export default function FollowersModal({ username, followerCount }) {
                 title={`Seguidores de @${username}`}
             >
                 <InfiniteScroll
-                    dataLength={followers.length}
+                    dataLength={following.length}
                     next={() => setSize(size + 1)}
                     hasMore={data && Boolean(data[data.length - 1].afterId)}
                     loader={<h1>Loading...</h1>}

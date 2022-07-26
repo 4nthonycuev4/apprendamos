@@ -3,6 +3,7 @@ import useSWR from "swr";
 import { useUser } from "@auth0/nextjs-auth0";
 
 import FollowersModal from "./modals/Followers";
+import FollowingModal from "./modals/Following";
 
 const AuthorInteractions = ({ username }) => {
     const { user, error } = useUser();
@@ -44,12 +45,10 @@ const AuthorInteractions = ({ username }) => {
                     username={username}
                     followerCount={(stats && stats.followerCount) || 0}
                 />
-                <div className="flex space-x-1">
-                    <span className="font-black">
-                        {(stats && stats.followingCount) || 0}
-                    </span>
-                    <span>Siguiendo</span>
-                </div>
+                <FollowingModal
+                    username={username}
+                    followingCount={(stats && stats.followingCount) || 0}
+                />
             </div>
             {isAuthenticated &&
                 (isAuthor ? (

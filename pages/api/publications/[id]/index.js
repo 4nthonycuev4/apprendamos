@@ -25,6 +25,9 @@ export default withApiAuthRequired(async function handleSingleContentRequest(
                 isQuestion
             );
             return res.status(200).json(updated);
+        } else if (req.method === "GET") {
+            const publication = await client.getPublication(id);
+            return res.status(200).json(publication);
         }
 
         if (response.error) {

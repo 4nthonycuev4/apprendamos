@@ -16,7 +16,7 @@ const PanelAuth = () => {
         <div
             className="
                 flex flex-col
-				space-y-6
+				space-y-4
                 font-bold text-xl"
         >
             <h1>Usuarios sugeridos</h1>

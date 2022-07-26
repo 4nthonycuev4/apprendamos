@@ -6,7 +6,7 @@ const UserPublicationsAPIPage = async (req, res) => {
     try {
         const client = new FaunaClient();
 
-        let { username } = req.query;
+        const { username } = req.query;
         const afterId = req.query && req.query.afterId;
 
         const content = await client.getAuthorPublications(username, afterId);

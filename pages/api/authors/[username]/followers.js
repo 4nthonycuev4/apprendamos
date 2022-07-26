@@ -1,25 +1,15 @@
 /** @format */
-import { getAccessToken } from "@auth0/nextjs-auth0";
 
-import FaunaClient from "../../../../fauna";
+import FaunaClient from "fauna";
 
-export default async function createContent(req, res) {
+const AuthorFollowersAPI = async (req, res) => {
     try {
-        const { accessToken } = await getAccessToken(req, res).catch((e) => {
-            return {};
-        });
+        const client = new FaunaClient();
 
-        const client = new FaunaClient(accessToken);
+        const { username } = req.query;
+        const afterId = req.query && req.query.afterId;
 
-        let { username } = req.query;
-
-        const after = req.query &&
-            req.query.after && {
-                collection: req.query.after.split("/")[0],
-                id: req.query.after.split("/")[1],
-            };
-
-        const content = await client.getFollowers(username, after);
+        const content = await client.getAuthorFollowers(username, afterId);
 
         res.status(200).json(content);
     } catch (error) {
@@ -29,4 +19,6 @@ export default async function createContent(req, res) {
             errorMessage: error.message,
         });
     }
-}
+};
+
+export default AuthorFollowersAPI;

@@ -6,13 +6,13 @@ import { SWRConfig } from "swr";
 
 import "moment/locale/es";
 
-import useDarkMode from "../hooks/useDarkMode";
+import useDarkMode from "hooks/useDarkMode";
 
 import "../styles/app.css";
-import Navbar from "./../components/navigation/Navbar";
-import GeneralNavbar from "../components/navigation/GeneralNavbar";
-import Panel from "./../components/navigation/Panel";
-import MobileNavbar from "./../components/navigation/MobileNavbar";
+import Navbar from "components/navigation/Navbar";
+import GeneralNavbar from "components/navigation/GeneralNavbar";
+import Panel from "components/navigation/Panel";
+import MobileNavbar from "components/navigation/MobileNavbar";
 
 moment.updateLocale("es", {
     relativeTime: {
@@ -47,32 +47,32 @@ const ComponentHandler = ({ Component, pageProps }) => {
     ) {
         return (
             <>
-                <div className="hidden sm:block xl:grow xl:max-w-xs px-2 sticky h-screen top-0 xl:overflow-auto">
+                <div className="hidden sm:flex xl:grow xl:max-w-[18rem] sticky h-screen top-0 xl:overflow-auto">
                     <Navbar />
                 </div>
                 <main
                     id="main"
-                    className="w-full flex flex-col md:grow md:max-w-xl sm:border-x min-h-[150vh]"
+                    className="w-full flex flex-col md:grow md:max-w-[36rem] sm:border-x min-h-[101vh]"
                 >
                     <Component {...pageProps} />
                     <div className="grow" />
                     <MobileNavbar />
                 </main>
-                <div className="hidden lg:block grow max-w-xs px-4 sticky h-screen top-0 overflow-auto">
+                <div className="hidden lg:block grow max-w-[18rem] sticky h-screen top-0 overflow-auto pl-4">
                     <Panel />
                 </div>
             </>
         );
     }
-    if (route === "/more" || route === "/draft") {
+    if (route === "/more" || route === "/drafts" || route === "/drafts/[id]") {
         return (
             <>
-                <div className="hidden sm:block xl:grow xl:max-w-xs px-2 xl:px-4 sticky h-screen top-0 xl:overflow-auto">
+                <div className="hidden sm:block xl:grow xl:max-w-[18rem] sticky h-screen top-0 xl:overflow-auto">
                     <Navbar />
                 </div>
                 <main
                     id="main"
-                    className="flex flex-col md:grow md:max-w-4xl border-x px-2 min-h-[150vh]"
+                    className="w-full flex flex-col md:grow md:max-w-[54rem] border-x min-h-[101vh]"
                 >
                     <Component {...pageProps} />
                     <div className="grow" />

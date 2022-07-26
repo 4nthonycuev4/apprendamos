@@ -56,7 +56,11 @@ const CodeComponent = ({ inline, children = [], className, ...props }) => {
     );
 };
 
-export const PublicationForm = ({ content, setContent, setSaved }) => (
+export const PublicationForm = ({
+    content,
+    setContent,
+    setSaved = (x) => x,
+}) => (
     <MDEditor
         value={content}
         onChange={(v, e) => {
@@ -68,6 +72,7 @@ export const PublicationForm = ({ content, setContent, setSaved }) => (
                 code: CodeComponent,
             },
         }}
+        height={600}
     />
 );
 

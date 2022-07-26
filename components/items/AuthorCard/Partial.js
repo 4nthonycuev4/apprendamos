@@ -3,13 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const PartialAuthorCard = ({
-    username,
-    name,
-    picture,
-    about = "Marco Antonio Muñiz Rivera, más conocido cómo Marc Anthony, es un cantautor y actor puertorriqueño-estadounidense, cuyos temas van desde la salsa, pasando por el bolero, la balada y el pop.",
-    isViewer,
-}) => {
+const PartialAuthorCard = ({ username, name, picture }) => {
     return (
         <div>
             <div className="flex items-center">
