@@ -2,56 +2,35 @@
 
 import { Divide, query } from "faunadb";
 
-import { GetPartialUser } from "../users/read";
+import { GetPartialAuthor } from "../authors/read";
 
-const {
-    Call,
-    Create,
-    Collection,
-    CurrentIdentity,
-    Paginate,
-    Documents,
-    Lambda,
-    Get,
-    Var,
-    Select,
-    Let,
-    Match,
-    Index,
-    Join,
-    If,
-    Exists,
-    Update,
-    Do,
-    Add,
-    Subtract,
-    Not,
-    Contains,
-    Abort,
-    Now,
-    Map,
-} = query;
+const { Paginate, Lambda, Get, Var, Select, Let, Match, Index, Join, Map } =
+    query;
 
 function GetComment(ref) {
     return Let(
         {
             comment: Get(ref),
-            author: GetPartialUser(Select(["data", "author"], Var("comment"))),
+            author: GetPartialAuthor(
+                Select(["data", "author"], Var("comment"))
+            ),
         },
         {
             id: ref,
-            created: Select(["data", "created"], Var("comment")),
-            updated: Select(["data", "updated"], Var("comment"), false),
-            message: Select(["data", "message"], Var("comment")),
+            createdAt: Select(["data", "createdAt"], Var("comment")),
+            updatedAt: Select(["data", "updatedAt"], Var("comment"), null),
+            body: Select(["data", "body"], Var("comment")),
             author: Var("author"),
             stats: {
                 likeCount: Select(
                     ["data", "stats", "likeCount"],
-                    Var("comment")
+                    Var("comment"),
+                    null
                 ),
-                commentCount: Select(
-                    ["data", "stats", "commentCount"],
-                    Var("comment")
+                replyCount: Select(
+                    ["data", "stats", "replyCount"],
+                    Var("comment"),
+                    null
                 ),
             },
         }
@@ -60,16 +39,10 @@ function GetComment(ref) {
 
 export function GetPublicationComments(parentRef, afterRef) {
     return Map(
-        Paginate(
-            Join(
-                Match(Index("comments_by_parent"), parentRef),
-                Index("comments_sorted_popularity")
-            ),
-            {
-                size: 20,
-                after: afterRef !== null && GetComment(afterRef),
-            }
-        ),
-        Lambda(["score", "ref"], GetComment(Var("ref")))
+        Paginate(Match(Index("comments_by_parent"), [parentRef]), {
+            size: 20,
+            after: afterRef !== null && GetComment(afterRef),
+        }),
+        Lambda(["ref"], GetComment(Var("ref")))
     );
 }

@@ -18,12 +18,12 @@ const {
     Collection,
 } = query;
 
-import { GetViewer, GetUserByUsername } from "../../users/read";
+import { GetViewer, GetAuthorBynickname } from "../../authors/read";
 
-const FollowAuthor = (username) =>
+const FollowAuthor = (nickname) =>
     Let(
         {
-            author: GetUserByUsername(username),
+            author: GetAuthorBynickname(nickname),
             viewer: GetViewer(),
             interactionsMatch: Match(Index("author_interactions"), [
                 Select(["ref"], Var("author")),
@@ -79,7 +79,7 @@ const FollowAuthor = (username) =>
                             data: {
                                 type: "follow",
                                 author: Select(["ref"], Var("author")),
-                                user: Select(["ref"], Var("viewer")),
+                                author: Select(["ref"], Var("viewer")),
                             },
                         }),
                         Delete(
@@ -102,7 +102,7 @@ const FollowAuthor = (username) =>
                     data: {
                         follow: true,
                         author: Select(["ref"], Var("author")),
-                        user: Select(["ref"], Var("viewer")),
+                        author: Select(["ref"], Var("viewer")),
                         createdAt: Now(),
                     },
                 }),
@@ -138,7 +138,7 @@ const FollowAuthor = (username) =>
                     data: {
                         type: "follow",
                         author: Select(["ref"], Var("author")),
-                        user: Select(["ref"], Var("viewer")),
+                        author: Select(["ref"], Var("viewer")),
                     },
                 })
             )

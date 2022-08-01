@@ -2,7 +2,7 @@ import { query } from "faunadb";
 const { Let, Select, Index, Get, Var, Paginate, Match, Lambda, Multiply, Map } =
     query;
 
-import { GetViewerRef, GetPartialUser } from "../users/read";
+import { GetViewerRef, GetPartialAuthor } from "../authors/read";
 
 const GetNotifications = (afterRef) =>
     Map(
@@ -31,8 +31,8 @@ const GetNotifications = (afterRef) =>
                     type: Select(["data", "type"], Var("notification")),
                     body: Select(["data", "body"], Var("notification"), null),
                     ts: Multiply(Select(["ts"], Var("notification")), 0.001),
-                    user: GetPartialUser(
-                        Select(["data", "user"], Var("notification"))
+                    author: GetPartialAuthor(
+                        Select(["data", "author"], Var("notification"))
                     ),
                 }
             )

@@ -2,7 +2,7 @@ import { query } from "faunadb";
 const { Var, Map, Paginate, Index, Lambda } = query;
 
 import GetSinglePublicationDraft from "./single";
-import { GetViewerRef } from "../users/read";
+import { GetViewerRef } from "../authors/read";
 
 const GetViewerPublicationDrafts = (afterRef) =>
     Map(

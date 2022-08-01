@@ -1,11 +1,11 @@
 CreateIndex({
-    name: "users_sorted_popularity",
+    name: "authors_sorted_popularity",
     source: {
-        collection: Collection("users"),
+        collection: Collection("authors"),
         fields: {
             score: Query(
                 Lambda(
-                    "user",
+                    "author",
                     Let(
                         {
                             ageFactor: 1,
@@ -20,7 +20,10 @@ CreateIndex({
                             publicationFactor: 10,
                             answerFactor: 11,
 
-                            joinTime: Select(["data", "joinedAt"], Var("user")),
+                            joinTime: Select(
+                                ["data", "joinedAt"],
+                                Var("author")
+                            ),
                             referenceTime: Time("2022-01-01T00:00:00+00:00"),
 
                             age: TimeDiff(
@@ -30,52 +33,52 @@ CreateIndex({
                             ),
                             partialViewCount: Select(
                                 ["data", "stats", "partialViewCount"],
-                                Var("user"),
+                                Var("author"),
                                 0
                             ),
                             fullViewCount: Select(
                                 ["data", "stats", "fullViewCount"],
-                                Var("user"),
+                                Var("author"),
                                 0
                             ),
                             stalkCount: Select(
                                 ["data", "stats", "stalkCount"],
-                                Var("user"),
+                                Var("author"),
                                 0
                             ),
                             likeCount: Select(
                                 ["data", "stats", "likeCount"],
-                                Var("user"),
+                                Var("author"),
                                 0
                             ),
                             commentCount: Select(
                                 ["data", "stats", "commentCount"],
-                                Var("user"),
+                                Var("author"),
                                 0
                             ),
                             dislikeCount: Select(
                                 ["data", "stats", "dislikeCount"],
-                                Var("user"),
+                                Var("author"),
                                 0
                             ),
                             saveCount: Select(
                                 ["data", "stats", "saveCount"],
-                                Var("user"),
+                                Var("author"),
                                 0
                             ),
                             followerCount: Select(
                                 ["data", "stats", "followerCount"],
-                                Var("user"),
+                                Var("author"),
                                 0
                             ),
                             publicationCount: Select(
                                 ["data", "stats", "publicationCount"],
-                                Var("user"),
+                                Var("author"),
                                 0
                             ),
                             answerCount: Select(
                                 ["data", "stats", "answerCount"],
-                                Var("user"),
+                                Var("author"),
                                 0
                             ),
                         },

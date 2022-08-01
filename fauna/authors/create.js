@@ -3,10 +3,10 @@ import { query } from "faunadb";
 
 const { CurrentIdentity, Var, Collection, Let, Select, Create, Now } = query;
 
-export function CreateUser(data) {
+export function CreateAuthor(data) {
     return Let(
         {
-            user: Create(Collection("users"), {
+            author: Create(Collection("authors"), {
                 data: {
                     ...data,
                     joinedAt: Now(),
@@ -15,15 +15,15 @@ export function CreateUser(data) {
             }),
             rel: Create(Collection("authorinteractions"), {
                 data: {
-                    user: Select(["ref"], Var("user")),
-                    author: Select(["ref"], Var("user")),
+                    author: Select(["ref"], Var("author")),
+                    author: Select(["ref"], Var("author")),
                     follow: true,
                 },
             }),
             account: Create(Collection("accounts"), {
                 data: {
                     connection: CurrentIdentity(),
-                    user: Select(["ref"], Var("user")),
+                    author: Select(["ref"], Var("author")),
                     createdAt: Now(),
                 },
             }),

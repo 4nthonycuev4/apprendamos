@@ -1,7 +1,7 @@
 import { query } from "faunadb";
 const { Let, Select, Index, Get, If, Var, Exists, Match } = query;
 
-import { GetViewerRef } from "../../users/read";
+import { GetViewerRef } from "../../authors/read";
 
 const GetPublicationInteractions = (ref) =>
     Let(

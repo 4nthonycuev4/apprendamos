@@ -2,7 +2,7 @@
 
 import { query } from "faunadb";
 
-import { GetViewerRef } from "../users/read";
+import { GetViewerRef } from "../authors/read";
 
 const {
     Delete,
@@ -11,7 +11,6 @@ const {
     Let,
     Update,
     Add,
-    Exists,
     Select,
     Var,
     If,
@@ -31,7 +30,7 @@ export function DeletePublication(ref) {
             status: If(
                 Equals(Var("authorRef"), Var("viewerRef")),
                 "done",
-                Abort("It is forbidden to delete other user's publication.")
+                Abort("It is forbidden to delete other author's publication.")
             ),
 
             author: Update(Var("authorRef"), {

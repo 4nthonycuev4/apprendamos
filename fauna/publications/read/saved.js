@@ -12,7 +12,7 @@ const {
     Map,
 } = query;
 
-import { GetViewerRef, GetPartialUser } from "../../users/read";
+import { GetViewerRef, GetPartialAuthor } from "../../authors/read";
 
 const GetSavedPublicationsAfterCursor = (ref) =>
     Let(
@@ -47,7 +47,7 @@ const GetSavedPublications = (afterRef) =>
                 Let(
                     {
                         publication: Get(Var("publicationRef")),
-                        author: GetPartialUser(
+                        author: GetPartialAuthor(
                             Select(["data", "author"], Var("publication"))
                         ),
                     },

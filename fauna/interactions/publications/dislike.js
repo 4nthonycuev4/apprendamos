@@ -20,7 +20,7 @@ const {
     Equals,
 } = query;
 
-import { GetViewer } from "../../users/read";
+import { GetViewer } from "../../authors/read";
 
 const DislikePublication = (ref) =>
     Let(
@@ -141,7 +141,7 @@ const DislikePublication = (ref) =>
                     data: {
                         dislike: true,
                         publication: ref,
-                        user: Select(["ref"], Var("viewer")),
+                        author: Select(["ref"], Var("viewer")),
                         createdAt: Now(),
                     },
                 }),

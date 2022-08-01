@@ -2,7 +2,7 @@
 
 import { query } from "faunadb";
 
-import { GetViewerRef } from "../users/read";
+import { GetViewerRef } from "../authors/read";
 
 const {
     Create,
@@ -21,14 +21,14 @@ const {
     Now,
 } = query;
 
-export function CreateComment(publicationRef, message) {
+export function CreatePublicationComment(publicationRef, body) {
     return Let(
         {
             viewerRef: GetViewerRef(),
             viewer: Get(Var("viewerRef")),
 
             publicationStatsRefMatch: Match(
-                Index("publicationstats_by_user"),
+                Index("publicationstats_by_author"),
                 publicationRef,
                 Var("viewerRef")
             ),
@@ -39,7 +39,7 @@ export function CreateComment(publicationRef, message) {
             author: Get(Var("authorRef")),
 
             authorStatsMatch: Match(
-                Index("authorstats_by_user"),
+                Index("authorstats_by_author"),
                 Var("authorRef"),
                 Var("viewerRef")
             ),
@@ -52,16 +52,10 @@ export function CreateComment(publicationRef, message) {
 
             comment: Create(Collection("comments"), {
                 data: {
-                    message,
+                    body,
                     author: Var("viewerRef"),
                     parent: publicationRef,
-                    created: Now(),
-                    stats: {
-                        likeCount: 0,
-                        dislikeCount: 0,
-                        commentCount: 0,
-                    },
-                    updated: null,
+                    createdAt: Now(),
                 },
             }),
         },
@@ -83,17 +77,10 @@ export function CreateComment(publicationRef, message) {
                 }),
                 Create(Collection("authorstats"), {
                     data: {
-                        user: Var("viewerRef"),
+                        author: Var("viewerRef"),
                         author: Var("authorRef"),
-                        following: false,
-                        viewCount: 0,
-                        readCount: 0,
-                        saveCount: 0,
-                        likeCount: 0,
-                        dislikeCount: 0,
                         commentCount: 1,
-                        cheerCount: 0,
-                        created: Now(),
+                        createdAt: Now(),
                     },
                 })
             ),

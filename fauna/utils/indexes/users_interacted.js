@@ -1,5 +1,5 @@
 CreateIndex({
-    name: "users_interacted",
+    name: "authors_interacted",
     source: {
         collection: [Collection("authorstats")],
         fields: {
@@ -26,7 +26,7 @@ CreateIndex({
     },
     terms: [
         {
-            field: ["data", "user"],
+            field: ["data", "author"],
         },
         {
             field: ["data", "save"],

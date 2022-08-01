@@ -29,12 +29,12 @@ export default function FollowingModal({ username, followingCount }) {
                 className="flex space-x-1"
             >
                 <span className="font-black">{followingCount}</span>
-                <span>Seguidores</span>
+                <span>Siguiendo</span>
             </button>
             <BaseModal
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
-                title={`Seguidores de @${username}`}
+                title={`${username} está siguiendo a`}
             >
                 <InfiniteScroll
                     dataLength={following.length}

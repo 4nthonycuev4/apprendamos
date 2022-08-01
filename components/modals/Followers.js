@@ -34,7 +34,7 @@ export default function FollowersModal({ username, followerCount }) {
             <BaseModal
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
-                title={`Seguidores de @${username}`}
+                title={`Seguidores de ${username}`}
             >
                 <InfiniteScroll
                     dataLength={followers.length}

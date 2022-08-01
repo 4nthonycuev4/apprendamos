@@ -3,7 +3,7 @@ const { Index, Var, Match, Paginate, Map, Lambda, Join, Select, Get } = query;
 
 import GetItemPublication from "./item";
 
-import { GetViewerRef } from "../../users/read";
+import { GetViewerRef } from "../../authors/read";
 
 const GetHomePublicationsAfterCursor = (ref) => [
     Select(["data", "publishedAt"], Get(ref)),

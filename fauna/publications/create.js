@@ -2,33 +2,44 @@
 
 import { query } from "faunadb";
 
-import { GetViewerRef } from "../users/read";
+import { GetViewerRef } from "../authors/read";
 
-const { Create, Update, Collection, Let, Var, Get, Select, Add, Now } = query;
+const {
+    Create,
+    Update,
+    Collection,
+    Let,
+    Var,
+    Get,
+    Select,
+    Add,
+    Now,
+    Call,
+    Function,
+} = query;
 
-export const CreatePublication = (body) =>
+export const CreatePublication = (draftRef, tags) =>
     Let(
         {
-            authorRef: GetViewerRef(),
-            author: Get(Var("authorRef")),
-
+            draft: Get(Var("draft_ref")),
             publication: Create(Collection("publications"), {
                 data: {
-                    body,
-                    author: Var("authorRef"),
+                    body: Select(["data", "body"], Var("draft")),
+                    author: Select(["data", "author"], Var("draft")),
                     createdAt: Now(),
-                    isDraft: true,
                 },
             }),
 
             authorUpdated: Update(Var("authorRef"), {
                 data: {
-                    publicationCount: Add(
-                        1,
-                        Select(["publicationCount"], Var("author"), 0)
-                    ),
+                    stats: {
+                        publicationCount: Add(
+                            1,
+                            Select(["publicationCount"], Var("author"), 0)
+                        ),
+                    },
                 },
             }),
         },
-        { id: Select(["ref"], Var("publication")) }
+        true
     );

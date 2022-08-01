@@ -2,7 +2,7 @@
 
 import { query } from "faunadb";
 
-import { GetUserRefByUsername, GetViewerRef } from "../users/read";
+import { GetAuthorRefBynickname, GetViewerRef } from "../authors/read";
 
 const {
     Create,
@@ -28,7 +28,7 @@ export function Like(publicationRef) {
 
             publication: Get(publicationRef),
             publicationStats: Get(
-                Match(Index("publicationstats_by_user"), [
+                Match(Index("publicationstats_by_author"), [
                     publicationRef,
                     Var("viewerRef"),
                 ])
@@ -37,7 +37,7 @@ export function Like(publicationRef) {
             authorRef: Select(["data", "author"], Var("publication")),
             author: Get(Var("authorRef")),
             authorStats: Get(
-                Match(Index("authorstats_by_user"), [
+                Match(Index("authorstats_by_author"), [
                     Var("authorRef"),
                     Var("viewerRef"),
                 ])
@@ -176,7 +176,7 @@ export function Dislike(publicationRef) {
 
             publication: Get(publicationRef),
             publicationStats: Get(
-                Match(Index("publicationstats_by_user"), [
+                Match(Index("publicationstats_by_author"), [
                     publicationRef,
                     Var("viewerRef"),
                 ])
@@ -185,7 +185,7 @@ export function Dislike(publicationRef) {
             authorRef: Select(["data", "author"], Var("publication")),
             author: Get(Var("authorRef")),
             authorStats: Get(
-                Match(Index("authorstats_by_user"), [
+                Match(Index("authorstats_by_author"), [
                     Var("authorRef"),
                     Var("viewerRef"),
                 ])
@@ -324,7 +324,7 @@ export function Save(publicationRef) {
 
             publication: Get(publicationRef),
             publicationStats: Get(
-                Match(Index("publicationstats_by_user"), [
+                Match(Index("publicationstats_by_author"), [
                     publicationRef,
                     Var("viewerRef"),
                 ])
@@ -333,7 +333,7 @@ export function Save(publicationRef) {
             authorRef: Select(["data", "author"], Var("publication")),
             author: Get(Var("authorRef")),
             authorStats: Get(
-                Match(Index("authorstats_by_user"), [
+                Match(Index("authorstats_by_author"), [
                     Var("authorRef"),
                     Var("viewerRef"),
                 ])
@@ -445,13 +445,13 @@ export function Save(publicationRef) {
     );
 }
 
-export function FollowUser(username) {
+export function FollowAuthor(nickname) {
     return Let(
         {
             viewerRef: GetViewerRef(),
-            authorRef: GetUserRefByUsername(username),
+            authorRef: GetAuthorRefBynickname(nickname),
             viewerAuthorStatsRefMatch: Match(
-                Index("stats_by_authorRef_and_userRef"),
+                Index("stats_by_authorRef_and_authorRef"),
                 Var("authorRef"),
                 Var("viewerRef")
             ),
@@ -463,9 +463,9 @@ export function FollowUser(username) {
 
             viewerAuthorStatsUpdated: If(
                 Not(Exists(Var("viewerAuthorStatsRefMatch"))),
-                Create(Collection("UserAuthorStats"), {
+                Create(Collection("AuthorAuthorStats"), {
                     data: {
-                        userRef: Var("viewerRef"),
+                        authorRef: Var("viewerRef"),
                         authorRef: Var("authorRef"),
                         following: true,
                         likes: {
@@ -560,7 +560,7 @@ export const View = (publicationRef) =>
                 },
             }),
 
-            publicationStatsMatch: Match(Index("publicationstats_by_user"), [
+            publicationStatsMatch: Match(Index("publicationstats_by_author"), [
                 publicationRef,
                 Var("viewerRef"),
             ]),
@@ -591,7 +591,7 @@ export const View = (publicationRef) =>
                     Create(Collection("PublicationStats"), {
                         data: {
                             publication: publicationRef,
-                            user: Var("viewerRef"),
+                            author: Var("viewerRef"),
                             viewCount: 1,
                         },
                     })

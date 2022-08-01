@@ -39,6 +39,8 @@ export default withApiAuthRequired(async function handleSingleContentRequest(
             }
         }
     } catch (error) {
-        return res.status(error.status || 500).json(error);
+        res.status(error.requestResult?.statusCode || 500).json(
+            error.requestResult?.responseContent?.errors || error
+        );
     }
 });

@@ -10,6 +10,10 @@ const NotificationCard = ({
     user,
     type,
 }) => {
+    const myHref =
+        statusCollection === "publications"
+            ? `/p/${statusId}`
+            : `/@${user.username}`;
     return (
         <div className="flex p-2 border-b items-center">
             <Link href={`/@${user.username}`}>
@@ -25,7 +29,7 @@ const NotificationCard = ({
                     </div>
                 </a>
             </Link>
-            <Link href={`/${statusCollection}/${statusId}`}>
+            <Link href={myHref}>
                 <a>
                     {type === "like" ? (
                         <p className="text-sm font-thin">

@@ -12,9 +12,8 @@ export default async function Search(req, res) {
 
         res.status(200).json(content);
     } catch (error) {
-        res.status(500).json({
-            errorCode: 500,
-            errorMessage: error.message,
-        });
+        res.status(error.requestResult?.statusCode || 500).json(
+            error.requestResult?.responseContent?.errors || error
+        );
     }
 }

@@ -10,7 +10,12 @@ const PanelAuth = () => {
         if (pageIndex === 0) return "/api/authors/trending";
         return `/api/authors/trending?after=${previousPageData.afterId}`;
     };
-    const { data: userPages, size, setSize, error } = useSWRInfinite(getKey);
+    const { data, error } = useSWRInfinite(getKey);
+
+    const authors =
+        data && data[0].data
+            ? [].concat(...data?.map((page) => [].concat(...page?.data)))
+            : [];
 
     return (
         <div
@@ -22,13 +27,16 @@ const PanelAuth = () => {
             <h1>Usuarios sugeridos</h1>
             {error ? (
                 <div className="mx-6">Hubo un error :(</div>
-            ) : !userPages ? (
+            ) : !authors ? (
                 <div className="mx-6">Cargando ...</div>
             ) : (
                 <>
-                    {userPages.map((page) =>
-                        page.data.map((user) => (
-                            <BasicAuthorCard key={user.username} {...user} />
+                    {authors.map((page) =>
+                        page.data.map((author) => (
+                            <BasicAuthorCard
+                                key={author.username}
+                                {...author}
+                            />
                         ))
                     )}
                 </>

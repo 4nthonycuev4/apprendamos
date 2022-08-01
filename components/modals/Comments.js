@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import useSWRInfinite from "swr/infinite";
 import { useUser } from "@auth0/nextjs-auth0";
+import InfiniteScroll from "react-infinite-scroll-component";
 import {
     PaperAirplaneIcon as PaperAirplaneIconOutline,
     AnnotationIcon as AnnotationIconOutline,
@@ -14,25 +15,24 @@ import {
 import Comment from "../items/Comment";
 import BaseModal from "./Base";
 
-export default function CommentsModal({
-    contentId,
-    viewerComment,
-    commentCount,
-}) {
-    const [commentCountUpdated, setCommentCountUpdated] =
-        useState(commentCount);
-    const { user } = useUser();
-    const htmlId = `commentInput${contentId}`;
+export default function CommentsModal({ id, commentCount, viewerCommented }) {
+    const { user, error: auth0Error } = useUser();
+    const htmlId = "commentInput";
 
     const [isOpen, setIsOpen] = useState(false);
     const handleOpen = () => setIsOpen(true);
 
     const getKey = (pageIndex, previousPageData) => {
         if (previousPageData && !previousPageData.data) return null;
-        if (pageIndex === 0) return `/api/${contentId}/comments`;
-        return `/api/${contentId}/comments?afterId=${previousPageData.afterRef.id}`;
+        if (pageIndex === 0) return `/api/publications/${id}/comments`;
+        return `/api/publications/${id}/comments?afterId=${previousPageData.afterId}`;
     };
-    const { data, size, setSize, error, mutate } = useSWRInfinite(getKey);
+    const { data, size, setSize, mutate } = useSWRInfinite(getKey);
+
+    const comments =
+        data && data[0].data
+            ? [].concat(...data?.map((page) => [].concat(...page?.data)))
+            : [];
 
     const [isCreatingComment, setIsCreatingComment] = useState(false);
     const [createCommentError, setCreateCommentError] = useState(null);
@@ -66,25 +66,22 @@ export default function CommentsModal({
         setIsCreatingComment(false);
     };
 
-    const createComment = async (message) => {
-        await fetch(`/api/${contentId}/comments`, {
+    const createComment = (body) =>
+        fetch(`/api/publications/${id}/comments`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                message,
+                body,
             }),
-        }).then((res) => res.json());
-        mutate();
-        setCommentCountUpdated(commentCount + 1);
-    };
+        }).then(() => mutate());
 
     return (
         <>
             <div className="flex">
                 <button type="button" onClick={handleOpen}>
-                    {viewerComment ? (
+                    {viewerCommented ? (
                         <AnnotationIconSolid className="w-5" />
                     ) : (
                         <AnnotationIconOutline
@@ -93,7 +90,7 @@ export default function CommentsModal({
                         />
                     )}
                 </button>
-                <span>{commentCountUpdated}</span>
+                <span>{commentCount || 0}</span>
             </div>
 
             <BaseModal
@@ -118,23 +115,23 @@ export default function CommentsModal({
                             id={htmlId}
                             type="text"
                             className="
-                            w-full
-							whitespace-pre-wrap 
-                            border-0 border-b-2 border-gray-200  bg-gray-100 p-0 
-							
-							text-gray-800
-                            dark:text-white
-							empty:before:text-gray-400
-							
-							empty:before:content-['Agrega_un_comentario...']
-							focus:border-gray-400
+                                w-full
+                                whitespace-pre-wrap 
+                                border-0 border-b-2 border-gray-200  bg-gray-100 p-0 
+                                
+                                text-gray-800
+                                dark:text-white
+                                empty:before:text-gray-400
+                                
+                                empty:before:content-['Agrega_un_comentario...']
+                                focus:border-gray-400
 
-							focus:ring-0 
-							dark:border-gray-600
-							dark:bg-gray-800 
+                                focus:ring-0 
+                                dark:border-gray-600
+                                dark:bg-gray-800 
 
-							dark:empty:before:text-gray-500
-							border-none
+                                dark:empty:before:text-gray-500
+                                border-none
 							"
                             contentEditable={true}
                         />
@@ -156,31 +153,21 @@ export default function CommentsModal({
                         {createCommentError}
                     </div>
                 )}
-                {error ? (
-                    <div className="mx-6">Hubo un error :(</div>
-                ) : !data ? (
-                    <div className="mx-6">Cargando ...</div>
-                ) : data[0].data.length < 1 ? (
-                    <h1>Sin comentarios</h1>
-                ) : (
-                    <>
-                        {data.map((page) =>
-                            page.data.map((item) => (
-                                <Comment key={item.id} {...item} />
-                            ))
-                        )}
-                        {data.at(-1)?.afterRef && (
-                            <div className="flex justify-center">
-                                <button
-                                    className="w-32 h-8 bg-cyan-500 rounded text-white disabled:hidden"
-                                    onClick={() => setSize(size + 1)}
-                                >
-                                    Mostrar más
-                                </button>
-                            </div>
-                        )}
-                    </>
-                )}
+                <InfiniteScroll
+                    dataLength={comments.length}
+                    next={() => setSize(size + 1)}
+                    hasMore={data && Boolean(data[data.length - 1].afterId)}
+                    loader={<h1>Loading...</h1>}
+                    endMessage={
+                        <p className="text-center">
+                            <b>Yay! You have seen it all :D</b>
+                        </p>
+                    }
+                >
+                    {comments?.map(
+                        (item) => item && <Comment key={item.id} {...item} />
+                    )}
+                </InfiniteScroll>
             </BaseModal>
         </>
     );

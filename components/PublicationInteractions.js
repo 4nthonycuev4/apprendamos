@@ -88,6 +88,8 @@ export const PublicationInteractions = ({ id }) => {
                 <span>{(stats && stats.cheerCount) || 0}</span>
             </div>
 
+            <CommentsModal id={id} />
+
             <div className="flex ">
                 <button
                     type="button"

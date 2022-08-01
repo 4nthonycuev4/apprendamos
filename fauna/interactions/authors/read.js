@@ -1,13 +1,13 @@
 import { query } from "faunadb";
 const { Let, Select, Index, Get, If, Var, Exists, Match } = query;
 
-import { GetViewerRef, GetUserRefByUsername } from "../../users/read";
+import { GetViewerRef, GetAuthorRefBynickname } from "../../authors/read";
 
-const GetAuthorInteractions = (username) =>
+const GetAuthorInteractions = (nickname) =>
     Let(
         {
             interactionsMatch: Match(Index("author_interactions"), [
-                GetUserRefByUsername(username),
+                GetAuthorRefBynickname(nickname),
                 GetViewerRef(),
             ]),
         },

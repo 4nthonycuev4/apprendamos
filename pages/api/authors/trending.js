@@ -11,7 +11,8 @@ export default async function getTrendingUsers(req, res) {
 
         res.status(200).json(users);
     } catch (error) {
-        console.log("error", error);
-        res.status(error.status || 500).json(error);
+        res.status(error.requestResult?.statusCode || 500).json(
+            error.requestResult?.responseContent?.errors || error
+        );
     }
 }

@@ -2,16 +2,19 @@
 
 import FaunaClient from "fauna";
 
-const AuthorFollowersAPI = async (req, res) => {
+const PublicationCommentsAPI = async (req, res) => {
     try {
         const client = new FaunaClient();
 
-        const { username } = req.query;
+        const { id: publicationId } = req.query;
         const afterId = req.query && req.query.afterId;
 
-        const content = await client.getAuthorFollowing(username, afterId);
+        const data = await client.getPublicationComments(
+            publicationId,
+            afterId
+        );
 
-        res.status(200).json(content);
+        res.status(200).json(data);
     } catch (error) {
         res.status(error.requestResult?.statusCode || 500).json(
             error.requestResult?.responseContent?.errors || error
@@ -19,4 +22,4 @@ const AuthorFollowersAPI = async (req, res) => {
     }
 };
 
-export default AuthorFollowersAPI;
+export default PublicationCommentsAPI;

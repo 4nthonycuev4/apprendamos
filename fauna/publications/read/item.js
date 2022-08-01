@@ -1,15 +1,15 @@
 import { query } from "faunadb";
 const { Var, Get, Select, SubString, Let } = query;
 
-const GetItemUser = (userRef) =>
+const GetItemAuthor = (authorRef) =>
     Let(
         {
-            user: Get(userRef),
+            author: Get(authorRef),
         },
         {
-            name: Select(["data", "name"], Var("user")),
-            username: Select(["data", "username"], Var("user")),
-            picture: Select(["data", "picture"], Var("user")),
+            name: Select(["data", "name"], Var("author")),
+            nickname: Select(["data", "nickname"], Var("author")),
+            picture: Select(["data", "picture"], Var("author")),
         }
     );
 
@@ -19,7 +19,7 @@ const GetItemPublication = (publicationRef, withAuthor = true) =>
             publication: Get(publicationRef),
             author:
                 withAuthor &&
-                GetItemUser(Select(["data", "author"], Var("publication"))),
+                GetItemAuthor(Select(["data", "author"], Var("publication"))),
         },
         {
             id: publicationRef,

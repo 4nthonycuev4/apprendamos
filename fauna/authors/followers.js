@@ -1,15 +1,15 @@
 import { query } from "faunadb";
 const { Var, Map, Paginate, Index, Lambda, Match } = query;
 
-import { GetPartialUser, GetUserRefByUsername } from "fauna/users/read";
+import { GetPartialAuthor, GetAuthorRefBynickname } from "fauna/authors/read";
 
 const GetAuthorFollowersAfterCursor = (afterRef) => afterRef;
 
-const GetAuthorFollowers = (username, afterRef) =>
+const GetAuthorFollowers = (nickname, afterRef) =>
     Map(
         Paginate(
             Match(Index("author_followers"), [
-                GetUserRefByUsername(username),
+                GetAuthorRefBynickname(nickname),
                 true,
             ]),
             {
@@ -18,7 +18,7 @@ const GetAuthorFollowers = (username, afterRef) =>
                     afterRef != null && GetAuthorFollowersAfterCursor(afterRef),
             }
         ),
-        Lambda(["ref"], GetPartialUser(Var("ref")))
+        Lambda(["ref"], GetPartialAuthor(Var("ref")))
     );
 
 export default GetAuthorFollowers;

@@ -1,11 +1,11 @@
 import { query } from "faunadb";
-import { GetUserByUsername } from "../users/read";
+import { GetAuthorBynickname } from "../authors/read";
 const { Let, Select, Var } = query;
 
-const GetAuthorStats = (username) =>
+const GetAuthorStats = (nickname) =>
     Let(
         {
-            author: GetUserByUsername(username),
+            author: GetAuthorBynickname(nickname),
         },
         {
             likeCount: Select(

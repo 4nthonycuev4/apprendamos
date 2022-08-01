@@ -13,11 +13,9 @@ const AuthorFollowersAPI = async (req, res) => {
 
         res.status(200).json(content);
     } catch (error) {
-        console.log("errorAPI", error);
-        res.status(500).json({
-            errorCode: 500,
-            errorMessage: error.message,
-        });
+        res.status(error.requestResult?.statusCode || 500).json(
+            error.requestResult?.responseContent?.errors || error
+        );
     }
 };
 

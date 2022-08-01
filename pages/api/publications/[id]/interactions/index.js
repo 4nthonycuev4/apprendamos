@@ -12,8 +12,9 @@ const PublicationInteractionsAPIPage = async (req, res) => {
 
         res.status(200).json(interactions);
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ error });
+        res.status(error.requestResult?.statusCode || 500).json(
+            error.requestResult?.responseContent?.errors || error
+        );
     }
 };
 

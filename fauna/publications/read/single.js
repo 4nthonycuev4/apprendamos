@@ -37,7 +37,7 @@ const GetSinglePublication = (ref) =>
         },
         {
             author: {
-                username: Select(["data", "username"], Var("author")),
+                nickname: Select(["data", "nickname"], Var("author")),
                 name: Select(["data", "name"], Var("author")),
                 picture: Select(["data", "picture"], Var("author")),
                 followerCount: Select(

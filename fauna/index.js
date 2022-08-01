@@ -12,17 +12,17 @@ import {
 import { DeletePublication } from "./publications/delete";
 
 import { CreateComment } from "./comments/create";
-import { GetPublicationComments } from "./comments/read";
+import { GetPublicationComments } from "./comments";
 
-import { CreateUser } from "./users/create";
+import { CreateAuthor } from "./authors/create";
 import {
-    GetSuggestedUsers,
-    GetTrendingUsers,
+    GetSuggestedAuthors,
+    GetTrendingAuthors,
     GetViewer,
-    GetSingleUser,
+    GetSingleAuthor,
     GetFollowingStatus,
-} from "./users/read";
-import { UpdateViewer } from "./users/update";
+} from "./authors/read";
+import { UpdateViewer } from "./authors/update";
 
 import LikePublication from "./interactions/publications/like";
 import DislikePublication from "./interactions/publications/dislike";
@@ -40,7 +40,6 @@ import GetNotifications from "./notifications/read";
 import {
     GetViewerPublicationDrafts,
     GetSinglePublicationDraft,
-    CreatePublicationDraft,
     UpdatePublicationDraft,
     PublishPublicationDraft,
 } from "./drafts";
@@ -53,23 +52,21 @@ const {
     Ref,
     Collection,
     Paginate,
-    Join,
     Distinct,
     Match,
     Var,
-    Get,
     Lambda,
     Index,
     If,
-    Equals,
     Select,
     Let,
     Update,
     Delete,
-    Union,
     NGram,
     Now,
     Map,
+    Call,
+    Function: Fn,
 } = query;
 
 export default class FaunaClient {
@@ -104,13 +101,13 @@ export default class FaunaClient {
 
     async register(data) {
         return this.client
-            .query(CreateUser(data))
+            .query(CreateAuthor(data))
             .then((res) => FaunaToJSON(res));
     }
 
-    async getViewerAuthorStats(username) {
+    async getViewerAuthorStats(nickname) {
         return this.client
-            .query(GetViewerAuthorStats(username))
+            .query(GetViewerAuthorStats(nickname))
             .then((res) => FaunaToJSON(res));
     }
 
@@ -121,9 +118,9 @@ export default class FaunaClient {
             .then((res) => FaunaToJSON(res));
     }
 
-    async getAuthorStats(username) {
+    async getAuthorStats(nickname) {
         return this.client
-            .query(GetAuthorStats(username))
+            .query(GetAuthorStats(nickname))
             .then((res) => FaunaToJSON(res));
     }
 
@@ -136,9 +133,9 @@ export default class FaunaClient {
             .then((res) => FaunaToJSON(res));
     }
 
-    async getAuthorInteractions(username) {
+    async getAuthorInteractions(nickname) {
         return this.client
-            .query(GetAuthorInteractions(username))
+            .query(GetAuthorInteractions(nickname))
             .then((res) => FaunaToJSON(res));
     }
 
@@ -160,9 +157,9 @@ export default class FaunaClient {
             .then((res) => FaunaToJSON(res));
     }
 
-    async followAuthor(username) {
+    async followAuthor(nickname) {
         return this.client
-            .query(FollowAuthor(username))
+            .query(FollowAuthor(nickname))
             .then((res) => FaunaToJSON(res));
     }
 
@@ -176,20 +173,16 @@ export default class FaunaClient {
 
     //COMMENTS CRUD
 
-    async getPublicationComments(ref, afterId) {
+    async getPublicationComments(publicationId, afterId) {
         const afterRef = afterId ? Ref(Collection("comments"), afterId) : null;
         return this.client
             .query(
                 GetPublicationComments(
-                    Ref(Collection(ref.collection), ref.id),
+                    Ref(Collection("publications"), publicationId),
                     afterRef
                 )
             )
-            .then((res) => FaunaToJSON(res))
-            .catch((error) => {
-                console.log("error", error);
-                return null;
-            });
+            .then((res) => FaunaToJSON(res));
     }
 
     async createComment(ref, message, coins) {
@@ -228,45 +221,45 @@ export default class FaunaClient {
             });
     }
 
-    // USERS CRUD
+    // AUTHORS CRUD
 
-    async getSingleUser(username) {
+    async getSingleAuthor(nickname) {
         return this.client
-            .query(GetSingleUser(username))
+            .query(GetSingleAuthor(nickname))
             .then((res) => FaunaToJSON(res));
     }
 
-    async getSuggestedUsers(afterId) {
-        const afterRef = afterId ? Ref(Collection("users"), afterId) : null;
+    async getSuggestedAuthors(afterId) {
+        const afterRef = afterId ? Ref(Collection("authors"), afterId) : null;
         return this.client
-            .query(GetSuggestedUsers(afterRef))
+            .query(GetSuggestedAuthors(afterRef))
             .then((res) => FaunaToJSON(res));
     }
 
-    async getAuthorFollowers(username, afterId) {
-        const afterRef = afterId && Ref(Collection("users"), afterId);
+    async getAuthorFollowers(nickname, afterId) {
+        const afterRef = afterId && Ref(Collection("authors"), afterId);
         return this.client
-            .query(GetAuthorFollowers(username, afterRef))
+            .query(GetAuthorFollowers(nickname, afterRef))
             .then((res) => FaunaToJSON(res));
     }
 
-    async getAuthorFollowing(username, afterId) {
-        const afterRef = afterId && Ref(Collection("users"), afterId);
+    async getAuthorFollowing(nickname, afterId) {
+        const afterRef = afterId && Ref(Collection("authors"), afterId);
         return this.client
-            .query(GetAuthorFollowing(username, afterRef))
+            .query(GetAuthorFollowing(nickname, afterRef))
             .then((res) => FaunaToJSON(res));
     }
 
-    async getTrendingUsers(afterId) {
-        const afterRef = afterId && Ref(Collection("users"), afterId);
+    async getTrendingAuthors(afterId) {
+        const afterRef = afterId && Ref(Collection("authors"), afterId);
         return this.client
-            .query(GetTrendingUsers(afterRef))
+            .query(GetTrendingAuthors(afterRef))
             .then((res) => FaunaToJSON(res));
     }
 
-    async getFollowingStatus(username) {
+    async getFollowingStatus(nickname) {
         return this.client
-            .query(GetFollowingStatus(username))
+            .query(GetFollowingStatus(nickname))
             .then((res) => FaunaToJSON(res));
     }
 
@@ -339,9 +332,9 @@ export default class FaunaClient {
     }
 
     // PUBLICATION DRAFTS CRUD
-    async createPublicationDraft(body) {
+    async createDraft(body) {
         return this.client
-            .query(CreatePublicationDraft(body))
+            .query(Call(Fn("createDraft"), body))
             .then((res) => FaunaToJSON(res));
     }
 
@@ -379,6 +372,15 @@ export default class FaunaClient {
 
     // PUBLICATIONS CRUD
 
+    async createPublication(draft_id, hashtags) {
+        return this.client.query(
+            Call(Fn("createPublication"), [
+                Ref(Collection("publications"), draft_id),
+                hashtags,
+            ])
+        );
+    }
+
     async getSinglePublication(id) {
         return this.client
             .query(GetSinglePublication(Ref(Collection("publications"), id)))
@@ -400,10 +402,10 @@ export default class FaunaClient {
             .then((res) => FaunaToJSON(res));
     }
 
-    async getAuthorPublications(username, afterId) {
+    async getAuthorPublications(nickname, afterId) {
         const afterRef = afterId && Ref(Collection("publications"), afterId);
         return this.client
-            .query(GetAuthorPublications(username, afterRef))
+            .query(GetAuthorPublications(nickname, afterRef))
             .then((res) => FaunaToJSON(res));
     }
 

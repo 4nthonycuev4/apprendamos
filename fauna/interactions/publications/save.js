@@ -19,7 +19,7 @@ const {
     Delete,
 } = query;
 
-import { GetViewer } from "../../users/read";
+import { GetViewer } from "../../authors/read";
 
 const SavePublication = (ref) =>
     Let(
@@ -94,7 +94,7 @@ const SavePublication = (ref) =>
                                     ["data", "author"],
                                     Var("publication")
                                 ),
-                                user: Select(["ref"], Var("viewer")),
+                                author: Select(["ref"], Var("viewer")),
                             },
                         }),
                         Delete(
@@ -119,7 +119,7 @@ const SavePublication = (ref) =>
                         save: true,
                         savedAt: Now(),
                         publication: ref,
-                        user: Select(["ref"], Var("viewer")),
+                        author: Select(["ref"], Var("viewer")),
                         createdAt: Now(),
                     },
                 }),
@@ -161,7 +161,7 @@ const SavePublication = (ref) =>
                             100
                         ),
                         author: Select(["data", "author"], Var("publication")),
-                        user: Select(["ref"], Var("viewer")),
+                        author: Select(["ref"], Var("viewer")),
                     },
                 })
             )

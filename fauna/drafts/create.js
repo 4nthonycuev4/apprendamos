@@ -1,19 +1,21 @@
-import { query } from "faunadb";
+import { Let, query } from "faunadb";
 const { Select, Create, Collection, Now } = query;
 
-import { GetViewerRef } from "../users/read";
+import { GetViewerRef } from "../authors/read";
 
-const CreatePublicationDraft = (body) =>
-    Select(
-        ["ref", "id"],
-        Create(Collection("publications"), {
-            data: {
-                body,
-                isDraft: true,
-                createdAt: Now(),
-                author: GetViewerRef(),
-            },
-        })
+const CreatePublicationDraft = (parsed_body) =>
+    Let(
+        {
+            author: Call(Function("getViewer")),
+            draft: Create(Collection("drafts"), {
+                data: {
+                    body: Var("parsed_body"),
+                    createdAt: Now(),
+                    author: Select,
+                },
+            }),
+        },
+        Select(["ref", "id"], Var("draft"))
     );
 
 export default CreatePublicationDraft;

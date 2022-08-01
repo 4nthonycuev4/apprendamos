@@ -21,7 +21,7 @@ const {
     Equals,
 } = query;
 
-import { GetViewer } from "../../users/read";
+import { GetViewer } from "../../authors/read";
 
 const LikePublication = (ref) =>
     Let(
@@ -140,7 +140,7 @@ const LikePublication = (ref) =>
                                     ["data", "author"],
                                     Var("publication")
                                 ),
-                                user: Select(["ref"], Var("viewer")),
+                                author: Select(["ref"], Var("viewer")),
                             },
                         }),
                         Delete(
@@ -164,7 +164,7 @@ const LikePublication = (ref) =>
                     data: {
                         like: true,
                         publication: ref,
-                        user: Select(["ref"], Var("viewer")),
+                        author: Select(["ref"], Var("viewer")),
                         createdAt: Now(),
                     },
                 }),
@@ -205,7 +205,7 @@ const LikePublication = (ref) =>
                             0,
                             100
                         ),
-                        user: Select(["ref"], Var("viewer")),
+                        author: Select(["ref"], Var("viewer")),
                         author: Select(["data", "author"], Var("publication")),
                     },
                 })

@@ -29,10 +29,10 @@ const {
 } = query;
 
 // cursors
-const GetUserPopularityCursor = (userRef) =>
+const GetAuthorPopularityCursor = (authorRef) =>
     Let(
         {
-            user: Get(userRef),
+            author: Get(authorRef),
             ageFactor: 1,
             viewFactor: 2,
             readFactor: 3,
@@ -42,25 +42,25 @@ const GetUserPopularityCursor = (userRef) =>
             saveFactor: 7,
             followerFactor: 8,
 
-            joinTime: Select(["data", "joined"], Var("user")),
+            joinTime: Select(["data", "joined"], Var("author")),
             referenceTime: Time("2022-01-01T00:00:00+00:00"),
 
             age: TimeDiff(Var("referenceTime"), Var("joinTime"), "hours"),
-            viewCount: Select(["data", "stats", "viewCount"], Var("user")),
-            readCount: Select(["data", "stats", "readCount"], Var("user")),
-            likeCount: Select(["data", "stats", "likeCount"], Var("user")),
+            viewCount: Select(["data", "stats", "viewCount"], Var("author")),
+            readCount: Select(["data", "stats", "readCount"], Var("author")),
+            likeCount: Select(["data", "stats", "likeCount"], Var("author")),
             dislikeCount: Select(
                 ["data", "stats", "dislikeCount"],
-                Var("user")
+                Var("author")
             ),
             commentCount: Select(
                 ["data", "stats", "commentCount"],
-                Var("user")
+                Var("author")
             ),
-            saveCount: Select(["data", "stats", "saveCount"], Var("user")),
+            saveCount: Select(["data", "stats", "saveCount"], Var("author")),
             followerCount: Select(
                 ["data", "stats", "followerCount"],
-                Var("user")
+                Var("author")
             ),
         },
         [
@@ -74,24 +74,24 @@ const GetUserPopularityCursor = (userRef) =>
                 Multiply(Var("saveFactor"), Var("saveCount")),
                 Multiply(Var("followerFactor"), Var("followerCount"))
             ),
-            userRef,
+            authorRef,
         ]
     );
 
-export const GetFollowingStatus = (username) =>
+export const GetFollowingStatus = (nickname) =>
     Let(
         {
             viewerRef: GetViewerRef(),
-            user: GetUserByUsername(username),
-            authorUserRelMatch: Match(Index("author_user_rel"), [
-                Select(["ref"], Var("user")),
+            author: GetAuthorBynickname(nickname),
+            authorAuthorRelMatch: Match(Index("author_author_rel"), [
+                Select(["ref"], Var("author")),
                 Var("viewerRef"),
             ]),
             following: If(
-                Exists(Var("authorUserRelMatch")),
+                Exists(Var("authorAuthorRelMatch")),
                 Select(
                     ["data", "following"],
-                    Get(Var("authorUserRelMatch")),
+                    Get(Var("authorAuthorRelMatch")),
                     false
                 ),
                 false
@@ -102,18 +102,18 @@ export const GetFollowingStatus = (username) =>
         }
     );
 
-export const StalkUser = (username) =>
+export const StalkAuthor = (nickname) =>
     Let(
         {
-            userMatch: Match(Index("user_by_username"), [username]),
-            user: Get(Var("userMatch")),
-            updatedUser: Update(Select(["ref"], Var("user")), {
+            authorMatch: Match(Index("author_by_nickname"), [nickname]),
+            author: Get(Var("authorMatch")),
+            updatedAuthor: Update(Select(["ref"], Var("author")), {
                 data: {
                     stats: {
                         stalkCount: Add(
                             Select(
                                 ["data", "stats", "stalkCount"],
-                                Var("user"),
+                                Var("author"),
                                 0
                             ),
                             1
@@ -121,148 +121,139 @@ export const StalkUser = (username) =>
                     },
                 },
             }),
-            following: GetFollowingStatusStalk(Select(["ref"], Var("user"))),
+            following: GetFollowingStatusStalk(Select(["ref"], Var("author"))),
         },
         {
-            name: Select(["data", "name"], Var("user")),
-            username: Select(["data", "username"], Var("user")),
-            about: Select(["data", "about"], Var("user")),
-            picture: Select(["data", "picture"], Var("user")),
+            name: Select(["data", "name"], Var("author")),
+            nickname: Select(["data", "nickname"], Var("author")),
+            about: Select(["data", "about"], Var("author")),
+            picture: Select(["data", "picture"], Var("author")),
             stats: {
                 followerCount: Select(
                     ["data", "stats", "followerCount"],
-                    Var("user"),
+                    Var("author"),
                     0
                 ),
                 followingCount: Select(
                     ["data", "stats", "followingCount"],
-                    Var("user"),
+                    Var("author"),
                     0
                 ),
                 likeCount: Select(
                     ["data", "stats", "likeCount"],
-                    Var("user"),
+                    Var("author"),
                     0
                 ),
                 following: Var("following"),
             },
-            joined: Select(["data", "joined"], Var("user")),
+            joined: Select(["data", "joined"], Var("author")),
         }
     );
 
-export const GetUserByUsername = (username) =>
-    Get(Match(Index("user_by_username"), [username]));
+export const GetAuthorBynickname = (nickname) =>
+    Get(Match(Index("author_by_nickname"), [nickname]));
 
-export const GetUserRefByUsername = (username) =>
-    Select(["ref"], GetUserByUsername(username));
+export const GetAuthorRefBynickname = (nickname) =>
+    Select(["ref"], GetAuthorBynickname(nickname));
 
-export const GetSingleUser = (username) =>
+export const GetSingleAuthor = (nickname) =>
     Let(
         {
-            user: GetUserByUsername(username),
+            author: GetAuthorBynickname(nickname),
         },
         {
-            name: Select(["data", "name"], Var("user")),
-            username: Select(["data", "username"], Var("user")),
-            about: Select(["data", "about"], Var("user")),
-            picture: Select(["data", "picture"], Var("user")),
-            joinedAt: Select(["data", "joinedAt"], Var("user")),
+            name: Select(["data", "name"], Var("author")),
+            nickname: Select(["data", "nickname"], Var("author")),
+            about: Select(["data", "about"], Var("author")),
+            picture: Select(["data", "picture"], Var("author")),
+            joinedAt: Select(["data", "joinedAt"], Var("author")),
             stats: {
                 followerCount: Select(
                     ["data", "stats", "followerCount"],
-                    Var("user"),
+                    Var("author"),
                     0
                 ),
                 followingCount: Select(
                     ["data", "stats", "followingCount"],
-                    Var("user"),
+                    Var("author"),
                     0
                 ),
                 likeCount: Select(
                     ["data", "stats", "likeCount"],
-                    Var("user"),
+                    Var("author"),
                     0
                 ),
             },
         }
     );
 
-export function GetViewerRef() {
-    return If(
-        HasCurrentIdentity(),
-        Select(
-            ["data", 0],
-            Paginate(Match(Index("user_by_connection"), CurrentIdentity()))
-        ),
-        null
-    );
-}
-
 export function GetViewer() {
-    return Get(GetViewerRef());
+    return Get(Match(Index("author_by_user_id"), [CurrentIdentity()]));
 }
 
-export const GetPartialUser = (userRef) =>
+export const GetViewerRef = () => Select(["ref"], GetViewer());
+
+export const GetPartialAuthor = (authorRef) =>
     Let(
         {
-            user: Get(userRef),
+            author: Get(authorRef),
         },
         {
-            username: Select(["data", "username"], Var("user")),
-            name: Select(["data", "name"], Var("user")),
-            picture: Select(["data", "picture"], Var("user")),
+            nickname: Select(["data", "nickname"], Var("author")),
+            name: Select(["data", "name"], Var("author")),
+            picture: Select(["data", "picture"], Var("author")),
         }
     );
 
-export function GetSuggestedUsers(afterRef) {
+export function GetSuggestedAuthors(afterRef) {
     return Map(
         Paginate(
             Join(
                 Join(
-                    Match(Index("following_by_user"), GetViewerRef()),
-                    Match(Index("following_by_user"))
+                    Match(Index("following_by_author"), GetViewerRef()),
+                    Match(Index("following_by_author"))
                 ),
-                Index("users_sorted_popularity")
+                Index("authors_sorted_popularity")
             ),
             {
                 size: 20,
-                after: afterRef != null && GetUserPopularityCursor(afterRef),
+                after: afterRef != null && GetAuthorPopularityCursor(afterRef),
             }
         ),
-        Lambda(["score", "ref"], GetPartialUser(Var("ref")))
+        Lambda(["score", "ref"], GetPartialAuthor(Var("ref")))
     );
 }
 
-export function GetFollowers(username, afterRef) {
+export function GetFollowers(nickname, afterRef) {
     return Map(
         Paginate(
             Join(
                 Match(Index("followers_by_author"), [
-                    Select(["ref"], GetUserByUsername(username)),
+                    Select(["ref"], GetAuthorBynickname(nickname)),
                     true,
                 ]),
-                Index("users_sorted_popularity")
+                Index("authors_sorted_popularity")
             ),
             {
                 size: 20,
-                after: afterRef != null && GetUserPopularityCursor(afterRef),
+                after: afterRef != null && GetAuthorPopularityCursor(afterRef),
             }
         ),
-        Lambda(["created", "ref"], GetPartialUser(Var("ref")))
+        Lambda(["created", "ref"], GetPartialAuthor(Var("ref")))
     );
 }
 
-export const GetTrendingUsers = (afterRef) =>
+export const GetTrendingAuthors = (afterRef) =>
     Map(
         Paginate(
             Join(
-                Match(Index("blocked_users"), [false]),
-                Index("users_sorted_popularity")
+                Match(Index("blocked_authors"), [false]),
+                Index("authors_sorted_popularity")
             ),
             {
                 size: 20,
-                after: afterRef != null && GetUserPopularityCursor(afterRef),
+                after: afterRef != null && GetAuthorPopularityCursor(afterRef),
             }
         ),
-        Lambda(["score", "ref"], GetPartialUser(Var("ref")))
+        Lambda(["score", "ref"], GetPartialAuthor(Var("ref")))
     );

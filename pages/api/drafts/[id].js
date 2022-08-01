@@ -27,8 +27,9 @@ const SinglePublicationDraftAPI = async (req, res) => {
             res.status(405).json({ error: "Method not allowed" });
         }
     } catch (error) {
-        console.log("error", error);
-        return res.status(error.status || 500).json(error);
+        res.status(error.requestResult?.statusCode || 500).json(
+            error.requestResult?.responseContent?.errors || error
+        );
     }
 };
 

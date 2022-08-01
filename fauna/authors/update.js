@@ -2,7 +2,7 @@
 
 import { query } from "faunadb";
 
-import { GetViewerRef, GetViewer, GetUserByUsername } from "./read";
+import { GetViewerRef, GetViewer, GetAuthorBynickname } from "./read";
 
 const {
     Update,
@@ -26,26 +26,26 @@ export function UpdateViewer(data) {
     });
 }
 
-export function FollowUser(username) {
+export function FollowAuthor(nickname) {
     return Let(
         {
             viewer: GetViewer(),
             viewerRef: Select("ref", Var("viewer")),
 
-            author: GetUserByUsername(username),
+            author: GetAuthorBynickname(nickname),
             authorRef: Select("ref", Var("author")),
 
-            authorUserRelMatch: Match(Index("author_user_rel"), [
+            authorAuthorRelMatch: Match(Index("author_author_rel"), [
                 Var("authorRef"),
                 Var("viewerRef"),
             ]),
-            authorUserRel: If(
-                Exists(Var("authorUserRelMatch")),
-                Get(Var("authorUserRelMatch")),
-                Create("authoruser", {
+            authorAuthorRel: If(
+                Exists(Var("authorAuthorRelMatch")),
+                Get(Var("authorAuthorRelMatch")),
+                Create("authorauthor", {
                     data: {
                         author: Var("authorRef"),
-                        user: Var("viewerRef"),
+                        author: Var("viewerRef"),
                         createdAt: Now(),
                     },
                 })
@@ -53,16 +53,19 @@ export function FollowUser(username) {
 
             following: Select(
                 ["data", "following"],
-                Var("authorUserRel"),
+                Var("authorAuthorRel"),
                 false
             ),
             gain: If(Var("following"), -1, 1),
 
-            authorStatsUpdated: Update(Select(["ref"], Var("authorUserRel")), {
-                data: {
-                    following: Not(Var("following")),
-                },
-            }),
+            authorStatsUpdated: Update(
+                Select(["ref"], Var("authorAuthorRel")),
+                {
+                    data: {
+                        following: Not(Var("following")),
+                    },
+                }
+            ),
 
             authorUpdated: Update(Var("authorRef"), {
                 data: {
