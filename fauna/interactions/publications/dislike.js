@@ -18,32 +18,32 @@ const {
     Delete,
     And,
     Equals,
+    Call,
+    Function: Fn,
 } = query;
-
-import { GetViewer } from "../../authors/read";
 
 const DislikePublication = (ref) =>
     Let(
         {
             publication: Get(ref),
             author: Get(Select(["data", "author"], Var("publication"))),
-            viewer: GetViewer(),
-            interactionsMatch: Match(Index("publication_interactions"), [
-                ref,
-                Select(["ref"], Var("viewer")),
-            ]),
+            interactor: Call(Fn("getViewer")),
+            interactions_match: Match(
+                Index("single_publication_interactions"),
+                [ref, Select(["ref"], Var("interactor"))]
+            ),
         },
         If(
-            Exists(Var("interactionsMatch")),
+            Exists(Var("interactions_match")),
             Let(
                 {
-                    interactions: Get(Var("interactionsMatch")),
-                    newDislikeStatus: Not(
+                    interactions: Get(Var("interactions_match")),
+                    new_dislike_status: Not(
                         Select(["data", "dislike"], Var("interactions"), false)
                     ),
-                    newLikeStatus: If(
+                    new_like_status: If(
                         And(
-                            Var("newDislikeStatus"),
+                            Var("new_dislike_status"),
                             Select(["data", "like"], Var("interactions"), false)
                         ),
                         false,
@@ -53,33 +53,33 @@ const DislikePublication = (ref) =>
                 Do(
                     Update(Select(["ref"], Var("interactions")), {
                         data: {
-                            like: Var("newLikeStatus"),
-                            dislike: Var("newDislikeStatus"),
+                            like: Var("new_like_status"),
+                            dislike: Var("new_dislike_status"),
                         },
                     }),
                     Update(ref, {
                         data: {
                             stats: {
-                                dislikeCount: Add(
+                                dislike_count: Add(
                                     Select(
-                                        ["data", "stats", "dislikeCount"],
+                                        ["data", "stats", "dislike_count"],
                                         Var("publication"),
                                         0
                                     ),
-                                    If(Var("newDislikeStatus"), 1, -1)
+                                    If(Var("new_dislike_status"), 1, -1)
                                 ),
-                                likeCount: If(
-                                    Equals(Var("newLikeStatus"), false),
+                                like_count: If(
+                                    Equals(Var("new_like_status"), false),
                                     Add(
                                         Select(
-                                            ["data", "stats", "likeCount"],
+                                            ["data", "stats", "like_count"],
                                             Var("publication"),
                                             1
                                         ),
                                         -1
                                     ),
                                     Select(
-                                        ["data", "stats", "likeCount"],
+                                        ["data", "stats", " like_count"],
                                         Var("publication"),
                                         null
                                     )
@@ -90,26 +90,26 @@ const DislikePublication = (ref) =>
                     Update(Select(["ref"], Var("author")), {
                         data: {
                             stats: {
-                                dislikeCount: Add(
+                                dislike_count: Add(
                                     Select(
-                                        ["data", "stats", "dislikeCount"],
+                                        ["data", "stats", "dislike_count"],
                                         Var("author"),
                                         0
                                     ),
-                                    If(Var("newDislikeStatus"), 1, -1)
+                                    If(Var("new_dislike_status"), 1, -1)
                                 ),
-                                likeCount: If(
-                                    Equals(Var("newLikeStatus"), false),
+                                like_count: If(
+                                    Equals(Var("new_like_status"), false),
                                     Add(
                                         Select(
-                                            ["data", "stats", "likeCount"],
+                                            ["data", "stats", "like_count"],
                                             Var("author"),
                                             1
                                         ),
                                         -1
                                     ),
                                     Select(
-                                        ["data", "stats", "likeCount"],
+                                        ["data", "stats", "like_count"],
                                         Var("author"),
                                         null
                                     )
@@ -118,17 +118,21 @@ const DislikePublication = (ref) =>
                         },
                     }),
                     If(
-                        Equals(Var("newLikeStatus"), false),
+                        Equals(Var("new_like_status"), false),
                         Delete(
                             Select(
                                 ["ref"],
                                 Get(
-                                    Match(Index("status_notification"), [
-                                        Select(["ref"], Var("author")),
-                                        Select(["ref"], Var("viewer")),
-                                        "like",
-                                        ref,
-                                    ])
+                                    Match(
+                                        Index(
+                                            "single_status_interactions_notification"
+                                        ),
+                                        [
+                                            ref,
+                                            Select(["ref"], Var("interactor")),
+                                            "like",
+                                        ]
+                                    )
                                 )
                             )
                         ),
@@ -141,16 +145,16 @@ const DislikePublication = (ref) =>
                     data: {
                         dislike: true,
                         publication: ref,
-                        author: Select(["ref"], Var("viewer")),
-                        createdAt: Now(),
+                        interactor: Select(["ref"], Var("interactor")),
+                        created_at: Now(),
                     },
                 }),
                 Update(ref, {
                     data: {
                         stats: {
-                            dislikeCount: Add(
+                            dislike_count: Add(
                                 Select(
-                                    ["data", "stats", "dislikeCount"],
+                                    ["data", "stats", "dislike_count"],
                                     Var("publication"),
                                     0
                                 ),
@@ -162,9 +166,9 @@ const DislikePublication = (ref) =>
                 Update(Select(["ref"], Var("author")), {
                     data: {
                         stats: {
-                            dislikeCount: Add(
+                            dislike_count: Add(
                                 Select(
-                                    ["data", "stats", "dislikeCount"],
+                                    ["data", "stats", "dislike_count"],
                                     Var("author"),
                                     0
                                 ),

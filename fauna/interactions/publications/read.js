@@ -1,21 +1,30 @@
 import { query } from "faunadb";
-const { Let, Select, Index, Get, If, Var, Exists, Match } = query;
-
-import { GetViewerRef } from "../../authors/read";
+const {
+    Let,
+    Select,
+    Index,
+    Get,
+    If,
+    Var,
+    Exists,
+    Match,
+    Call,
+    Function: Fn,
+} = query;
 
 const GetPublicationInteractions = (ref) =>
     Let(
         {
-            interactionsMatch: Match(Index("publication_interactions"), [
-                ref,
-                GetViewerRef(),
-            ]),
+            interactions_match: Match(
+                Index("single_publication_interactions"),
+                [ref, Call(Fn("getViewerRef"))]
+            ),
         },
         If(
-            Exists(Var("interactionsMatch")),
+            Exists(Var("interactions_match")),
             Let(
                 {
-                    interactions: Get(Var("interactionsMatch")),
+                    interactions: Get(Var("interactions_match")),
                 },
                 {
                     like: Select(["data", "like"], Var("interactions"), null),
@@ -27,7 +36,7 @@ const GetPublicationInteractions = (ref) =>
                     save: Select(["data", "save"], Var("interactions"), null),
                     comment: If(
                         Select(
-                            ["data", "commentCount"],
+                            ["data", "comment_count"],
                             Var("interactions"),
                             0
                         ) > 0,
@@ -35,8 +44,11 @@ const GetPublicationInteractions = (ref) =>
                         null
                     ),
                     cheer: If(
-                        Select(["data", "cheerCount"], Var("interactions"), 0) >
-                            0,
+                        Select(
+                            ["data", "cheer_count"],
+                            Var("interactions"),
+                            0
+                        ) > 0,
                         true,
                         null
                     ),

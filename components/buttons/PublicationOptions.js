@@ -19,10 +19,7 @@ const MyLink = forwardRef((props, ref) => {
     );
 });
 
-export default function PublicationOptionsButton({
-    publicationId,
-    publishedAt,
-}) {
+export default function PublicationOptionsButton({ publicationId, createdAt }) {
     const [copyLinkModalOpen, setCopyLinkModalOpen] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
@@ -53,7 +50,7 @@ export default function PublicationOptionsButton({
                     <div>
                         <Menu.Button className="inline-flex w-full justify-center rounded-md py-2 text-sm font-medium hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
                             <p className="text-sm dark:text-gray-300">
-                                {moment(publishedAt).fromNow()}
+                                {moment(createdAt).fromNow()}
                             </p>
                             <ChevronDownIcon
                                 className="h-5 w-5 text-blue-600 hover:text-blue-300"

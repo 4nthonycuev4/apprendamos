@@ -74,7 +74,7 @@ export const PublicationInteractions = ({ id }) => {
                         <ThumbUpIconOutline strokeWidth={1.5} className="w-5" />
                     )}
                 </button>
-                <span>{(stats && stats.likeCount) || 0}</span>
+                <span>{(stats && stats.like_count) || 0}</span>
             </div>
 
             <div className="flex text-red-400">
@@ -85,7 +85,7 @@ export const PublicationInteractions = ({ id }) => {
                         <HeartIconOutline strokeWidth={1.5} className="w-5" />
                     )}
                 </button>
-                <span>{(stats && stats.cheerCount) || 0}</span>
+                <span>{(stats && stats.cheer_ount) || 0}</span>
             </div>
 
             <CommentsModal id={id} />

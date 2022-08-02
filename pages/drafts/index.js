@@ -10,7 +10,7 @@ const CreatePublicationDraftPage = ({ user }) => {
     const [body, setBody] = useState("");
     const router = useRouter();
 
-    const createPublicationDraft = async () => {
+    const createDraft = async () => {
         const id = await fetch(`/api/drafts`, {
             method: "POST",
             headers: {
@@ -35,7 +35,7 @@ const CreatePublicationDraftPage = ({ user }) => {
                 <button
                     type="submit"
                     className="border-2 border-blue-700 bg-blue-700 rounded px-2 py-1 text-gray-100 font-semibold"
-                    onClick={createPublicationDraft}
+                    onClick={createDraft}
                 >
                     Crear borrador
                 </button>

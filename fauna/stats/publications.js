@@ -7,18 +7,18 @@ const GetPublicationStats = (ref) =>
             publication: Get(ref),
         },
         {
-            likeCount: Select(
-                ["data", "stats", "likeCount"],
+            like_count: Select(
+                ["data", "stats", "like_count"],
                 Var("publication"),
                 null
             ),
-            cheerCount: Select(
-                ["data", "stats", "cheerCount"],
+            cheer_count: Select(
+                ["data", "stats", "cheer_count"],
                 Var("publication"),
                 null
             ),
-            commentCount: Select(
-                ["data", "stats", "commentCount"],
+            comment_count: Select(
+                ["data", "stats", "comment_count"],
                 Var("publication"),
                 null
             ),

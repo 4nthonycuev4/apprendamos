@@ -1,12 +1,9 @@
 /** @format */
 import Head from "next/head";
-import { useState } from "react";
-import { useUser } from "@auth0/nextjs-auth0";
 import FaunaClient from "../../../fauna";
 import { MDParsed } from "../../../components/Markdown";
 import Publication404 from "../../../components/errors/Publication404";
 import PublicationOptionsButton from "./../../../components/buttons/PublicationOptions";
-import PublicationStats from "./../../../components/PublicationStats";
 import Title from "./../../../components/navigation/Title";
 import BasicAuthorCard from "./../../../components/items/AuthorCard/Basic";
 import FollowButton from "../../../components/buttons/Follow";
@@ -47,7 +44,7 @@ const PublicationPage = ({ publication }) => {
                     <div className="flex items-center">
                         <PublicationOptionsButton
                             publicationId={publication.id}
-                            publishedAt={publication.publishedAt}
+                            createdAt={publication.createdAt}
                         />
                     </div>
                 </div>
@@ -65,7 +62,10 @@ const getServerSideProps = async ({ query, resolvedUrl }) => {
         const publication = await client.getSinglePublication(id);
         return {
             props: {
-                publication,
+                publication: {
+                    ...publication,
+                    id,
+                },
             },
         };
     } catch (error) {

@@ -139,9 +139,11 @@ export default class FaunaClient {
             .then((res) => FaunaToJSON(res));
     }
 
-    async likePublication(id) {
+    async likePublication(publication_id) {
         return this.client
-            .query(LikePublication(Ref(Collection("publications"), id)))
+            .query(
+                LikePublication(Ref(Collection("publications"), publication_id))
+            )
             .then((res) => FaunaToJSON(res));
     }
 
@@ -338,6 +340,18 @@ export default class FaunaClient {
             .then((res) => FaunaToJSON(res));
     }
 
+    async createPublication(draft_id, hashtags) {
+        return this.client
+            .query(
+                Call(
+                    Fn("createPublication"),
+                    Ref(Collection("drafts"), draft_id),
+                    hashtags
+                )
+            )
+            .then((res) => FaunaToJSON(res));
+    }
+
     async updatePublicationDraft(id, body) {
         return this.client
             .query(
@@ -349,10 +363,10 @@ export default class FaunaClient {
             .then((res) => FaunaToJSON(res));
     }
 
-    async getSinglePublicationDraft(id) {
+    async getPublicationDraft(draft_id) {
         return this.client
             .query(
-                GetSinglePublicationDraft(Ref(Collection("publications"), id))
+                Call(Fn("getSingleDraft"), Ref(Collection("drafts"), draft_id))
             )
             .then((res) => FaunaToJSON(res));
     }
@@ -372,18 +386,14 @@ export default class FaunaClient {
 
     // PUBLICATIONS CRUD
 
-    async createPublication(draft_id, hashtags) {
-        return this.client.query(
-            Call(Fn("createPublication"), [
-                Ref(Collection("publications"), draft_id),
-                hashtags,
-            ])
-        );
-    }
-
     async getSinglePublication(id) {
         return this.client
-            .query(GetSinglePublication(Ref(Collection("publications"), id)))
+            .query(
+                Call(
+                    Fn("getSinglePublication"),
+                    Ref(Collection("publications"), id)
+                )
+            )
             .then((res) => FaunaToJSON(res));
     }
 

@@ -12,7 +12,7 @@ const SinglePublicationDraftAPI = async (req, res) => {
             const id = await client.deletePublicationDraft({ collection, id });
             res.status(200).json(id);
         } else if (req.method === "GET") {
-            const response = await client.getSinglePublicationDraft(id);
+            const response = await client.getPublicationDraft(id);
             res.status(200).json(response);
         } else if (req.method === "PUT") {
             const { body } = req.body;
