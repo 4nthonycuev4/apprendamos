@@ -14,7 +14,7 @@ const PublicationPage = ({ publication }) => {
         <>
             <Head>
                 <title>{`@${
-                    publication.author.username
+                    publication.author.nickname
                 }: ${publication.body.slice(2, 20)}... || Apprendamos`}</title>
                 <meta property="og:url" content="apprendamos.com" />
                 <meta property="og:type" content="website" />
@@ -38,7 +38,7 @@ const PublicationPage = ({ publication }) => {
                 <div className="flex justify-between items-center">
                     <div className="flex space-x-2 items-center">
                         <BasicAuthorCard {...publication.author} />
-                        <FollowButton username={publication.author.username} />
+                        <FollowButton nickname={publication.author.nickname} />
                     </div>
 
                     <div className="flex items-center">

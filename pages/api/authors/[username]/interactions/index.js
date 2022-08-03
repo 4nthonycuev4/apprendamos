@@ -6,9 +6,9 @@ const AuthorInteractionsAPIPage = async (req, res) => {
         const { accessToken } = await getAccessToken(req, res);
         const client = new FaunaClient(accessToken);
 
-        const { username } = req.query;
+        const { nickname } = req.query;
 
-        const interactions = await client.getAuthorInteractions(username);
+        const interactions = await client.getAuthorInteractions(nickname);
 
         res.status(200).json(interactions);
     } catch (error) {

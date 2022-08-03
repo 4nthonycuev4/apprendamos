@@ -34,7 +34,7 @@ const PanelAuth = () => {
                     {authors.map((page) =>
                         page.data.map((author) => (
                             <BasicAuthorCard
-                                key={author.username}
+                                key={author.nickname}
                                 {...author}
                             />
                         ))
@@ -50,7 +50,7 @@ const PanelNoAuth = () => <h1>Panel no auth</h1>;
 const Panel = () => {
     const { user } = useUser();
 
-    if (user && user?.username) return <PanelAuth />;
+    if (user && user?.nickname) return <PanelAuth />;
     return <PanelNoAuth />;
 };
 

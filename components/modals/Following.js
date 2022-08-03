@@ -5,14 +5,14 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import BaseModal from "./Base";
 import BasicAuthorCard from "./../items/AuthorCard/Basic";
 
-export default function FollowingModal({ username, followingCount }) {
+export default function FollowingModal({ nickname, followingCount }) {
     const [isOpen, setIsOpen] = useState(false);
     const handleOpen = () => setIsOpen(true);
 
     const getKey = (pageIndex, previousPageData) => {
         if (previousPageData && !previousPageData.data) return null;
-        if (pageIndex === 0) return `/api/authors/${username}/following`;
-        return `/api/authors/${username}/following?afterId=${previousPageData.afterId}`;
+        if (pageIndex === 0) return `/api/authors/${nickname}/following`;
+        return `/api/authors/${nickname}/following?afterId=${previousPageData.afterId}`;
     };
     const { data, size, setSize } = useSWRInfinite(getKey);
 
@@ -34,7 +34,7 @@ export default function FollowingModal({ username, followingCount }) {
             <BaseModal
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
-                title={`${username} está siguiendo a`}
+                title={`${nickname} está siguiendo a`}
             >
                 <InfiniteScroll
                     dataLength={following.length}

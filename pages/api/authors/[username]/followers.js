@@ -6,10 +6,10 @@ const AuthorFollowersAPI = async (req, res) => {
     try {
         const client = new FaunaClient();
 
-        const { username } = req.query;
+        const { nickname } = req.query;
         const afterId = req.query && req.query.afterId;
 
-        const content = await client.getAuthorFollowers(username, afterId);
+        const content = await client.getAuthorFollowers(nickname, afterId);
 
         res.status(200).json(content);
     } catch (error) {

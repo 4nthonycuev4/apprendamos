@@ -5,24 +5,24 @@ import { useUser } from "@auth0/nextjs-auth0";
 import FollowersModal from "./modals/Followers";
 import FollowingModal from "./modals/Following";
 
-const AuthorInteractions = ({ username }) => {
+const AuthorInteractions = ({ nickname }) => {
     const { user, error } = useUser();
     const isAuthenticated = !error && user?.id;
-    const isAuthor = user?.username === username;
+    const isAuthor = user?.nickname === nickname;
 
     const { data: stats, mutate: refetchStats } = useSWR(
-        `/api/authors/${username}/stats`,
+        `/api/authors/${nickname}/stats`,
         { refreshInterval: 5000 }
     );
     const { data: interactions, mutate: refetchInteractions } = useSWR(
-        isAuthenticated && `/api/authors/${username}/interactions`,
+        isAuthenticated && `/api/authors/${nickname}/interactions`,
         { refreshInterval: 5000 }
     );
 
     const isFollowing = (interactions && interactions.follow) || false;
 
     const follow = () =>
-        fetch(`/api/authors/${username}/interactions/follow`, {
+        fetch(`/api/authors/${nickname}/interactions/follow`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -42,11 +42,11 @@ const AuthorInteractions = ({ username }) => {
                     <span>Likes</span>
                 </div>
                 <FollowersModal
-                    username={username}
+                    nickname={nickname}
                     followerCount={(stats && stats.followerCount) || 0}
                 />
                 <FollowingModal
-                    username={username}
+                    nickname={nickname}
                     followingCount={(stats && stats.followingCount) || 0}
                 />
             </div>

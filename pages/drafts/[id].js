@@ -53,8 +53,8 @@ const SinglePublicationDraftPage = ({ user }) => {
             <Head>
                 <title>Crear Pregunta</title>
             </Head>
-            <Title>@{user.username} draft</Title>
-            <p>This is a draft page for @{user.username}</p>
+            <Title>@{user.nickname} draft</Title>
+            <p>This is a draft page for @{user.nickname}</p>
             {body && body.length > 0 && (
                 <>
                     <PublicationForm

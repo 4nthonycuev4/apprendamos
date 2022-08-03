@@ -8,7 +8,7 @@ import AuthorInteractions from "./../../AuthorInteractions";
 
 export const FullAuthorCard = ({
     picture,
-    username,
+    nickname,
     name,
     joinedAt,
     about,
@@ -26,9 +26,9 @@ export const FullAuthorCard = ({
         </div>
         <div className="text-center">
             <h1 className="text-xl font-bold">{name}</h1>
-            <h1 className="text-md mb-2 font-normal">@{username}</h1>
+            <h1 className="text-md mb-2 font-normal">@{nickname}</h1>
         </div>
-        <AuthorInteractions username={username} />
+        <AuthorInteractions nickname={nickname} />
         <div className="itmes-center flex h-6 justify-center ">
             <div className="pt-[2px] pr-1">
                 <CalendarIcon className="h-5 w-5" />

@@ -26,7 +26,7 @@ const FollowButton = ({ following, follow }) => (
     </div>
 );
 
-export const AuthorStatsButtons = ({ originalStats, username }) => {
+export const AuthorStatsButtons = ({ originalStats, nickname }) => {
     const { user, loading } = useUser();
     const [stats, setStats] = useState(originalStats);
 
@@ -35,13 +35,13 @@ export const AuthorStatsButtons = ({ originalStats, username }) => {
     }, [originalStats]);
 
     const getFollowing = async () => {
-        const following = await fetch(`/api/users/following/${username}`);
+        const following = await fetch(`/api/users/following/${nickname}`);
         const followingJson = await following.json();
         setStats({ ...stats, following: followingJson });
     };
 
     const follow = async () => {
-        const response = await fetch(`/api/users/${username}/follow`, {
+        const response = await fetch(`/api/users/${nickname}/follow`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -59,7 +59,7 @@ export const AuthorStatsButtons = ({ originalStats, username }) => {
                     <span>Likes</span>
                 </div>
                 <FollowersModal
-                    username={username}
+                    nickname={nickname}
                     followerCount={stats.followerCount}
                 />
                 <div className="flex space-x-1">
@@ -67,7 +67,7 @@ export const AuthorStatsButtons = ({ originalStats, username }) => {
                     <span>Siguiendo</span>
                 </div>
             </div>
-            {user?.username && (
+            {user?.nickname && (
                 <FollowButton following={stats.following} follow={follow} />
             )}
         </div>

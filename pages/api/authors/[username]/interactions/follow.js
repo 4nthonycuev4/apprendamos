@@ -6,9 +6,9 @@ const FollowAuthorAPIPage = async (req, res) => {
         const { accessToken } = await getAccessToken(req, res);
         const client = new FaunaClient(accessToken);
 
-        const { username } = req.query;
+        const { nickname } = req.query;
 
-        await client.followAuthor(username);
+        await client.followAuthor(nickname);
 
         res.status(200).send("Transaction succeeded");
     } catch (error) {

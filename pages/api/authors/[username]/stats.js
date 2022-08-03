@@ -4,8 +4,8 @@ const AuthorStatsAPIPage = async (req, res) => {
     try {
         const client = new FaunaClient();
 
-        const { username } = req.query;
-        const stats = await client.getAuthorStats(username);
+        const { nickname } = req.query;
+        const stats = await client.getAuthorStats(nickname);
 
         res.status(200).json(stats);
     } catch (error) {

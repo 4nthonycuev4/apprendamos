@@ -79,7 +79,7 @@ const DislikePublication = (ref) =>
                                         -1
                                     ),
                                     Select(
-                                        ["data", "stats", " like_count"],
+                                        ["data", "stats", "like_count"],
                                         Var("publication"),
                                         null
                                     )

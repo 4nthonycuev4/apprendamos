@@ -23,7 +23,7 @@ export default function DeleteContentModal({ isOpen, setIsOpen, contentId }) {
             .catch((err) => console.log(err));
 
         if (deleted?.status === "done") {
-            router.push("/" + user.username);
+            router.push("/" + user.nickname);
         }
 
         setIsDeleting(false);

@@ -59,7 +59,7 @@ const FollowSomeonePage = ({ user }) => {
                                             key={item.id}
                                             {...item}
                                             isViewer={
-                                                item.username === user.username
+                                                item.nickname === user.nickname
                                             }
                                         />
                                     </div>

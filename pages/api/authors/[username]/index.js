@@ -12,9 +12,9 @@ export default async function users(req, res) {
 
         const client = new FaunaClient(accessToken);
 
-        const { username } = req.query;
+        const { nickname } = req.query;
 
-        const user = await client.getSingleUser(username);
+        const user = await client.getSingleUser(nickname);
 
         res.status(200).json(user);
     } catch (error) {

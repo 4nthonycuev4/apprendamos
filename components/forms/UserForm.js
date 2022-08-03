@@ -15,7 +15,7 @@ export default function UserForm({ user }) {
     } = useForm({
         defaultValues: {
             name: user?.name,
-            username: user?.username,
+            nickname: user?.nickname,
             about: user?.about,
         },
     });
@@ -23,11 +23,11 @@ export default function UserForm({ user }) {
     const router = useRouter();
     const picture = `/ru${selectedPictureId}.jpg`;
     const createUser = async (data) => {
-        const { name, about, username } = data;
+        const { name, about, nickname } = data;
         try {
             await fetch("/api/auth/register", {
                 method: "POST",
-                body: JSON.stringify({ name, about, username, picture }),
+                body: JSON.stringify({ name, about, nickname, picture }),
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -39,11 +39,11 @@ export default function UserForm({ user }) {
     };
 
     const updateUser = async (data) => {
-        const { name, about, username } = data;
+        const { name, about, nickname } = data;
         try {
             const user = await fetch(`/api/viewer/update`, {
                 method: "PUT",
-                body: JSON.stringify({ name, about, username, picture }),
+                body: JSON.stringify({ name, about, nickname, picture }),
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -140,14 +140,14 @@ export default function UserForm({ user }) {
             <div className="mb-4">
                 <label
                     className="mb-1  block text-sm font-bold"
-                    htmlFor="username"
+                    htmlFor="nickname"
                 >
                     Nombre de Usuario
                 </label>
                 <input
                     type="text"
-                    id="username"
-                    {...register("username", {
+                    id="nickname"
+                    {...register("nickname", {
                         required: true,
                         minLength: 4,
                         maxLength: 20,
@@ -155,15 +155,15 @@ export default function UserForm({ user }) {
                     })}
                     className="w-full rounded border bg-white px-3 py-2 text-gray-700 outline-none"
                 />
-                {errors.username && (
+                {errors.nickname && (
                     <p className="font-bold text-red-900">
-                        {errors.username.type === "required" &&
+                        {errors.nickname.type === "required" &&
                             "El nombre de usuario es obligatorio"}
-                        {errors.username.type === "minLength" &&
+                        {errors.nickname.type === "minLength" &&
                             "El nombre de usuario debe tener al menos 4 caracteres"}
-                        {errors.username.type === "maxLength" &&
+                        {errors.nickname.type === "maxLength" &&
                             "El nombre de usuario no puede tener más de 20 caracteres"}
-                        {errors.username.type === "pattern" &&
+                        {errors.nickname.type === "pattern" &&
                             "El nombre de usuario solo puede contener (letras y números) y (guiones y puntos) entre ellos"}
                     </p>
                 )}

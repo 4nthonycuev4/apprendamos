@@ -2,20 +2,20 @@ import Link from "next/link";
 import useSWR from "swr";
 import { useUser } from "@auth0/nextjs-auth0";
 
-export default function FollowButton({ username }) {
+export default function FollowButton({ nickname }) {
     const { user, error } = useUser();
     const isAuthenticated = !error && user?.id;
-    const isAuthor = user?.username === username;
+    const isAuthor = user?.nickname === nickname;
 
     const { data: interactions, mutate: refetchInteractions } = useSWR(
-        isAuthenticated && `/api/authors/${username}/interactions`,
+        isAuthenticated && `/api/authors/${nickname}/interactions`,
         { refreshInterval: 5000 }
     );
 
     const isFollowing = (interactions && interactions.follow) || false;
 
     const follow = () =>
-        fetch(`/api/authors/${username}/interactions/follow`, {
+        fetch(`/api/authors/${nickname}/interactions/follow`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -26,7 +26,7 @@ export default function FollowButton({ username }) {
 
     if (!isAuthenticated || isAuthor) {
         return (
-            <Link href={`/@${username}`}>
+            <Link href={`/@${nickname}`}>
                 <a>
                     <button className="text-xs font-bold text-white py-1 w-32 rounded-full border-[1.5px] bg-gray-900 hover:bg-gray-800">
                         Ir al perfil

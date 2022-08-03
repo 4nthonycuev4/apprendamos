@@ -84,7 +84,7 @@ const MobileNavbarAuth = ({ user }) => (
                 </div>
             </a>
         </Link>
-        <Link href={`/@${user.username}`}>
+        <Link href={`/@${user.nickname}`}>
             <a>
                 <div className="xl:hidden relative h-6 w-6 rounded-full overflow-hidden border cursor-pointer">
                     <Image
@@ -141,7 +141,7 @@ const MobileNavbarNoAuth = () => (
 const MobileNavbar = () => {
     const { user } = useUser();
 
-    if (user && user?.username) return <MobileNavbarAuth user={user} />;
+    if (user && user?.nickname) return <MobileNavbarAuth user={user} />;
     return <MobileNavbarNoAuth />;
 };
 

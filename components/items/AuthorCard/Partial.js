@@ -3,11 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const PartialAuthorCard = ({ username, name, picture }) => {
+const PartialAuthorCard = ({ nickname, name, picture }) => {
     return (
         <div>
             <div className="flex items-center">
-                <Link href={`/@${username}`}>
+                <Link href={`/@${nickname}`}>
                     <a>
                         <div className="relative h-10 w-10 rounded-full overflow-hidden border mr-2.5">
                             <Image
@@ -20,12 +20,12 @@ const PartialAuthorCard = ({ username, name, picture }) => {
                     </a>
                 </Link>
                 <div>
-                    <Link href={`/@${username}`}>
+                    <Link href={`/@${nickname}`}>
                         <a>
                             <h1 className="font-semibold text-sm -mb-1">
                                 {name}
                             </h1>
-                            <h1 className="font-normal text-sm dark:text-gray-300">{`@${username}`}</h1>
+                            <h1 className="font-normal text-sm dark:text-gray-300">{`@${nickname}`}</h1>
                         </a>
                     </Link>
                 </div>

@@ -12,8 +12,8 @@ const Profile = ({ userData }) => {
     const getKey = (pageIndex, previousPageData) => {
         if (previousPageData && !previousPageData.data) return null;
         if (pageIndex === 0)
-            return `/api/authors/${userData.username}/publications`;
-        return `/api/authors/${userData.username}/publications?afterId=${previousPageData.afterId}`;
+            return `/api/authors/${userData.nickname}/publications`;
+        return `/api/authors/${userData.nickname}/publications?afterId=${previousPageData.afterId}`;
     };
     const { data, size, setSize } = useSWRInfinite(getKey);
 
@@ -25,12 +25,12 @@ const Profile = ({ userData }) => {
     return (
         <>
             <Head>
-                <title>{`${userData.name} (@${userData.username}) || Apprendamos`}</title>
+                <title>{`${userData.name} (@${userData.nickname}) || Apprendamos`}</title>
 
                 <meta property="og:image" content={userData.picture} />
                 <meta
                     property="og:title"
-                    content={`${userData.name} (@${userData.username}) || Apprendamos`}
+                    content={`${userData.name} (@${userData.nickname}) || Apprendamos`}
                 />
                 <meta property="og:description" content={userData.about} />
                 <meta property="og:url" content="apprendamos.com" />
@@ -74,10 +74,10 @@ const ProfilePageHandler = ({ userData, errorCode }) => {
 
 const getServerSideProps = async ({ query, resolvedUrl }) => {
     try {
-        const { rawUsername } = query;
-        const username = rawUsername.split("@")[1];
+        const { rawNickname } = query;
+        const nickname = rawNickname.split("@")[1];
 
-        if (!username) {
+        if (!nickname) {
             return {
                 redirect: {
                     permanent: false,
@@ -89,7 +89,7 @@ const getServerSideProps = async ({ query, resolvedUrl }) => {
 
         const client = new FaunaClient();
 
-        const user = await client.getSingleUser(username);
+        const user = await client.getSingleUser(nickname);
 
         return { props: { userData: user } };
     } catch (error) {

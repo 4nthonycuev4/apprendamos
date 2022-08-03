@@ -20,11 +20,11 @@ export default function Comment({ body, createdAt, updatedAt, author }) {
             </div>
             <div className="w-full">
                 <div className="flex justify-between">
-                    <Link href={`/${author.username}`}>
+                    <Link href={`/${author.nickname}`}>
                         <a className="hover:underline">
                             <span className="font-bold">{author.name}</span>
                             <span> · </span>
-                            <span>@{author.username}</span>
+                            <span>@{author.nickname}</span>
                         </a>
                     </Link>
                 </div>

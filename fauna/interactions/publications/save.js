@@ -17,47 +17,48 @@ const {
     Not,
     Do,
     Delete,
+    Call,
+    Paginate,
+    Function: Fn,
 } = query;
-
-import { GetViewer } from "../../authors/read";
 
 const SavePublication = (ref) =>
     Let(
         {
             publication: Get(ref),
             author: Get(Select(["data", "author"], Var("publication"))),
-            viewer: GetViewer(),
-            interactionsMatch: Match(Index("publication_interactions"), [
-                ref,
-                Select(["ref"], Var("viewer")),
-            ]),
+            interactor: Call(Fn("getViewer")),
+            interactions_match: Match(
+                Index("single_publication_interactions"),
+                [ref, Select(["ref"], Var("interactor"))]
+            ),
         },
         If(
-            Exists(Var("interactionsMatch")),
+            Exists(Var("interactions_match")),
             Let(
                 {
-                    interactions: Get(Var("interactionsMatch")),
-                    newSaveStatus: Not(
+                    interactions: Get(Var("interactions_match")),
+                    new_save_status: Not(
                         Select(["data", "save"], Var("interactions"), false)
                     ),
                 },
                 Do(
                     Update(Select(["ref"], Var("interactions")), {
                         data: {
-                            save: Var("newSaveStatus"),
-                            savedAt: Now(),
+                            save: Var("new_save_status"),
+                            saved_at: Now(),
                         },
                     }),
                     Update(ref, {
                         data: {
                             stats: {
-                                saveCount: Add(
+                                save_count: Add(
                                     Select(
-                                        ["data", "stats", "saveCount"],
+                                        ["data", "stats", "save_count"],
                                         Var("publication"),
                                         0
                                     ),
-                                    If(Var("newSaveStatus"), 1, -1)
+                                    If(Var("new_save_status"), 1, -1)
                                 ),
                             },
                         },
@@ -65,22 +66,22 @@ const SavePublication = (ref) =>
                     Update(Select(["ref"], Var("author")), {
                         data: {
                             stats: {
-                                saveCount: Add(
+                                save_count: Add(
                                     Select(
-                                        ["data", "stats", "saveCount"],
+                                        ["data", "stats", "save_count"],
                                         Var("author"),
                                         0
                                     ),
-                                    If(Var("newSaveStatus"), 1, -1)
+                                    If(Var("new_save_status"), 1, -1)
                                 ),
                             },
                         },
                     }),
                     If(
-                        Var("newSaveStatus"),
+                        Var("new_save_status"),
                         Create(Collection("notifications"), {
                             data: {
-                                type: "save",
+                                alert: "save",
                                 status: ref,
                                 body: SubString(
                                     Select(
@@ -94,19 +95,23 @@ const SavePublication = (ref) =>
                                     ["data", "author"],
                                     Var("publication")
                                 ),
-                                author: Select(["ref"], Var("viewer")),
+                                interactor: Select(["ref"], Var("interactor")),
                             },
                         }),
                         Delete(
                             Select(
-                                ["ref"],
-                                Get(
-                                    Match(Index("status_notification"), [
-                                        Select(["ref"], Var("author")),
-                                        Select(["ref"], Var("viewer")),
-                                        "save",
-                                        ref,
-                                    ])
+                                ["data", 0],
+                                Paginate(
+                                    Match(
+                                        Index(
+                                            "single_status_interactions_notification"
+                                        ),
+                                        [
+                                            ref,
+                                            Select(["ref"], Var("interactor")),
+                                            "save",
+                                        ]
+                                    )
                                 )
                             )
                         )
@@ -117,18 +122,18 @@ const SavePublication = (ref) =>
                 Create(Collection("publicationinteractions"), {
                     data: {
                         save: true,
-                        savedAt: Now(),
+                        saved_At: Now(),
                         publication: ref,
-                        author: Select(["ref"], Var("viewer")),
-                        createdAt: Now(),
+                        author: Select(["ref"], Var("interactor")),
+                        created_at: Now(),
                     },
                 }),
                 Update(ref, {
                     data: {
                         stats: {
-                            saveCount: Add(
+                            save_count: Add(
                                 Select(
-                                    ["data", "stats", "saveCount"],
+                                    ["data", "stats", "save_count"],
                                     Var("publication"),
                                     0
                                 ),
@@ -140,9 +145,9 @@ const SavePublication = (ref) =>
                 Update(Select(["ref"], Var("author")), {
                     data: {
                         stats: {
-                            saveCount: Add(
+                            save_count: Add(
                                 Select(
-                                    ["data", "stats", "saveCount"],
+                                    ["data", "stats", "save_count"],
                                     Var("author"),
                                     0
                                 ),
@@ -153,15 +158,15 @@ const SavePublication = (ref) =>
                 }),
                 Create(Collection("notifications"), {
                     data: {
-                        type: "save",
+                        alert: "save",
                         status: ref,
                         body: SubString(
                             Select(["data", "body"], Var("publication")),
                             0,
                             100
                         ),
-                        author: Select(["data", "author"], Var("publication")),
-                        author: Select(["ref"], Var("viewer")),
+                        author: Select(["ref"], Var("author")),
+                        interactor: Select(["ref"], Var("interactor")),
                     },
                 })
             )

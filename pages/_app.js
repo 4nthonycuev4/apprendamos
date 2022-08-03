@@ -39,7 +39,7 @@ const ComponentHandler = ({ Component, pageProps }) => {
     if (
         route === "/home" ||
         route === "/p/[id]" ||
-        route === "/[rawUsername]" ||
+        route === "/[rawNickname]" ||
         route === "/trending" ||
         route === "/search" ||
         route === "/notifications" ||

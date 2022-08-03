@@ -8,9 +8,7 @@ import FaunaClient from "fauna";
 const LikePublicationAPIPage = async (req, res) => {
     try {
         const { accessToken } = await getAccessToken(req, res);
-        console.log("accessToken", accessToken);
         const session = getSession(req, res);
-        console.log("session", session);
         const client = new FaunaClient(accessToken);
 
         const { id } = req.query;

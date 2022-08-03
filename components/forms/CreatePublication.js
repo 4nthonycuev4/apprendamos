@@ -97,7 +97,7 @@ export default function CreatePublicationForm({ user }) {
                         />
                     </div>
                     <span className="dark:text-gray-200">
-                        Borrador de {user.username}
+                        Borrador de {user.nickname}
                     </span>
                     <span className="text-gray-400">
                         {saved ? "Guardado" : saving ? "Guardando..." : ""}

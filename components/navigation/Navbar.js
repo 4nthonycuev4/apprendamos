@@ -1,16 +1,12 @@
-/** @format */
-import { useRouter } from "next/router";
 import { useUser } from "@auth0/nextjs-auth0";
 import Image from "next/image";
 import {
-    LoginIcon,
     BookmarkIcon,
     SearchIcon,
     TrendingUpIcon,
     PencilAltIcon,
     HomeIcon,
     BellIcon,
-    MailIcon,
     CogIcon,
 } from "@heroicons/react/outline";
 import Link from "next/link";
@@ -90,15 +86,6 @@ const NavbarAuth = ({ user }) => (
                 </div>
             </a>
         </Link>
-        {/* 
-    <Link href="/messages">
-      <a>
-        <div className="flex items-center justify-center xl:justify-start">
-          <MailIcon className="h-6 w-6 xl:mr-4" />
-          <span>Mensajes</span>
-        </div>
-      </a>
-    </Link> */}
         <Link href="/settings/profile">
             <a>
                 <div className="flex items-center justify-center xl:justify-start">
@@ -110,7 +97,7 @@ const NavbarAuth = ({ user }) => (
         <div className="hidden xl:block">
             <BasicAuthorCard {...user} />
         </div>
-        <Link href={`/@${user.username}`}>
+        <Link href={`/@${user.nickname}`}>
             <a>
                 <div className="xl:hidden relative h-10 w-10 rounded-full overflow-hidden border cursor-pointer">
                     <Image
@@ -171,7 +158,7 @@ const NavbarNoAuth = () => (
 const Navbar = () => {
     const { user } = useUser();
 
-    if (user && user?.username) return <NavbarAuth user={user} />;
+    if (user && user?.nickname) return <NavbarAuth user={user} />;
     return <NavbarNoAuth />;
 };
 

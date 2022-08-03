@@ -41,7 +41,7 @@ export default function CommentOptionsModal({
             <div className="fixed inset-0 dark:bg-slate-700 max-w-xl mx-auto" />
             <div className="solid py-auto relative h-full w-auto mx-6 items-center justify-center space-y-4">
                 <div className="mx-auto mt-10 w-full space-y-8 px-4 sm:w-1/2">
-                    {viewer?.username === comment.author.username ? (
+                    {viewer?.nickname === comment.author.nickname ? (
                         <CommentForm commentToUpdate={comment.comment} />
                     ) : (
                         <Comment
@@ -58,7 +58,7 @@ export default function CommentOptionsModal({
                         >
                             Atrás
                         </button>
-                        {viewer?.username === comment.author.username && (
+                        {viewer?.nickname === comment.author.nickname && (
                             <button
                                 type="button"
                                 className="w-40 rounded-lg border py-2 hover:bg-slate-100"

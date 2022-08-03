@@ -86,7 +86,9 @@ export default class FaunaClient {
 
     // VIEWER CRUD
     async getViewer() {
-        return this.client.query(GetViewer()).then((res) => FaunaToJSON(res));
+        return this.client
+            .query(Call(Fn("getViewer")))
+            .then((res) => FaunaToJSON(res));
     }
 
     async updateViewer(data) {

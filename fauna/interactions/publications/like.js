@@ -126,7 +126,7 @@ const LikePublication = (ref) =>
                         Var("new_like_status"),
                         Create(Collection("notifications"), {
                             data: {
-                                type: "like",
+                                alert: "like",
                                 status: ref,
                                 body: SubString(
                                     Select(

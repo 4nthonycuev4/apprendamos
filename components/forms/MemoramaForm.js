@@ -55,7 +55,7 @@ export default function MemoramaForm({ memorama, author }) {
                 .catch((err) => console.error(err));
 
             router.push(
-                `/${res.author.username}/m/${res.content.faunaRef.id}/`
+                `/${res.author.nickname}/m/${res.content.faunaRef.id}/`
             );
         } catch (err) {
             console.error(err);

@@ -28,8 +28,8 @@ const CreatePublicationDraftPage = ({ user }) => {
             <Head>
                 <title>Crear Pregunta</title>
             </Head>
-            <Title>@{user.username} draft</Title>
-            <p>This is a draft page for @{user.username}</p>
+            <Title>@{user.nickname} draft</Title>
+            <p>This is a draft page for @{user.nickname}</p>
             <PublicationForm content={body} setContent={setBody} />
             <div className="flex space-x-4 justify-end pt-2">
                 <button

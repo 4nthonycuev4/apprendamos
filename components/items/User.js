@@ -13,17 +13,17 @@ export default function User({ user }) {
                 src={user.picture}
                 width={40}
                 height={40}
-                alt={user.username}
+                alt={user.nickname}
                 className="rounded-full"
             />
-            <Link href={`/p/${user.username}`}>
+            <Link href={`/p/${user.nickname}`}>
                 <a>
                     <h1 className="text-md -mt-1 ml-2 font-bold hover:underline">
                         {user.name}
                     </h1>
 
                     <h1 className="text-md -mt-1.5 ml-2 font-thin">
-                        @{user.username}
+                        @{user.nickname}
                     </h1>
                 </a>
             </Link>
