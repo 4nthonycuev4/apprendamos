@@ -4,7 +4,7 @@ import { useUser } from "@auth0/nextjs-auth0";
 
 export default function FollowButton({ nickname }) {
     const { user, error } = useUser();
-    const isAuthenticated = !error && user?.id;
+    const isAuthenticated = !error && user?.sub;
     const isAuthor = user?.nickname === nickname;
 
     const { data: interactions, mutate: refetchInteractions } = useSWR(

@@ -1,30 +1,25 @@
-import { useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import useSWRInfinite from "swr/infinite";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import PartialAuthorCard from "../../components/items/AuthorCard/Partial";
+import BasicAuthorCard from "../../components/items/AuthorCard/Basic";
+import FollowButton from "../../components/buttons/Follow";
 import Title from "../../components/navigation/Title";
 
 const FollowSomeonePage = ({ user }) => {
     const getKey = (pageIndex, previousPageData) => {
         if (previousPageData && !previousPageData.data) return null;
-        if (pageIndex === 0) return "/api/users/trending";
-        return `/api/users/trending?afterId=${previousPageData.afterId}`;
+        if (pageIndex === 0) return "/api/authors/trending";
+        return `/api/authors/trending?afterId=${previousPageData.afterId}`;
     };
-    const { data, size, setSize, error } = useSWRInfinite(getKey);
+    const { data, size, setSize } = useSWRInfinite(getKey);
 
-    const [contentSize, setContentSize] = useState(0);
-
-    useEffect(() => {
-        let n = 0;
-        data?.forEach((page) => {
-            n += page.data?.length;
-        });
-        setContentSize(n);
-    }, [size, data]);
+    const authors =
+        data && data[0].data
+            ? [].concat(...data?.map((page) => [].concat(...page?.data)))
+            : [];
 
     return (
         <>
@@ -38,10 +33,9 @@ const FollowSomeonePage = ({ user }) => {
             </p>
 
             <InfiniteScroll
-                scrollableTarget="main"
-                dataLength={contentSize}
+                dataLength={authors.length}
                 next={() => setSize(size + 1)}
-                hasMore={Boolean(data?.at(-1)?.after)}
+                hasMore={data && Boolean(data[data.length - 1].afterId)}
                 loader={<h1>Loading...</h1>}
                 endMessage={
                     <p className="text-center text-gray-600">
@@ -52,15 +46,12 @@ const FollowSomeonePage = ({ user }) => {
                 <div className="grid grid-cols-2 gap-2">
                     {data?.map((page) =>
                         page.data?.map(
-                            (item) =>
-                                item && (
-                                    <div className="border p-2 hover:bg-gray-50 rounded">
-                                        <PartialAuthorCard
-                                            key={item.id}
-                                            {...item}
-                                            isViewer={
-                                                item.nickname === user.nickname
-                                            }
+                            (author) =>
+                                author && (
+                                    <div className="border p-2 hover:bg-gray-50 rounded flex space-x-2 items-center">
+                                        <BasicAuthorCard {...author} />
+                                        <FollowButton
+                                            nickname={author.nickname}
                                         />
                                     </div>
                                 )

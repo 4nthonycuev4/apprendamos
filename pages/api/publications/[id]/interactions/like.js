@@ -1,14 +1,9 @@
-import {
-    getAccessToken,
-    withApiAuthRequired,
-    getSession,
-} from "@auth0/nextjs-auth0";
+import { getAccessToken, withApiAuthRequired } from "@auth0/nextjs-auth0";
 import FaunaClient from "fauna";
 
 const LikePublicationAPIPage = async (req, res) => {
     try {
         const { accessToken } = await getAccessToken(req, res);
-        const session = getSession(req, res);
         const client = new FaunaClient(accessToken);
 
         const { id } = req.query;

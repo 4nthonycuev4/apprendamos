@@ -1,7 +1,7 @@
 /** @format */
 import { query } from "faunadb";
 
-const { CurrentIdentity, Var, Collection, Let, Select, Create, Now } = query;
+const { Var, Collection, Let, Select, Create, Now, Do } = query;
 
 export function CreateAuthor(data) {
     return Let(
@@ -9,25 +9,20 @@ export function CreateAuthor(data) {
             author: Create(Collection("authors"), {
                 data: {
                     ...data,
-                    joinedAt: Now(),
-                    blocked: false,
-                },
-            }),
-            rel: Create(Collection("authorinteractions"), {
-                data: {
-                    author: Select(["ref"], Var("author")),
-                    author: Select(["ref"], Var("author")),
-                    follow: true,
-                },
-            }),
-            account: Create(Collection("accounts"), {
-                data: {
-                    connection: CurrentIdentity(),
-                    author: Select(["ref"], Var("author")),
-                    createdAt: Now(),
+                    joined_at: Now(),
                 },
             }),
         },
-        true
+        Do(
+            Create(Collection("authorinteractions"), {
+                data: {
+                    author: Select(["ref"], Var("author")),
+                    interactor: Select(["ref"], Var("author")),
+                    follow: true,
+                    created_at: Now(),
+                },
+            }),
+            true
+        )
     );
 }

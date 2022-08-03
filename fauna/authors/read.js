@@ -17,67 +17,13 @@ const {
     Map,
     Update,
     Add,
-    Create,
+    Call,
+    Documents,
     Collection,
-    Now,
-    SubString,
-    Count,
-    Time,
-    TimeDiff,
-    Multiply,
-    HasCurrentIdentity,
+    Function: Fn,
 } = query;
 
 // cursors
-const GetAuthorPopularityCursor = (authorRef) =>
-    Let(
-        {
-            author: Get(authorRef),
-            ageFactor: 1,
-            viewFactor: 2,
-            readFactor: 3,
-            likeFactor: 4,
-            dislikeFactor: -5,
-            commentFactor: 6,
-            saveFactor: 7,
-            followerFactor: 8,
-
-            joinTime: Select(["data", "joined"], Var("author")),
-            referenceTime: Time("2022-01-01T00:00:00+00:00"),
-
-            age: TimeDiff(Var("referenceTime"), Var("joinTime"), "hours"),
-            viewCount: Select(["data", "stats", "viewCount"], Var("author")),
-            readCount: Select(["data", "stats", "readCount"], Var("author")),
-            likeCount: Select(["data", "stats", "likeCount"], Var("author")),
-            dislikeCount: Select(
-                ["data", "stats", "dislikeCount"],
-                Var("author")
-            ),
-            commentCount: Select(
-                ["data", "stats", "commentCount"],
-                Var("author")
-            ),
-            saveCount: Select(["data", "stats", "saveCount"], Var("author")),
-            followerCount: Select(
-                ["data", "stats", "followerCount"],
-                Var("author")
-            ),
-        },
-        [
-            Add(
-                Multiply(Var("ageFactor"), Var("age")),
-                Multiply(Var("viewFactor"), Var("viewCount")),
-                Multiply(Var("readFactor"), Var("readCount")),
-                Multiply(Var("likeFactor"), Var("likeCount")),
-                Multiply(Var("dislikeFactor"), Var("dislikeCount")),
-                Multiply(Var("commentFactor"), Var("commentCount")),
-                Multiply(Var("saveFactor"), Var("saveCount")),
-                Multiply(Var("followerFactor"), Var("followerCount"))
-            ),
-            authorRef,
-        ]
-    );
-
 export const GetFollowingStatus = (nickname) =>
     Let(
         {
@@ -247,13 +193,15 @@ export const GetTrendingAuthors = (afterRef) =>
     Map(
         Paginate(
             Join(
-                Match(Index("blocked_authors"), [false]),
+                Documents(Collection("authors")),
                 Index("authors_sorted_popularity")
             ),
             {
                 size: 20,
-                after: afterRef != null && GetAuthorPopularityCursor(afterRef),
+                after:
+                    afterRef != null &&
+                    Call(Fn("getTrendingAuthorsCursor"), afterRef),
             }
         ),
-        Lambda(["score", "ref"], GetPartialAuthor(Var("ref")))
+        Lambda(["score", "ref"], Call(Fn("getItemAuthor"), Var("ref")))
     );

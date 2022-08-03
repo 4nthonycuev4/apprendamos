@@ -8,104 +8,110 @@ CreateIndex({
                     "author",
                     Let(
                         {
-                            ageFactor: 1,
-                            partialViewFactor: 2,
-                            fullViewFactor: 3,
-                            stalkFactor: 4,
-                            likeFactor: 5,
-                            dislikeFactor: -6,
-                            commentFactor: 7,
-                            saveFactor: 8,
-                            followerFactor: 9,
-                            publicationFactor: 10,
-                            answerFactor: 11,
+                            age_factor: 1,
+                            partial_view_factor: 2,
+                            full_view_factor: 3,
+                            stalk_factor: 4,
+                            like_factor: 5,
+                            dislike_factor: -6,
+                            comment_factor: 7,
+                            save_factor: 8,
+                            follower_factor: 9,
+                            publication_factor: 10,
+                            answer_factor: 11,
 
-                            joinTime: Select(
-                                ["data", "joinedAt"],
+                            join_time: Select(
+                                ["data", "joined_at"],
                                 Var("author")
                             ),
-                            referenceTime: Time("2022-01-01T00:00:00+00:00"),
+                            reference_time: Time("2022-01-01T00:00:00+00:00"),
 
                             age: TimeDiff(
-                                Var("referenceTime"),
-                                Var("joinTime"),
+                                Var("reference_time"),
+                                Var("join_time"),
                                 "seconds"
                             ),
-                            partialViewCount: Select(
-                                ["data", "stats", "partialViewCount"],
+                            partial_view_count: Select(
+                                ["data", "stats", "partial_view_count"],
                                 Var("author"),
                                 0
                             ),
-                            fullViewCount: Select(
-                                ["data", "stats", "fullViewCount"],
+                            full_view_count: Select(
+                                ["data", "stats", "full_view_count"],
                                 Var("author"),
                                 0
                             ),
-                            stalkCount: Select(
-                                ["data", "stats", "stalkCount"],
+                            stalk_count: Select(
+                                ["data", "stats", "stalk_count"],
                                 Var("author"),
                                 0
                             ),
-                            likeCount: Select(
-                                ["data", "stats", "likeCount"],
+                            like_count: Select(
+                                ["data", "stats", "like_count"],
                                 Var("author"),
                                 0
                             ),
-                            commentCount: Select(
-                                ["data", "stats", "commentCount"],
+                            comment_count: Select(
+                                ["data", "stats", "comment_count"],
                                 Var("author"),
                                 0
                             ),
-                            dislikeCount: Select(
-                                ["data", "stats", "dislikeCount"],
+                            dislike_count: Select(
+                                ["data", "stats", "dislike_count"],
                                 Var("author"),
                                 0
                             ),
-                            saveCount: Select(
-                                ["data", "stats", "saveCount"],
+                            save_count: Select(
+                                ["data", "stats", "save_count"],
                                 Var("author"),
                                 0
                             ),
-                            followerCount: Select(
-                                ["data", "stats", "followerCount"],
+                            follower_count: Select(
+                                ["data", "stats", "follower_count"],
                                 Var("author"),
                                 0
                             ),
-                            publicationCount: Select(
-                                ["data", "stats", "publicationCount"],
+                            publication_count: Select(
+                                ["data", "stats", "publication_count"],
                                 Var("author"),
                                 0
                             ),
-                            answerCount: Select(
-                                ["data", "stats", "answerCount"],
+                            answer_count: Select(
+                                ["data", "stats", "answer_count"],
                                 Var("author"),
                                 0
                             ),
                         },
                         Add(
-                            Multiply(Var("ageFactor"), Var("age")),
+                            Multiply(Var("age_factor"), Var("age")),
                             Multiply(
-                                Var("partialViewFactor"),
-                                Var("partialViewCount")
+                                Var("partial_view_factor"),
+                                Var("partial_view_count")
                             ),
                             Multiply(
-                                Var("fullViewFactor"),
-                                Var("fullViewCount")
+                                Var("full_view_factor"),
+                                Var("full_view_count")
                             ),
-                            Multiply(Var("stalkFactor"), Var("stalkCount")),
-                            Multiply(Var("likeFactor"), Var("likeCount")),
-                            Multiply(Var("dislikeFactor"), Var("dislikeCount")),
-                            Multiply(Var("commentFactor"), Var("commentCount")),
-                            Multiply(Var("saveFactor"), Var("saveCount")),
+                            Multiply(Var("stalk_factor"), Var("stalk_count")),
+                            Multiply(Var("like_factor"), Var("like_count")),
                             Multiply(
-                                Var("followerFactor"),
-                                Var("followerCount")
+                                Var("dislike_factor"),
+                                Var("dislike_count")
                             ),
                             Multiply(
-                                Var("publicationFactor"),
-                                Var("publicationCount")
+                                Var("comment_factor"),
+                                Var("comment_count")
                             ),
-                            Multiply(Var("answerFactor"), Var("answerCount"))
+                            Multiply(Var("save_factor"), Var("save_count")),
+                            Multiply(
+                                Var("follower_factor"),
+                                Var("follower_count")
+                            ),
+                            Multiply(
+                                Var("publication_factor"),
+                                Var("publication_count")
+                            ),
+                            Multiply(Var("answer_factor"), Var("answer_count"))
                         )
                     )
                 )

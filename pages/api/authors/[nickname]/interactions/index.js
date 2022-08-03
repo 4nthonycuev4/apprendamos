@@ -1,5 +1,5 @@
 import { getAccessToken, withApiAuthRequired } from "@auth0/nextjs-auth0";
-import FaunaClient from "../../../../../fauna";
+import FaunaClient from "fauna";
 
 const AuthorInteractionsAPIPage = async (req, res) => {
     try {

@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 
 import UserForm from "../../components/forms/UserForm";
 import Title from "../../components/navigation/Title";
@@ -12,7 +11,7 @@ export default function RegisterPage({ user }) {
     const router = useRouter();
 
     useEffect(() => {
-        if (user.id) {
+        if (user && user.id) {
             router.push("/");
         }
     }, [user, router]);
