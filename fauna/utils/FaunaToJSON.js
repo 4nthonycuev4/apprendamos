@@ -6,27 +6,11 @@ export default function FaunaToJSON(obj) {
         return obj.map((e) => FaunaToJSON(e));
     }
     if (typeof obj === "object") {
-        if (obj.after || obj.before) {
-            if (obj.after) {
-                return {
-                    afterId: FaunaToJSON(obj.after[obj.after.length - 1]),
-                    data: FaunaToJSON(obj.data),
-                };
-            }
-            return {
-                data: FaunaToJSON(obj.data),
-            };
-        }
-
-        if (obj.ref && obj.data) {
-            return {
-                id: obj.ref.id,
-                ...FaunaToJSON(obj.data),
-            };
-        }
-
         if (obj.collection && obj.id) {
-            return obj.id;
+            return {
+                id: obj.id,
+                collection: obj.collection.id,
+            };
         }
 
         if (obj.value) {
@@ -34,14 +18,7 @@ export default function FaunaToJSON(obj) {
         }
 
         Object.keys(obj).forEach((k) => {
-            if (k === "data") {
-                const d = obj[k];
-                delete obj.data;
-
-                Object.keys(d).forEach((dataKey) => {
-                    obj[dataKey] = FaunaToJSON(d[dataKey]);
-                });
-            } else if (obj[k] === null || obj[k] === undefined) {
+            if (obj[k] === null || obj[k] === undefined) {
                 delete obj[k];
             } else {
                 obj[k] = FaunaToJSON(obj[k]);

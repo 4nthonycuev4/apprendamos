@@ -1,15 +1,28 @@
 import { query } from "faunadb";
-const { Let, Select, Index, Get, Var, Paginate, Match, Lambda, Multiply, Map } =
-    query;
-
-import { GetViewerRef, GetPartialAuthor } from "../authors/read";
+const {
+    Call,
+    Function: Fn,
+    Let,
+    Select,
+    Index,
+    Get,
+    Var,
+    Paginate,
+    Match,
+    Lambda,
+    Multiply,
+    Map,
+} = query;
 
 const GetNotifications = (afterRef) =>
     Map(
-        Paginate(Match(Index("author_notifications"), [GetViewerRef()]), {
-            size: 10,
-            after: afterRef != null && afterRef,
-        }),
+        Paginate(
+            Match(Index("author_notifications"), Call(Fn("getViewerRef"))),
+            {
+                size: 10,
+                after: afterRef != null && afterRef,
+            }
+        ),
         Lambda(
             ["ref"],
             Let(
@@ -17,22 +30,18 @@ const GetNotifications = (afterRef) =>
                     notification: Get(Var("ref")),
                 },
                 {
-                    id: Select(["ref"], Var("notification")),
-                    statusId: Select(
+                    id: Select(["ref", "id"], Var("notification")),
+                    statusFref: Select(
                         ["data", "status"],
                         Var("notification"),
                         null
                     ),
-                    statusCollection: Select(
-                        ["data", "status", "collection", "id"],
-                        Var("notification"),
-                        null
-                    ),
-                    type: Select(["data", "type"], Var("notification")),
+                    alert: Select(["data", "alert"], Var("notification")),
                     body: Select(["data", "body"], Var("notification"), null),
                     ts: Multiply(Select(["ts"], Var("notification")), 0.001),
-                    author: GetPartialAuthor(
-                        Select(["data", "author"], Var("notification"))
+                    interactor: Call(
+                        Fn("getItemAuthor"),
+                        Select(["data", "interactor"], Var("notification"))
                     ),
                 }
             )

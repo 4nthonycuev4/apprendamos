@@ -8,11 +8,10 @@ const {
     Paginate,
     Match,
     Lambda,
-    SubString,
+    Call,
+    Function: Fn,
     Map,
 } = query;
-
-import { GetViewerRef, GetPartialAuthor } from "../../authors/read";
 
 const GetSavedPublicationsAfterCursor = (ref) =>
     Let(
@@ -20,7 +19,7 @@ const GetSavedPublicationsAfterCursor = (ref) =>
             interactions: Get(ref),
         },
         [
-            Select(["data", "savedAt"], Var("interactions")),
+            Select(["data", "saved_at"], Var("interactions")),
             Select(["data", "publication"], Var("interactions")),
             ref,
         ]
@@ -28,59 +27,37 @@ const GetSavedPublicationsAfterCursor = (ref) =>
 
 const GetSavedPublications = (afterRef) =>
     Let(
-        { viewerRef: GetViewerRef() },
+        { viewer_ref: Call(Fn("getViewerRef")) },
         Map(
             Paginate(
-                Match(Index("saved_publications"), [Var("viewerRef"), true]),
+                Match(
+                    Index("saved_publications_by_interactor"),
+                    Var("viewer_ref"),
+                    true
+                ),
                 {
                     size: 5,
                     after:
                         afterRef != null &&
                         GetSavedPublicationsAfterCursor(
                             afterRef,
-                            GetViewerRef()
+                            Var("viewer_ref")
                         ),
                 }
             ),
             Lambda(
-                ["savedAt", "publicationRef"],
+                ["saved_at", "publication_ref"],
                 Let(
                     {
-                        publication: Get(Var("publicationRef")),
-                        author: GetPartialAuthor(
-                            Select(["data", "author"], Var("publication"))
+                        publication: Call(
+                            Fn("getItemPublication"),
+                            Var("publication_ref"),
+                            true
                         ),
                     },
                     {
-                        id: Var("publicationRef"),
-                        body: SubString(
-                            Select(["data", "body"], Var("publication")),
-                            0,
-                            200
-                        ),
-                        publishedAt: Select(
-                            ["data", "publishedAt"],
-                            Var("publication")
-                        ),
-                        stats: {
-                            likeCount: Select(
-                                ["data", "stats", "likeCount"],
-                                Var("publication"),
-                                null
-                            ),
-                            cheerCount: Select(
-                                ["data", "stats", "cheerCount"],
-                                Var("publication"),
-                                null
-                            ),
-                            commentCount: Select(
-                                ["data", "stats", "commentCount"],
-                                Var("publication"),
-                                null
-                            ),
-                        },
-                        author: Var("author"),
-                        savedAt: Var("savedAt"),
+                        saved_at: Var("saved_at"),
+                        data: Var("publication"),
                     }
                 )
             )

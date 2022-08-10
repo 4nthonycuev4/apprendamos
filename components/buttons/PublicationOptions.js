@@ -19,13 +19,16 @@ const MyLink = forwardRef((props, ref) => {
     );
 });
 
-export default function PublicationOptionsButton({ publicationId, createdAt }) {
+export default function PublicationOptionsButton({
+    publication_id,
+    created_at,
+}) {
     const [copyLinkModalOpen, setCopyLinkModalOpen] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
     const handleCopyLink = () => {
         navigator.clipboard.writeText(
-            `https://apprendamos.com/p/${publicationId}`
+            `https://apprendamos.com/p/${publication_id}`
         );
         setCopyLinkModalOpen(true);
     };
@@ -39,7 +42,7 @@ export default function PublicationOptionsButton({ publicationId, createdAt }) {
             <DeleteContentModal
                 isOpen={deleteModalOpen}
                 setIsOpen={setDeleteModalOpen}
-                publicationId={publicationId}
+                publicationId={publication_id}
             />
             <CopyLinkModal
                 isOpen={copyLinkModalOpen}
@@ -50,7 +53,7 @@ export default function PublicationOptionsButton({ publicationId, createdAt }) {
                     <div>
                         <Menu.Button className="inline-flex w-full justify-center rounded-md py-2 text-sm font-medium hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
                             <p className="text-sm dark:text-gray-300">
-                                {moment(createdAt).fromNow()}
+                                {moment(created_at).fromNow()}
                             </p>
                             <ChevronDownIcon
                                 className="h-5 w-5 text-blue-600 hover:text-blue-300"
@@ -71,7 +74,7 @@ export default function PublicationOptionsButton({ publicationId, createdAt }) {
                             <div className="px-1 py-1 ">
                                 <Menu.Item>
                                     {({ active }) => (
-                                        <MyLink href={`/p/${publicationId}`}>
+                                        <MyLink href={`/p/${publication_id}`}>
                                             <button
                                                 className={`${
                                                     active
@@ -127,7 +130,7 @@ export default function PublicationOptionsButton({ publicationId, createdAt }) {
                                 <Menu.Item>
                                     {({ active }) => (
                                         <MyLink
-                                            href={`/p/${publicationId}/update`}
+                                            href={`/p/${publication_id}/update`}
                                         >
                                             <button
                                                 className={`${

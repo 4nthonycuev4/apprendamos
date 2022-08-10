@@ -6,13 +6,13 @@ import {
 } from "@heroicons/react/outline";
 
 const PublicationStats = ({
-    likeCount,
-    cheerCount,
-    commentCount,
-    publicationId,
+    like_count,
+    cheer_count,
+    comment_count,
+    publication_id,
 }) => (
     <div className="flex justify-between px-10">
-        <Link href={`/p/${publicationId}`}>
+        <Link href={`/p/${publication_id}`}>
             <a className="">
                 <button className="px-2 text-sm font-semibold text-gray-600">
                     Seguir leyendo
@@ -22,15 +22,15 @@ const PublicationStats = ({
         <div className="flex justify-center space-x-8 cursor-default text-gray-600">
             <div className="flex ">
                 <ThumbUpIconOutline strokeWidth={1.5} className="w-5" />
-                <span>{likeCount || 0}</span>
+                <span>{like_count || 0}</span>
             </div>
             <div className="flex ">
                 <HeartIconOutline strokeWidth={1.5} className="w-5" />
-                <span>{cheerCount || 0}</span>
+                <span>{cheer_count || 0}</span>
             </div>
             <div className="flex ">
                 <AnnotationIconOutline strokeWidth={1.5} className="w-5" />
-                <span>{commentCount || 0}</span>
+                <span>{comment_count || 0}</span>
             </div>
         </div>
     </div>

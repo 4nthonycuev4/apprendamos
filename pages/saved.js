@@ -4,8 +4,8 @@ import Head from "next/head";
 import useSWRInfinite from "swr/infinite";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import PublicationPartialView from "../components/items/PublicationPartialView";
 import Title from "../components/navigation/Title";
+import ItemPublication from "./../components/items/Publication";
 
 export default function SavedContentPage() {
     const getKey = (pageIndex, previousPageData) => {
@@ -25,18 +25,6 @@ export default function SavedContentPage() {
         <>
             <Head>
                 <title>Apprendamos || Flashcards & articles</title>
-                <link
-                    rel="stylesheet"
-                    href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css"
-                    integrity="sha384-KiWOvVjnN8qwAZbuQyWDIbfCLFhLXNETzBQjA/92pIowpC0d2O3nppDGQVgwd2nB"
-                    crossOrigin="anonymous"
-                />
-                <script
-                    defer
-                    src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
-                    integrity="sha384-0fdwu/T/EQMsQlrHCCHoH10pkPLlKA1jL5dFyUOvB3lfeT2540/2g6YgSi2BL14p"
-                    crossOrigin="anonymous"
-                />
                 <meta property="og:url" content="apprendamos.com" />
                 <meta property="og:type" content="website" />
                 <meta property="fb:app_id" content="328834189100104" />
@@ -69,7 +57,11 @@ export default function SavedContentPage() {
                 {publications.map(
                     (item) =>
                         item && (
-                            <PublicationPartialView key={item.id} {...item} />
+                            <ItemPublication
+                                key={item.data.fref.id}
+                                {...item.data}
+                                saved_at={item.saved_at}
+                            />
                         )
                 )}
             </InfiniteScroll>

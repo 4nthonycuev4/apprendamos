@@ -1,31 +1,19 @@
 import { query } from "faunadb";
-const { Select, Index, Get, Var, Match, Paginate, Map, Join, Lambda } = query;
-
-import GetItemPublication from "./item";
-import { GetAuthorRefBynickname } from "../../authors/read";
-
-const GetAuthorPublicationsAfterCursor = (ref) => [
-    Select(["data", "publishedAt"], Get(ref)),
-    ref,
-];
+const { Call, Function: Fn, Index, Var, Match, Paginate, Map, Lambda } = query;
 
 const GetAuthorPublications = (nickname, afterRef) =>
     Map(
         Paginate(
-            Join(
-                Match(Index("publications_by_author"), [
-                    GetAuthorRefBynickname(nickname),
-                ]),
-                Index("publications_sorted_publishedAt")
+            Match(
+                Index("publications_by_author"),
+                Call(Fn("getAuthorRefByNickname"), nickname)
             ),
             {
                 size: 5,
-                after:
-                    afterRef != null &&
-                    GetAuthorPublicationsAfterCursor(afterRef),
+                after: afterRef != null && afterRef,
             }
         ),
-        Lambda(["publishedAt", "ref"], GetItemPublication(Var("ref"), false))
+        Lambda(["ref"], Call(Fn("getItemPublication"), Var("ref"), false))
     );
 
 export default GetAuthorPublications;

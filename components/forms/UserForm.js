@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
-export default function wUserForm({ user }) {
+export default function UserForm({ user }) {
     const [selectedPictureId, setSelectedPictureId] = useState(0);
 
     const {

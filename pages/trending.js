@@ -4,8 +4,8 @@ import Head from "next/head";
 import useSWRInfinite from "swr/infinite";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import { PublicationPartialView } from "./../components/items/PublicationPartialView";
 import Title from "../components/navigation/Title";
+import  ItemPublication  from "./../components/items/Publication";
 
 export default function TrendingContentPage() {
     const getKey = (pageIndex, previousPageData) => {
@@ -55,9 +55,7 @@ export default function TrendingContentPage() {
             >
                 {publications?.map(
                     (item) =>
-                        item && (
-                            <PublicationPartialView key={item.id} {...item} />
-                        )
+                        item && <ItemPublication key={item.fref.id} {...item} />
                 )}
             </InfiniteScroll>
         </>

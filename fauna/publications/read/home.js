@@ -1,12 +1,20 @@
 import { query } from "faunadb";
-const { Index, Var, Match, Paginate, Map, Lambda, Join, Select, Get } = query;
-
-import GetItemPublication from "./item";
-
-import { GetViewerRef } from "../../authors/read";
+const {
+    Index,
+    Var,
+    Match,
+    Paginate,
+    Map,
+    Lambda,
+    Join,
+    Select,
+    Get,
+    Call,
+    Function: Fn,
+} = query;
 
 const GetHomePublicationsAfterCursor = (ref) => [
-    Select(["data", "publishedAt"], Get(ref)),
+    Select(["data", "created_at"], Get(ref)),
     ref,
 ];
 
@@ -15,10 +23,14 @@ const GetHomePublications = (afterRef) =>
         Paginate(
             Join(
                 Join(
-                    Match(Index("author_following"), [GetViewerRef(), true]),
+                    Match(
+                        Index("author_following"),
+                        Call(Fn("getViewerRef")),
+                        true
+                    ),
                     Index("publications_by_author")
                 ),
-                Index("publications_sorted_publishedAt")
+                Index("publications_sorted_by_creation_time")
             ),
             {
                 size: 5,
@@ -27,7 +39,10 @@ const GetHomePublications = (afterRef) =>
                     GetHomePublicationsAfterCursor(afterRef),
             }
         ),
-        Lambda(["publishedAt", "ref"], GetItemPublication(Var("ref")))
+        Lambda(
+            ["created_at", "ref"],
+            Call(Fn("getItemPublication"), Var("ref"), true)
+        )
     );
 
 export default GetHomePublications;

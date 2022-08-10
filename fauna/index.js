@@ -87,7 +87,7 @@ export default class FaunaClient {
     // VIEWER CRUD
     async getViewer() {
         return this.client
-            .query(Call(Fn("getViewer")))
+            .query(Call(Fn("getItemAuthor"), Call(Fn("getViewerRef"))))
             .then((res) => FaunaToJSON(res));
     }
 
@@ -229,7 +229,7 @@ export default class FaunaClient {
 
     async getSingleAuthor(nickname) {
         return this.client
-            .query(GetSingleAuthor(nickname))
+            .query(Call(Fn("getSingleAuthor"), nickname))
             .then((res) => FaunaToJSON(res));
     }
 

@@ -8,13 +8,13 @@ import PublicationOptionsButton from "../buttons/PublicationOptions";
 import PublicationStats from "../PublicationStats";
 import { MDParsed } from "../Markdown";
 
-export const PublicationPartialView = ({
+export const ItemPublication = ({
     body,
-    publishedAt,
+    created_at,
     author,
-    id,
+    fref,
     stats,
-    savedAt,
+    saved_at,
 }) => {
     const [start, setStart] = useState(false);
     const timer = useRef(0);
@@ -41,7 +41,7 @@ export const PublicationPartialView = ({
     }, [start]);
 
     const handleView = () => {
-        fetch(`/api/publications/${id}/view`);
+        fetch(`/api/publications/${fref.id}/view`);
     };
 
     return (
@@ -50,8 +50,8 @@ export const PublicationPartialView = ({
                 <BasicAuthorCard {...author} />
                 <div className="flex items-center">
                     <PublicationOptionsButton
-                        publicationId={id}
-                        publishedAt={publishedAt}
+                        publication_id={fref.id}
+                        created_at={created_at}
                     />
                 </div>
             </div>
@@ -73,15 +73,17 @@ export const PublicationPartialView = ({
                     body={
                         body +
                         "..." +
-                        (savedAt
-                            ? "\n\n`Guardado " + moment(savedAt).fromNow() + "`"
+                        (saved_at
+                            ? "\n\n`Guardado " +
+                              moment(saved_at).fromNow() +
+                              "`"
                             : "")
                     }
                 />
             </InView>
-            <PublicationStats {...stats} publicationId={id} />
+            <PublicationStats {...stats} publication_id={fref.id} />
         </div>
     );
 };
 
-export default PublicationPartialView;
+export default ItemPublication;

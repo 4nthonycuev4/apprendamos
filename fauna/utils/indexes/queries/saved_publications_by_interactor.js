@@ -1,20 +1,18 @@
 CreateIndex({
-    name: "publications_saved_by_author",
-    source: {
-        collection: [Collection("publicationauthor")],
-    },
+    name: "saved_publications_by_interactor",
+    source: Collection("publicationinteractions"),
     terms: [
         {
-            field: ["data", "author"],
+            field: ["data", "interactor"],
         },
         {
-            field: ["data", "saved"],
+            field: ["data", "save"],
             value: true,
         },
     ],
     values: [
         {
-            field: ["data", "savedAt"],
+            field: ["data", "saved_at"],
             reverse: true,
         },
         {

@@ -48,9 +48,9 @@ const PanelAuth = () => {
 const PanelNoAuth = () => <h1>Panel no auth</h1>;
 
 const Panel = () => {
-    const { user } = useUser();
+    // const { user } = useUser();
 
-    if (user && user?.nickname) return <PanelAuth />;
+    // if (user && user?.nickname) return <PanelAuth />;
     return <PanelNoAuth />;
 };
 

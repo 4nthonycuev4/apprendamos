@@ -122,9 +122,9 @@ const SavePublication = (ref) =>
                 Create(Collection("publicationinteractions"), {
                     data: {
                         save: true,
-                        saved_At: Now(),
+                        saved_at: Now(),
                         publication: ref,
-                        author: Select(["ref"], Var("interactor")),
+                        interactor: Select(["ref"], Var("interactor")),
                         created_at: Now(),
                     },
                 }),

@@ -3,7 +3,7 @@ import useSWRInfinite from "swr/infinite";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import Title from "../components/navigation/Title";
-import { PublicationPartialView } from "./../components/items/PublicationPartialView";
+import ItemPublication from "components/items/Publication";
 
 const HomePage = () => {
     const getKey = (pageIndex, previousPageData) => {
@@ -53,9 +53,7 @@ const HomePage = () => {
             >
                 {publications?.map(
                     (item) =>
-                        item && (
-                            <PublicationPartialView key={item.id} {...item} />
-                        )
+                        item && <ItemPublication key={item.id} {...item} />
                 )}
             </InfiniteScroll>
         </>

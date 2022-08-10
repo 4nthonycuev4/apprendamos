@@ -3,17 +3,16 @@ import Head from "next/head";
 import useSWRInfinite from "swr/infinite";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import FaunaClient from "../../fauna";
-import User404 from "../../components/errors/User404";
-import { PublicationPartialView } from "../../components/items/PublicationPartialView";
-import { FullAuthorCard } from "../../components/items/AuthorCard/Full";
+import FaunaClient from "fauna";
+import User404 from "components/errors/User404";
+import { ItemPublication } from "components/items/Publication";
+import { FullAuthorCard } from "components/items/AuthorCard/Full";
 
-const Profile = ({ userData }) => {
+const AuthorProfilePage = ({ nickname, picture, name, about }) => {
     const getKey = (pageIndex, previousPageData) => {
         if (previousPageData && !previousPageData.data) return null;
-        if (pageIndex === 0)
-            return `/api/authors/${userData.nickname}/publications`;
-        return `/api/authors/${userData.nickname}/publications?afterId=${previousPageData.afterId}`;
+        if (pageIndex === 0) return `/api/authors/${nickname}/publications`;
+        return `/api/authors/${nickname}/publications?afterId=${previousPageData.afterId}`;
     };
     const { data, size, setSize } = useSWRInfinite(getKey);
 
@@ -25,20 +24,25 @@ const Profile = ({ userData }) => {
     return (
         <>
             <Head>
-                <title>{`${userData.name} (@${userData.nickname}) || Apprendamos`}</title>
+                <title>{`${name} (@${nickname}) || Apprendamos`}</title>
 
-                <meta property="og:image" content={userData.picture} />
+                <meta property="og:image" content={picture} />
                 <meta
                     property="og:title"
-                    content={`${userData.name} (@${userData.nickname}) || Apprendamos`}
+                    content={`${name} (@${nickname}) || Apprendamos`}
                 />
-                <meta property="og:description" content={userData.about} />
+                <meta property="og:description" content={about} />
                 <meta property="og:url" content="apprendamos.com" />
                 <meta property="og:type" content="website" />
                 <meta property="fb:app_id" content="328834189100104" />
                 <meta name="twitter:card" content="summary" />
             </Head>
-            <FullAuthorCard {...userData} />
+            <FullAuthorCard
+                nickname={nickname}
+                name={name}
+                about={about}
+                picture={picture}
+            />
             <InfiniteScroll
                 dataLength={publications.length}
                 next={() => setSize(size + 1)}
@@ -53,10 +57,14 @@ const Profile = ({ userData }) => {
                 {publications.map(
                     (item) =>
                         item && (
-                            <PublicationPartialView
-                                key={item.id}
+                            <ItemPublication
+                                key={item.fref.id}
                                 {...item}
-                                author={userData}
+                                author={{
+                                    nickname,
+                                    name,
+                                    picture,
+                                }}
                             />
                         )
                 )}
@@ -65,11 +73,15 @@ const Profile = ({ userData }) => {
     );
 };
 
-const ProfilePageHandler = ({ userData, errorCode }) => {
+const AuthorProfilePageHandler = ({ userData, errorCode }) => {
+    if (!errorCode && userData) {
+        return <AuthorProfilePage {...userData} />;
+    }
     if (errorCode === 404) {
         return <User404 />;
+    } else {
+        return <h1>Error</h1>;
     }
-    return <Profile userData={userData} />;
 };
 
 const getServerSideProps = async ({ query, resolvedUrl }) => {
@@ -88,15 +100,20 @@ const getServerSideProps = async ({ query, resolvedUrl }) => {
         }
 
         const client = new FaunaClient();
-
-        const user = await client.getSingleUser(nickname);
-
+        const user = await client.getSingleAuthor(nickname);
         return { props: { userData: user } };
     } catch (error) {
-        console.log("error", error);
-        return { props: { errorCode: error.requestResult.statusCode } };
+        return {
+            props: {
+                errorCode:
+                    error.requestResult?.responseContent?.errors[0]?.cause[0]
+                        ?.cause[0]?.code === "instance not found"
+                        ? 404
+                        : 500,
+            },
+        };
     }
 };
 
-export default ProfilePageHandler;
+export default AuthorProfilePageHandler;
 export { getServerSideProps };

@@ -3,7 +3,7 @@ import useSWRInfinite from "swr/infinite";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import Title from "../components/navigation/Title";
-import NotificationCard from "../components/items/NotificationCard";
+import Notification from "../components/items/Notification";
 
 const NotificationsPage = () => {
     const getKey = (pageIndex, previousPageData) => {
@@ -52,8 +52,7 @@ const NotificationsPage = () => {
                 }
             >
                 {notifications.map(
-                    (item) =>
-                        item && <NotificationCard key={item.id} {...item} />
+                    (item) => item && <Notification key={item.id} {...item} />
                 )}
             </InfiniteScroll>
         </>

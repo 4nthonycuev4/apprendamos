@@ -16,7 +16,7 @@ import CommentsModal from "./modals/Comments";
 
 export const PublicationInteractions = ({ id }) => {
     const { user, error } = useUser();
-    const isAuthenticated = !error && user?.id;
+    const isAuthenticated = !error && user?.nickname;
 
     const { data: stats, mutate: refetchStats } = useSWR(
         `/api/publications/${id}/stats`,
